@@ -1,0 +1,9 @@
+Se instaló:
+1. Git
+2. VS Code
+3. Docker
+4. Node.js
+5. Angular CLI
+6. PHP
+7. Composer
+8. Postman
