@@ -1,0 +1,59 @@
+<h1>Solicitudes de Tutor Pendientes</h1>
+
+<div *ngIf="solicitudes.length > 0; else sinSolicitudes">
+
+  <div
+    *ngFor="let solicitud of solicitudes"
+    class="solicitud-card">
+
+    <h3>
+
+      {{ solicitud.project.titulo }}
+
+    </h3>
+
+    <p>
+
+      <strong>Estudiante:</strong>
+
+      {{ solicitud.student.name }}
+
+    </p>
+
+    <p>
+
+      <strong>Mensaje:</strong>
+
+      {{ solicitud.mensaje }}
+
+    </p>
+
+    <button
+      (click)="aceptarSolicitud(solicitud.id)">
+
+      Aceptar
+
+    </button>
+
+    <button
+      (click)="rechazarSolicitud(solicitud.id)">
+
+      Rechazar
+
+    </button>
+
+    <hr>
+
+  </div>
+
+</div>
+
+<ng-template #sinSolicitudes>
+
+  <p>
+
+    No tienes solicitudes pendientes.
+
+  </p>
+
+</ng-template>

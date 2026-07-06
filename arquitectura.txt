@@ -1,0 +1,51 @@
+Angular
+    ↓
+Laravel API
+    ↓
+MySQL Docker
+
+
+
+Usuario hace login
+        	↓
+Laravel devuelve token
+        	↓
+Angular guarda token
+        	↓
+Interceptor agrega:
+Authorization: Bearer TOKEN
+        	↓
+Laravel Sanctum valida
+        	↓
+Dashboard según rol
+
+Arquitectura:
+| Rol         | Ver proyectos                  | Crear proyectos | Editar propios | Gestionar usuarios | Revisar proyectos |
+| ----------- | ------------------------------ | --------------- | -------------- | ------------------ | ----------------- |
+| Coordinador | Todos                          | Sí              | Sí             | Sí                 | Sí                |
+| Tutor       | Los que tutoriza + los propios | Sí              | Sí             | No                 | Sí                |
+| Estudiante  | Solo los propios               | Sí              | Sí             | No                 | No                |
+
+
+User
+├── role
+├── projects
+├── tutorRequestsSent
+└── tutorRequestsReceived
+
+Project
+├── owner
+├── tutor
+└── tutorRequests
+
+TutorRequest
+├── project
+├── student
+└── tutor
+
+
+para login desde thunder (post):
+{
+    "email": "coordinador@artes.edu.co",
+    "password": "123456"
+}

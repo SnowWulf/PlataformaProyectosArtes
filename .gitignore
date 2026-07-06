@@ -6,3 +6,10 @@ frontend/node_modules
 
 .vscode
 .idea
+
+# Composer accidental en la raíz
+/vendor/
+
+# Angular
+frontend/frontend-app/node_modules/
+frontend/frontend-app/dist/

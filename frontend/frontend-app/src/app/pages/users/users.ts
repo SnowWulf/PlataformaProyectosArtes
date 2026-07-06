@@ -1,0 +1,212 @@
+import {
+  Component,
+  afterNextRender,
+  ChangeDetectorRef
+} from '@angular/core';
+
+import { CommonModule } from '@angular/common';
+
+import { User } from '../../models/user';
+
+import { UserService } from '../../services/user-service';
+
+import { UserForm } from '../user-form/user-form';
+
+import { DeleteUserDialog } from '../../components/delete-user-dialog/delete-user-dialog';
+
+@Component({
+  selector: 'app-users',
+  standalone: true,
+  imports: [
+  CommonModule,
+  UserForm,
+  DeleteUserDialog
+  ],
+  templateUrl: './users.html',
+  styleUrl: './users.scss'
+})
+export class Users {
+
+  users: User[] = [];
+
+  mostrarFormulario = false;
+
+  usuarioSeleccionado: User | null = null;
+
+  mostrarDialogoEliminar = false;
+
+  usuarioAEliminar: User | null = null;
+
+  constructor(
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {
+
+    afterNextRender(() => {
+
+      this.cargarUsuarios();
+
+    });
+
+  }
+
+  cargarUsuarios(): void {
+
+    this.userService
+      .getUsers()
+      .subscribe({
+
+        next: (data) => {
+
+          this.users = data;
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+        }
+
+      });
+
+  }
+
+  nuevoUsuario(): void {
+
+    this.usuarioSeleccionado = null;
+
+    this.mostrarFormulario = true;
+
+  }
+
+  editarUsuario(usuario: User): void {
+
+    this.usuarioSeleccionado = usuario;
+
+    this.mostrarFormulario = true;
+
+  }
+
+  cerrarFormulario(): void {
+
+    this.mostrarFormulario = false;
+
+    this.usuarioSeleccionado = null;
+
+  }
+
+  abrirEliminar(usuario: User): void {
+
+  this.usuarioAEliminar = usuario;
+
+  this.mostrarDialogoEliminar = true;
+
+}
+
+cerrarEliminar(): void {
+
+  this.mostrarDialogoEliminar = false;
+
+  this.usuarioAEliminar = null;
+
+}
+
+confirmarEliminar(password: string): void {
+
+  if (!this.usuarioAEliminar) {
+
+    return;
+
+  }
+
+  this.userService
+    .deleteUserWithPassword(
+      this.usuarioAEliminar.id,
+      password
+    )
+    .subscribe({
+
+      next: (response) => {
+
+        alert(response.message);
+
+        this.cerrarEliminar();
+
+        this.cargarUsuarios();
+
+      },
+
+      error: (err) => {
+
+        console.error(err);
+
+        if (err.status === 401) {
+
+          alert('Contraseña incorrecta.');
+
+        } else if (err.status === 400) {
+
+          alert(err.error.message);
+
+        } else {
+
+          alert('No fue posible eliminar el usuario.');
+
+        }
+
+      }
+
+    });
+
+}
+
+  usuarioGuardado(): void {
+
+    this.cargarUsuarios();
+
+    this.cerrarFormulario();
+
+  }
+
+//   eliminarUsuario(usuario: User): void {
+
+//   const confirmar = confirm(
+
+//     `¿Desea eliminar al usuario ${usuario.name}?`
+
+//   );
+
+//   if (!confirmar) {
+
+//     return;
+
+//   }
+
+//   this.userService
+//     .deleteUser(usuario.id)
+//     .subscribe({
+
+//       next: () => {
+
+//         alert('Usuario eliminado correctamente.');
+
+//         this.cargarUsuarios();
+
+//       },
+
+//       error: (err) => {
+
+//         console.error(err);
+
+//         alert('No fue posible eliminar el usuario.');
+
+//       }
+
+//     });
+
+// }
+
+}

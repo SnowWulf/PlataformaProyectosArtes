@@ -1,0 +1,52 @@
+<h2>Solicitar tutor</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="enviarSolicitud()">
+
+  <div>
+
+    <label>Tutor</label>
+
+    <select formControlName="tutor_id">
+
+      <option value="">
+        Seleccione un tutor
+      </option>
+
+      <option
+        *ngFor="let tutor of tutores"
+        [value]="tutor.id">
+
+        {{ tutor.name }}
+
+      </option>
+
+    </select>
+
+  </div>
+
+  <br>
+
+  <div>
+
+    <label>Mensaje (opcional)</label>
+
+    <br>
+
+    <textarea
+      rows="5"
+      formControlName="mensaje">
+    </textarea>
+
+  </div>
+
+  <br>
+
+  <button type="submit">
+
+    Enviar solicitud
+
+  </button>
+
+</form>

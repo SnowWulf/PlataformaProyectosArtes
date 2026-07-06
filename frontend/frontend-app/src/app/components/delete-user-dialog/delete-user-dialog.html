@@ -1,0 +1,75 @@
+<div class="dialog">
+
+    <h2>
+
+        Eliminar Usuario
+
+    </h2>
+
+    <p>
+
+        Está a punto de eliminar al usuario:
+
+    </p>
+
+    <strong>
+
+        {{ usuario.name }}
+
+    </strong>
+
+    <p class="warning">
+
+        Esta acción es permanente y no podrá deshacerse.
+
+    </p>
+
+    <form
+        [formGroup]="form"
+        (ngSubmit)="eliminar()">
+
+        <label>
+
+            Ingrese su contraseña
+
+        </label>
+
+        <input
+            type="password"
+            formControlName="password"
+            placeholder="Contraseña">
+
+        @if(form.get('password')?.invalid && form.get('password')?.touched){
+
+            <small class="error">
+
+                Debe ingresar su contraseña.
+
+            </small>
+
+        }
+
+        <div class="buttons">
+
+            <button
+                type="button"
+                class="cancel"
+                (click)="cancelar.emit()">
+
+                Cancelar
+
+            </button>
+
+            <button
+                type="submit"
+                class="delete">
+
+                Eliminar
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>

@@ -1,0 +1,104 @@
+<h1>Proyectos</h1>
+
+<div *ngIf="projects && projects.length > 0; else sinDatos">
+
+  <button (click)="nuevoProyecto()">
+
+    Nuevo proyecto
+
+</button>
+
+  <table border="1">
+
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre del Proyecto</th>
+        <th>Tipo de Proyecto</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Propietario</th>
+        <th>Tutor</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+
+    <tbody>
+
+      <tr *ngFor="let project of projects">
+
+        <td>
+          {{ project.id }}
+        </td>
+
+        <td>
+          {{ project.titulo }}
+        </td>
+
+        <td>
+          {{ project.tipo_proyecto}}
+        </td>
+
+        <td>
+          {{ project.descripcion}}
+        </td>
+
+        <td>
+          {{ project.estado }}
+        </td>
+
+        <td>
+          {{ project.owner?.name }}
+        </td>
+
+        <td>
+          {{ project.tutor?.name ?? 'Sin tutor' }}
+        </td>
+
+        <td>
+          <button
+            *ngIf="puedeEditarProyecto(project)"
+            (click)="editarProyecto(project)">
+            Editar
+          </button>
+
+          <button
+            *ngIf="!project.tutor"
+            (click)="solicitarTutor(project)">
+            Solicitar tutor
+          </button>
+
+          <button
+              *ngIf="auth.esCoordinador()"
+              (click)="eliminarProyecto(project)">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <app-project-form
+    *ngIf="mostrarFormulario"
+    [proyecto]="proyectoSeleccionado"
+    (guardado)="cerrarFormulario(); cargarProyectos()">
+  </app-project-form>
+
+  <app-tutor-request-form
+    *ngIf="mostrarSolicitudTutor"
+    [proyecto]="proyectoSolicitud!">
+  </app-tutor-request-form>
+
+</div>
+
+
+<ng-template #sinDatos>
+
+  <p>
+    Cargando proyectos desde Laravel...
+  </p>
+
+</ng-template>

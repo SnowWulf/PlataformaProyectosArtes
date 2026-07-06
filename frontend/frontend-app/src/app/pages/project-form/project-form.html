@@ -1,0 +1,85 @@
+<h2>
+
+  {{ proyecto ? 'Editar proyecto' : 'Nuevo proyecto' }}
+
+</h2>
+
+<form
+  [formGroup]="form"
+  (ngSubmit)="guardar()">
+
+  <div>
+    <label>Título</label>
+    <input
+      type="text"
+      formControlName="titulo">
+  </div>
+
+  <div>
+    <label>Descripción</label>
+    <textarea
+        formControlName="descripcion"
+        rows="4">
+    </textarea>
+  </div>
+
+  <div>
+
+  <label>Tipo de proyecto</label>
+
+  <select formControlName="tipo_proyecto">
+
+    <option value="">Seleccione un tipo de proyecto</option>
+
+    <option value="Investigación">
+      Investigación
+    </option>
+
+    <option value="Investigación-Creación">
+      Investigación-Creación
+    </option>
+
+    <option value="Creación Artística">
+      Creación Artística
+    </option>
+
+    <option value="Pasantía">
+      Pasantía
+    </option>
+
+    <option value="Extensión / Interacción Social">
+      Extensión / Interacción Social
+    </option>
+
+    <option value="Gestión Cultural">
+      Gestión Cultural
+    </option>
+
+    <option value="Innovación y Desarrollo">
+      Innovación y Desarrollo
+    </option>
+
+    <option value="Formación Artística y Pedagógica">
+      Formación Artística y Pedagógica
+    </option>
+
+    <option value="Emprendimiento e Industrias Creativas">
+      Emprendimiento e Industrias Creativas
+    </option>
+
+    <option value="Patrimonio y Memoria Cultural">
+      Patrimonio y Memoria Cultural
+    </option>
+
+  </select>
+
+</div>
+
+<button type="submit">
+
+  Guardar
+
+</button>
+</form>
+
+

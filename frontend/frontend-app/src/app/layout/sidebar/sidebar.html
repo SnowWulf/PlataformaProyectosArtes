@@ -1,0 +1,54 @@
+<div class="sidebar">
+
+    <div class="sidebar-header">
+
+        <h2>🎓 Plataforma Artes</h2>
+
+    </div>
+
+    <nav class="sidebar-menu">
+
+        <a
+            routerLink="/dashboard"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">
+
+            🏠 Dashboard
+
+        </a>
+
+        <a
+            routerLink="/dashboard/projects"
+            routerLinkActive="active">
+
+            📁 Proyectos
+
+        </a>
+
+        @if(auth.esTutor()){
+
+            <a
+                routerLink="/dashboard/tutor-requests"
+                routerLinkActive="active">
+
+                👨‍🏫 Solicitudes de Tutor
+
+            </a>
+
+        }
+
+        @if(auth.esCoordinador()){
+
+            <a
+                routerLink="/dashboard/users"
+                routerLinkActive="active">
+
+                👥 Usuarios
+
+            </a>
+
+        }
+
+    </nav>
+
+</div>

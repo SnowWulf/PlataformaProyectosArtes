@@ -1,0 +1,130 @@
+<div class="users-container">
+
+    <div class="users-header">
+
+        <h2>Gestión de Usuarios</h2>
+
+        <button
+            (click)="nuevoUsuario()">
+
+            + Nuevo Usuario
+
+        </button>
+
+    </div>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Nombre</th>
+
+                <th>Correo</th>
+
+                <th>Rol</th>
+
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @for (usuario of users; track usuario.id) {
+
+                <tr>
+
+                    <td>
+
+                        {{ usuario.name }}
+
+                    </td>
+
+                    <td>
+
+                        {{ usuario.email }}
+
+                    </td>
+
+                    <td>
+
+                        {{ usuario.role?.nombre }}
+
+                    </td>
+
+                    <td>
+
+                        <button
+                        (click)="editarUsuario(usuario)">
+
+                        ✏️ Editar
+
+                        </button>
+
+                        <button
+                            (click)="abrirEliminar(usuario)"
+                            style="margin-left:10px;">
+
+                            🗑️ Eliminar
+
+                        </button>
+                    </td>
+
+                </tr>
+
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+@if (mostrarFormulario) {
+
+    <div class="modal-backdrop">
+
+        <div class="modal">
+
+            <app-user-form
+
+                [usuario]="usuarioSeleccionado"
+
+                (cerrar)="cerrarFormulario()"
+
+                (guardado)="usuarioGuardado()">
+
+            </app-user-form>
+
+        </div>
+
+    </div>
+
+}
+
+
+@if (mostrarDialogoEliminar && usuarioAEliminar) {
+
+    <div class="modal-backdrop">
+
+        <div class="modal">
+
+            <app-delete-user-dialog
+
+                [usuario]="usuarioAEliminar"
+
+                (cancelar)="cerrarEliminar()"
+
+                (confirmar)="confirmarEliminar($event)">
+
+            </app-delete-user-dialog>
+
+        </div>
+
+    </div>
+
+}

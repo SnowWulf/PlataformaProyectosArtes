@@ -1,0 +1,87 @@
+instrucciones: 
+para phpmyadmin: http://localhost:8080
+Usuario: root
+Contraseña: root
+
+
+Hasta ahora tenemos: (12 de junio)
+Frontend  : Angular
+Backend   : Laravel
+BD        : MySQL (Docker)
+Admin BD  : phpMyAdmin
+Control   : Git
+SO        : Ubuntu
+
+
+Lo que habremos completado
+User
+  ├── pertenece a → Role
+  └── tiene muchos → Projects
+
+Project
+  └── pertenece a → User (owner)
+  
+Base de Datos
+│
+├── Roles
+│   ├── Estudiante
+│   ├── Tutor
+│   └── Coordinador
+│
+├── Usuarios
+│   └── Juan Pérez
+│
+└── Proyectos
+    └── Plataforma Digital para Gestión de Proyectos Académicos
+    
+    
+Herramientas: docker compose, swagger, thunder client
+
+
+
+hubo que instalar api.php porque no viene por ddefecto en la versión de laravel 13.3
+
+
+para el sistema de login usamos LARAVEL SANCTUM (apis, tokens, etc)
+
+
+* Para crear users(Post):
+{
+ "name":"Andres ponce",   
+ "email":"aaponce@udenar.edu.co",
+ "password":"grado93jm",
+ "role_id":1
+}
+
+* La parte lógica del ingreso es:
+Login
+  ↓
+Dashboard
+  ↓
+Módulos
+
+* Para los dashboards de coordinador (focus on proyectos) 
+Coordinador
+    ↓
+ve todos los proyectos
+
+Tutor
+    ↓
+ve proyectos propios + asignados
+
+Estudiante
+    ↓
+ve sus proyectos
+
+
+Entonces: 
+GET /api/projects
+        |
+        ↓
+¿Quién eres?
+        |
+        ├── Coordinador → todos
+        |
+        ├── Tutor → propios + asignados
+        |
+        └── Estudiante → propios
