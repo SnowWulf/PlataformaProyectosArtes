@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TutorRequestController;
+use App\Http\Controllers\DocumentController;
 
 
 Route::post('/login',[AuthController::class,'login']);
@@ -17,6 +18,7 @@ Route::post('/login',[AuthController::class,'login']);
 // TODO lo que necesite usuario logueado aquí
 Route::middleware('auth:sanctum')->group(function(){
 
+    Route::apiResource('documents', DocumentController::class);
 
     Route::get('/user', function(Request $request){
 

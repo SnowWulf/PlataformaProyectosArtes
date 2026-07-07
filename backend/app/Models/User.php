@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 
+
 #[Fillable([
     'name',
     'email',
@@ -65,5 +66,10 @@ class User extends Authenticatable
         TutorRequest::class,
         'tutor_id'
         );
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
     }
 }

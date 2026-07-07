@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\User;
 
 class Project extends Model
@@ -32,5 +33,10 @@ class Project extends Model
     public function tutorRequests()
     {
         return $this->hasMany(TutorRequest::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
     }
 }
