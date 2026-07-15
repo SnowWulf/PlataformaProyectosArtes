@@ -1,0 +1,263 @@
+@if (project) {
+
+  <h1>{{ project.titulo }}</h1>
+
+  <p>{{ project.descripcion }}</p>
+
+  <hr>
+
+  <nav>
+
+    <button>
+      Información
+    </button>
+
+    <button>
+      Documentos
+    </button>
+
+    <button>
+      Tutorías
+    </button>
+
+    <button>
+      Revisiones
+    </button>
+
+  </nav>
+
+  <hr>
+
+  <h2>Información</h2>
+
+  <p>
+    Tipo: {{ project.tipo_proyecto }}
+  </p>
+
+  <p>
+    Estado: {{ project.estado }}
+  </p>
+
+  <p>
+    Tutor:
+    {{ project.tutor?.name ?? 'Sin tutor' }}
+  </p>
+
+  <hr>
+
+  <h2>Documentos</h2>
+
+  @if (puedeSubirDocumento()) {
+
+    <button
+      (click)="abrirFormularioDocumento()">
+      Subir documento
+    </button>
+
+  }
+
+    @if (mostrarFormularioDocumento) {
+
+    <app-document-form
+        [projectId]="project.id"
+        [document]="documentoSeleccionado"
+        (guardado)="documentoGuardado()"
+        (cancelado)="cerrarFormularioDocumento()">
+    </app-document-form>
+    
+    
+    }
+
+  <hr>
+
+  @if (documents.length > 0) {
+
+    @for (document of documents; track document.id) {
+
+      <div>
+
+        <h3>{{ document.nombre }}</h3>
+
+        <p>
+
+  <strong>
+    Estado actual:
+  </strong>
+
+  <span
+    [class]="
+      obtenerClaseEstado(
+        document.estado
+      )
+    ">
+
+    {{ document.estado }}
+
+  </span>
+
+</p>
+
+        <p>
+          {{ document.descripcion }}
+        </p>
+
+        <p>
+            Fecha de subida:
+            {{ document.created_at | date:'dd/MM/yyyy HH:mm' }}
+        </p>
+
+        <p>
+            Última edición:
+            {{ document.updated_at | date:'dd/MM/yyyy HH:mm' }}
+       </p>
+
+       
+       <a
+        [href]="document.file_url"
+        target="_blank">
+
+    Ver PDF
+    
+
+    </a>
+
+    <br><br>
+
+    <button
+        (click)="abrirFormularioDocumento(document)">
+        Editar
+    </button>
+
+    <button
+        (click)="eliminarDocumento(document)">
+        Eliminar
+    </button>
+
+    @if (auth.esTutor()) {
+    <button
+        (click)="abrirFormularioRevision(document)">
+        Revisar
+    </button>
+    }
+
+    @if (
+  document.reviews &&
+  document.reviews.length > 0
+) {
+
+  <hr>
+
+  <h4>
+    Historial de revisiones
+  </h4>
+
+  @for (
+    review of document.reviews;
+    track review.id
+  ) {
+
+    <div>
+
+        
+      <p>
+
+        <strong>
+          Estado:
+        </strong>
+
+        {{ review.estado }}
+
+      </p>
+
+      <p>
+
+        <strong>
+          Tutor:
+        </strong>
+
+        {{ review.tutor?.name }}
+
+      </p>
+
+      <p>
+
+        <strong>
+          Comentario:
+        </strong>
+
+            {{ review.comentario }}
+
+        </p>
+
+        @if (review.attachment_url) {
+
+        <p>
+
+        <strong>
+        Archivo adjunto:
+        </strong>
+
+            <a
+                [href]="review.attachment_url"
+                target="_blank">
+
+                Descargar archivo
+
+            </a>
+
+        </p>
+
+        }
+
+        <p>
+
+            <strong>
+                Fecha:
+            </strong>
+
+            {{ review.created_at | date:'dd/MM/yyyy HH:mm' }}
+
+        </p>
+
+        
+        </div>
+
+        <hr>
+
+    }
+
+    }
+
+    @if (
+    mostrarFormularioRevision &&
+    documentoRevision?.id === document.id
+    ) {
+
+    <app-document-review-form
+
+        [documentId]="document.id"
+
+        (guardado)="revisionGuardada()"
+
+        (cancelado)="cerrarFormularioRevision()">
+
+    </app-document-review-form>
+
+    }
+
+
+      </div>
+
+      <hr>
+
+    }
+
+  } @else {
+
+    <p>
+      Este proyecto aún no tiene documentos.
+    </p>
+
+  }
+
+}

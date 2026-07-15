@@ -1,0 +1,62 @@
+<h3>Subir documento</h3>
+
+<form [formGroup]="form">
+
+  <div>
+
+    <label>
+      Nombre
+    </label>
+
+    <input
+      type="text"
+      formControlName="nombre">
+
+  </div>
+
+  <br>
+
+  <div>
+
+    <label>
+      Descripción
+    </label>
+
+    <textarea
+      formControlName="descripcion">
+    </textarea>
+
+  </div>
+
+  <br>
+
+  <div>
+
+    <label>
+      Archivo PDF
+    </label>
+
+    <input
+      type="file"
+      accept=".pdf"
+      (change)="onFileSelected($event)">
+
+  </div>
+
+  <br>
+
+  <button
+  type="button"
+  (click)="guardar()">
+    Guardar
+  </button>
+
+  <button
+  type="button"
+  (click)="cancelar()">
+
+  Cancelar
+
+</button>
+
+</form>

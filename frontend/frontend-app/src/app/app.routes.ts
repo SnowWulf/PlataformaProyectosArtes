@@ -9,6 +9,9 @@ import { TutorRequests } from './pages/tutor-requests/tutor-requests';
 import { authGuard } from './guards/auth-guard';
 import { roleGuard } from './guards/role-guard';
 
+import { Documents } from './pages/documents/documents';
+import { ProjectDetail } from './pages/project-detail/project-detail';
+
 export const routes: Routes = [
 
   {
@@ -32,6 +35,16 @@ export const routes: Routes = [
       {
         path: 'projects',
         component: Projects
+      },
+
+      {
+        path: 'projects/:id',
+        component: ProjectDetail
+      },
+
+      {
+        path: 'documents',
+        component: Documents
       },
 
       {

@@ -1,0 +1,15 @@
+<h2>Documentos</h2>
+
+@for (document of documents; track document.id) {
+
+  <div>
+    <h3>{{ document.nombre }}</h3>
+
+    <p>{{ document.descripcion }}</p>
+
+    <a [href]="document.file_url" target="_blank">
+      Ver PDF
+    </a>
+  </div>
+
+}

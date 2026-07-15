@@ -10,6 +10,7 @@ import { ProjectService } from '../../services/project-service';
 import { ProjectForm } from '../project-form/project-form';
 import { Auth } from '../../services/auth';
 import { TutorRequestForm } from '../tutor-request-form/tutor-request-form';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
@@ -34,7 +35,8 @@ export class Projects {
   constructor(
     private projectService: ProjectService,
     private cdr: ChangeDetectorRef,
-    public auth: Auth
+    public auth: Auth,
+    private router: Router
   ) {
 
     afterNextRender(() => {
@@ -192,4 +194,13 @@ cerrarSolicitudTutor(): void {
 
 }
 
+
+verProyecto(project: Project): void {
+
+  this.router.navigate([
+    '/dashboard/projects',
+    project.id
+  ]);
+
+  }
 }

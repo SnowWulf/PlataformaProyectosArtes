@@ -1,0 +1,79 @@
+<h3>Nueva revisión</h3>
+
+<form [formGroup]="form">
+
+  <label>
+    Estado
+  </label>
+
+  <br>
+
+  <select
+    formControlName="estado">
+
+    <option>
+      Pendiente revisión
+    </option>
+
+    <option>
+      En revisión
+    </option>
+
+    <option>
+      Requiere correcciones
+    </option>
+
+    <option>
+      Aprobado
+    </option>
+
+    <option>
+      Rechazado
+    </option>
+
+  </select>
+
+  <br><br>
+
+  <label>
+    Comentario
+  </label>
+
+  <br>
+
+  <textarea
+    formControlName="comentario">
+  </textarea>
+
+  <br><br>
+
+  <label>
+    Archivo adjunto
+  </label>
+
+  <br>
+
+  <input
+    type="file"
+    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+    (change)="onFileSelected($event)">
+
+  <br><br>
+
+  <button
+    type="button"
+    (click)="guardar()">
+
+    Guardar revisión
+
+  </button>
+
+  <button
+    type="button"
+    (click)="cancelar()">
+
+    Cancelar
+
+  </button>
+
+</form>
