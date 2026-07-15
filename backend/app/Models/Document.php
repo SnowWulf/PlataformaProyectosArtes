@@ -31,4 +31,11 @@ class Document extends Model
     {
         return asset('storage/' . $this->file_path);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(
+            DocumentReview::class
+        );
+    }
 }

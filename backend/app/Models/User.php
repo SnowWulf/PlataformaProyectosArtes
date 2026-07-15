@@ -72,4 +72,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Document::class);
     }
+
+    public function documentReviews()
+    {
+        return $this->hasMany(
+            DocumentReview::class,
+            'tutor_id'
+        );
+    }
 }

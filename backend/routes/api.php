@@ -9,7 +9,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TutorRequestController;
 use App\Http\Controllers\DocumentController;
-
+use App\Http\Controllers\DocumentReviewController;
 
 Route::post('/login',[AuthController::class,'login']);
 
@@ -101,5 +101,20 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put(
         '/tutor-requests/{id}/reject',
         [TutorRequestController::class, 'reject']
+    );
+
+    Route::get(
+        '/projects/{project}/documents',
+        [ProjectController::class, 'documents']
+    );
+
+    Route::post(
+        '/documents/{document}/reviews',
+        [DocumentReviewController::class, 'store']
+    );
+
+    Route::get(
+        '/documents/{document}/reviews',
+        [DocumentReviewController::class, 'index']
     );
 });

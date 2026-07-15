@@ -51,6 +51,51 @@ class DocumentController extends Controller
     ], 201);
     }
 
+
+    public function update(
+    Request $request,
+    Document $document
+)
+{
+    $validated = $request->validate([
+
+        'nombre' => 'required|string|max:255',
+
+        'descripcion' => 'nullable|string',
+
+        'archivo' => 'nullable|file|mimes:pdf|max:10240',
+
+    ]);
+
+    if ($request->hasFile('archivo')) {
+
+        if ($document->file_path) {
+
+            Storage::disk('public')
+                ->delete($document->file_path);
+
+        }
+
+        $document->file_path =
+            $request->file('archivo')
+                ->store('documents', 'public');
+
+    }
+
+    $document->nombre =
+        $validated['nombre'];
+
+    $document->descripcion =
+        $validated['descripcion'] ?? null;
+
+    $document->save();
+
+    return response()->json([
+        'message' => 'Documento actualizado correctamente',
+        'document' => $document
+    ]);
+    }
+
     public function destroy(Document $document)
     {
     if ($document->file_path) {

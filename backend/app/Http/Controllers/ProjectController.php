@@ -130,4 +130,14 @@ class ProjectController extends Controller
             'message' => 'Proyecto eliminado correctamente.'
         ]);
     }
+
+    public function documents(Project $project)
+    {
+    return response()->json(
+        $project->documents()
+            ->with('user')
+            ->latest()
+            ->get()
+    );
+    }
 }
