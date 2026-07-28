@@ -1,4 +1,4 @@
-import { 
+import {
   Component,
   afterNextRender,
   ChangeDetectorRef
@@ -11,18 +11,21 @@ import { ProjectForm } from '../project-form/project-form';
 import { Auth } from '../../services/auth';
 import { TutorRequestForm } from '../tutor-request-form/tutor-request-form';
 import { Router } from '@angular/router';
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-projects',
   standalone: true,
   imports: [
-  CommonModule,
-  ProjectForm,
-  TutorRequestForm
+    CommonModule,
+    FormsModule,
+    ProjectForm,
+    TutorRequestForm
   ],
   templateUrl: './projects.html',
   styleUrl: './projects.scss'
-  
+
+
+
 })
 export class Projects {
   mostrarFormulario = false;
@@ -30,6 +33,11 @@ export class Projects {
   mostrarSolicitudTutor = false;
   proyectoSolicitud: Project | null = null;
   projects: Project[] = [];
+  mostrarModalEliminar = false;
+
+  proyectoEliminar: Project | null = null;
+
+  nombreConfirmacion = '';
 
 
   constructor(
@@ -77,41 +85,41 @@ export class Projects {
 
   }
 
-  nuevoProyecto(){
+  nuevoProyecto() {
 
     this.proyectoSeleccionado = null;
 
     this.mostrarFormulario = true;
 
-}
+  }
 
-editarProyecto(project: Project){
+  editarProyecto(project: Project) {
 
     this.proyectoSeleccionado = project;
 
     this.mostrarFormulario = true;
 
-}
+  }
 
-cerrarFormulario(){
+  cerrarFormulario() {
 
     this.mostrarFormulario = false;
 
-}
-
-eliminarProyecto(project: Project): void {
-
-  const confirmar = confirm(
-    `¿Está seguro de eliminar el proyecto "${project.titulo}"?`
-  );
-
-  if (!confirmar) {
-
-    return;
-
   }
 
-  this.projectService
+  eliminarProyecto(project: Project): void {
+
+    const confirmar = confirm(
+      `¿Está seguro de eliminar el proyecto "${project.titulo}"?`
+    );
+
+    if (!confirmar) {
+
+      return;
+
+    }
+
+    this.projectService
       .deleteProject(project.id!)
       .subscribe({
 
@@ -136,71 +144,194 @@ eliminarProyecto(project: Project): void {
 
       });
 
-}
+  }
 
-puedeEditarProyecto(project: Project): boolean {
+  puedeEditarProyecto(project: Project): boolean {
 
-  const usuario = this.auth.obtenerUsuario();
+    const usuario = this.auth.obtenerUsuario();
 
-  if (!usuario) {
+    if (!usuario) {
+
+      return false;
+
+    }
+
+    // El coordinador puede editar todos
+    if (this.auth.esCoordinador()) {
+
+      return true;
+
+    }
+
+    // El estudiante solo sus proyectos
+    if (
+      this.auth.esEstudiante() &&
+      project.owner?.id === usuario.id
+    ) {
+
+      return true;
+
+    }
 
     return false;
 
   }
+  solicitarTutor(project: Project): void {
 
-  // El coordinador puede editar todos
-  if (this.auth.esCoordinador()) {
+    this.proyectoSolicitud = project;
 
-    return true;
-
-  }
-
-  // El estudiante solo sus proyectos
-  if (
-    this.auth.esEstudiante() &&
-    project.owner?.id === usuario.id
-  ) {
-
-    return true;
+    this.mostrarSolicitudTutor = true;
 
   }
 
-  // El tutor solo los proyectos donde es tutor
-  if (
-    this.auth.esTutor() &&
-    project.tutor?.id === usuario.id
-  ) {
+  cerrarSolicitudTutor(): void {
 
-    return true;
+    this.mostrarSolicitudTutor = false;
+
+    this.proyectoSolicitud = null;
 
   }
 
-  return false;
 
-}
-solicitarTutor(project: Project): void {
+  verProyecto(project: Project): void {
 
-  this.proyectoSolicitud = project;
-
-  this.mostrarSolicitudTutor = true;
-
-}
-
-cerrarSolicitudTutor(): void {
-
-  this.mostrarSolicitudTutor = false;
-
-  this.proyectoSolicitud = null;
-
-}
-
-
-verProyecto(project: Project): void {
-
-  this.router.navigate([
-    '/dashboard/projects',
-    project.id
-  ]);
+    this.router.navigate([
+      '/dashboard/projects',
+      project.id
+    ]);
 
   }
+
+
+  usuarioActual: any;
+
+  ngOnInit(): void {
+
+    this.usuarioActual =
+      this.auth.obtenerUsuario();
+
+    this.cargarProyectos();
+
+  }
+
+  get misProyectos(): Project[] {
+
+    return this.projects.filter(
+
+      project =>
+
+        project.owner?.id ===
+        this.usuarioActual?.id
+
+    );
+
+  }
+
+  get proyectosExternos(): Project[] {
+
+    return this.projects.filter(
+
+      project =>
+
+        project.owner?.id !==
+        this.usuarioActual?.id
+
+    );
+
+  }
+  irANuevoProyecto(): void {
+
+    this.router.navigate([
+      '/dashboard/projects'
+    ]);
+
+  }
+
+  esPropietarioProyecto(
+    project: Project
+  ): boolean {
+
+    const usuario =
+      this.auth.obtenerUsuario();
+
+    return (
+      !!usuario &&
+      project.owner?.id === usuario.id
+    );
+
+  }
+
+  abrirModalEliminar(
+    project: Project
+  ): void {
+
+    this.proyectoEliminar = project;
+
+    this.nombreConfirmacion = '';
+
+    this.mostrarModalEliminar = true;
+
+  }
+
+  cerrarModalEliminar(): void {
+
+    this.mostrarModalEliminar = false;
+
+    this.proyectoEliminar = null;
+
+    this.nombreConfirmacion = '';
+
+  }
+
+  confirmarEliminarProyecto(): void {
+
+    console.log(
+    'Usuario:',
+    this.auth.obtenerUsuario()
+  );
+
+  console.log(
+    'Proyecto:',
+    this.proyectoEliminar
+  );
+
+  if (!this.proyectoEliminar) {
+
+    return;
+
+  }
+
+  this.projectService
+    .deleteProject(
+      this.proyectoEliminar.id!
+    )
+    .subscribe({
+
+      next: () => {
+
+        console.log(
+          'Proyecto eliminado correctamente'
+        );
+
+        this.cerrarModalEliminar();
+
+        this.cargarProyectos();
+
+      },
+
+      error: (err) => {
+
+        console.error(
+          'Error al eliminar proyecto',
+          err
+        );
+
+      }
+
+    });
+
 }
+  
+}
+
+

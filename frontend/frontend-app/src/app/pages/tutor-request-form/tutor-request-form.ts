@@ -10,7 +10,7 @@ import {
 import {
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule
+  ReactiveFormsModule,
 } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -42,6 +42,16 @@ export class TutorRequestForm implements OnInit {
 
   form!: FormGroup;
 
+  @Output()
+  cancelado =
+    new EventEmitter<void>();
+
+  @Output()
+  enviado =
+    new EventEmitter<void>();
+
+
+
   constructor(
     private fb: FormBuilder,
     private tutorRequestService: TutorRequestService,
@@ -61,7 +71,7 @@ export class TutorRequestForm implements OnInit {
   ngOnInit(): void {
 
     this.cargarTutores();
-    
+
   }
 
   cargarTutores(): void {
@@ -98,13 +108,13 @@ export class TutorRequestForm implements OnInit {
 
   enviarSolicitud(): void {
 
-  if (this.form.invalid) {
+    if (this.form.invalid) {
 
-    return;
+      return;
 
-  }
+    }
 
-  this.tutorRequestService
+    this.tutorRequestService
       .createTutorRequest({
 
         project_id: this.proyecto.id,
@@ -117,6 +127,12 @@ export class TutorRequestForm implements OnInit {
       .subscribe({
 
         next: (respuesta) => {
+
+          console.log(
+            'Solicitud enviada'
+          );
+
+          this.enviado.emit();
 
           console.log(
             'Solicitud enviada correctamente',
@@ -136,12 +152,15 @@ export class TutorRequestForm implements OnInit {
             err
           );
 
-          alert('No fue posible enviar la solicitud.');
+          alert(
+            err.error?.message ??
+            'No fue posible enviar la solicitud.'
+          );
 
         }
 
       });
 
-}
+  }
 
 }

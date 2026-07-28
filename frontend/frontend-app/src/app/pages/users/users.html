@@ -2,44 +2,168 @@
 
     <div class="users-header">
 
-        <h2>Gestión de Usuarios</h2>
+        <div>
 
-        <button
-            (click)="nuevoUsuario()">
+            <h1>
 
-            + Nuevo Usuario
+                👥 Gestión de Usuarios
+
+            </h1>
+
+            <p>
+
+                Administra estudiantes, tutores y coordinadores.
+
+            </p>
+
+        </div>
+
+        <button class="btn-primary" (click)="nuevoUsuario()">
+
+            ➕ Nuevo Usuario
 
         </button>
 
     </div>
 
-    <table>
+    <div class="stats-grid">
 
-        <thead>
+        <div class="stat-card" [class.activa]="
+    filtroRol === 'todos'
+  " (click)="
+    filtroRol = 'todos'
+  ">
 
-            <tr>
+            <h3>
 
-                <th>Nombre</th>
+                {{ users.length }}
 
-                <th>Correo</th>
+            </h3>
 
-                <th>Rol</th>
+            <p>
 
-                <th>Acciones</th>
+                Usuarios Totales
 
-            </tr>
+            </p>
 
-        </thead>
+        </div>
 
-        <tbody>
+        <div class="stat-card" [class.activa]="
+    filtroRol === 'Estudiante'
+  " (click)="
+    filtroRol = 'Estudiante'
+  ">
 
-            @for (usuario of users; track usuario.id) {
+            <h3>
+
+                {{
+                users.filter(
+                u => u.role?.nombre === 'Estudiante'
+                ).length
+                }}
+
+            </h3>
+
+            <p>
+
+                Estudiantes
+
+            </p>
+
+        </div>
+
+        <div class="stat-card" [class.activa]="
+    filtroRol === 'Tutor'
+  " (click)="
+    filtroRol = 'Tutor'
+  ">
+
+            <h3>
+
+                {{
+                users.filter(
+                u => u.role?.nombre === 'Tutor'
+                ).length
+                }}
+
+            </h3>
+
+            <p>
+
+                Tutores
+
+            </p>
+
+        </div>
+
+        <div class="stat-card" [class.activa]="
+    filtroRol === 'Coordinador'
+  " (click)="
+    filtroRol = 'Coordinador'
+  ">
+
+            <h3>
+
+                {{
+                users.filter(
+                u => u.role?.nombre === 'Coordinador'
+                ).length
+                }}
+
+            </h3>
+
+            <p>
+
+                Coordinadores
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="search-box">
+
+        <input type="text" placeholder="🔍 Buscar usuario por nombre o correo..." [(ngModel)]="busqueda">
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Nombre</th>
+
+                    <th>Correo</th>
+
+                    <th>Rol</th>
+
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @for (
+  usuario of usuariosFiltrados;
+  track usuario.id
+) {
 
                 <tr>
 
                     <td>
 
-                        {{ usuario.name }}
+                        <strong>
+
+                            {{ usuario.name }}
+
+                        </strong>
 
                     </td>
 
@@ -51,80 +175,79 @@
 
                     <td>
 
-                        {{ usuario.role?.nombre }}
+                        <span class="role-badge" [class.role-estudiante]="usuario.role?.nombre === 'Estudiante'"
+                            [class.role-tutor]="usuario.role?.nombre === 'Tutor'"
+                            [class.role-coordinador]="usuario.role?.nombre === 'Coordinador'">
+
+                            {{ usuario.role?.nombre }}
+
+                        </span>
 
                     </td>
 
                     <td>
 
-                        <button
-                        (click)="editarUsuario(usuario)">
+                        <div class="action-buttons">
 
-                        ✏️ Editar
+                            <button class="btn-edit" (click)="editarUsuario(usuario)">
 
-                        </button>
+                                ✏️ Editar
 
-                        <button
-                            (click)="abrirEliminar(usuario)"
-                            style="margin-left:10px;">
+                            </button>
 
-                            🗑️ Eliminar
+                            <button class="btn-delete" (click)="abrirEliminar(usuario)">
 
-                        </button>
+                                🗑️ Eliminar
+
+                            </button>
+
+                        </div>
+
                     </td>
 
                 </tr>
 
-            }
+                }
 
-        </tbody>
+            </tbody>
 
-    </table>
+        </table>
+
+    </div>
 
 </div>
 
 
 @if (mostrarFormulario) {
 
-    <div class="modal-backdrop">
+<div class="modal-backdrop">
 
-        <div class="modal">
+    <div class="modal">
 
-            <app-user-form
+        <app-user-form [usuario]="usuarioSeleccionado" (cerrar)="cerrarFormulario()" (guardado)="usuarioGuardado()">
 
-                [usuario]="usuarioSeleccionado"
-
-                (cerrar)="cerrarFormulario()"
-
-                (guardado)="usuarioGuardado()">
-
-            </app-user-form>
-
-        </div>
+        </app-user-form>
 
     </div>
+
+</div>
 
 }
 
 
 @if (mostrarDialogoEliminar && usuarioAEliminar) {
 
-    <div class="modal-backdrop">
+<div class="modal-backdrop">
 
-        <div class="modal">
+    <div class="modal">
 
-            <app-delete-user-dialog
+        <app-delete-user-dialog [usuario]="usuarioAEliminar" (cancelar)="cerrarEliminar()"
+            (confirmar)="confirmarEliminar($event)">
 
-                [usuario]="usuarioAEliminar"
-
-                (cancelar)="cerrarEliminar()"
-
-                (confirmar)="confirmarEliminar($event)">
-
-            </app-delete-user-dialog>
-
-        </div>
+        </app-delete-user-dialog>
 
     </div>
+
+</div>
 
 }

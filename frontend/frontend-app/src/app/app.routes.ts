@@ -12,6 +12,10 @@ import { roleGuard } from './guards/role-guard';
 import { Documents } from './pages/documents/documents';
 import { ProjectDetail } from './pages/project-detail/project-detail';
 
+import { StudentHome } from './pages/student-home/student-home';
+import { TutorHome } from './pages/tutor-home/tutor-home';
+import { CoordinatorHome } from './pages/coordinator-home/coordinator-home';
+
 export const routes: Routes = [
 
   {
@@ -30,6 +34,21 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'projects',
         pathMatch: 'full'
+      },
+
+      {
+        path: 'student-home',
+        component: StudentHome
+      },
+      
+      {
+        path: 'tutor-home',
+        component: TutorHome
+      },
+
+      {
+        path: 'coordinator-home',
+        component: CoordinatorHome
       },
 
       {
@@ -79,5 +98,4 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'dashboard'
   }
-
 ];

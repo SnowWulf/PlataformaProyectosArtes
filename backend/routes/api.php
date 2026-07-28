@@ -117,4 +117,5 @@ Route::middleware('auth:sanctum')->group(function(){
         '/documents/{document}/reviews',
         [DocumentReviewController::class, 'index']
     );
+    
 });

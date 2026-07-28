@@ -1,48 +1,124 @@
-<h1>Solicitudes de Tutor Pendientes</h1>
+<h1>
 
-<div *ngIf="solicitudes.length > 0; else sinSolicitudes">
+  👩‍🏫 Solicitudes de tutor
+
+</h1>
+
+<p class="resumen-solicitudes">
+
+  Tienes
+
+  <strong>
+
+    {{ solicitudes.length }}
+
+  </strong>
+
+  solicitud(es) pendiente(s).
+
+</p>
+
+<div
+  *ngIf="solicitudes.length > 0;
+         else sinSolicitudes">
 
   <div
     *ngFor="let solicitud of solicitudes"
     class="solicitud-card">
 
-    <h3>
+    <div class="solicitud-header">
 
-      {{ solicitud.project.titulo }}
+      <h3>
 
-    </h3>
+        📚 {{ solicitud.project.titulo }}
 
-    <p>
+      </h3>
 
-      <strong>Estudiante:</strong>
+      <span class="estado-pendiente">
 
-      {{ solicitud.student.name }}
+        Pendiente
 
-    </p>
+      </span>
 
-    <p>
+    </div>
 
-      <strong>Mensaje:</strong>
+    <div class="solicitud-body">
 
-      {{ solicitud.mensaje }}
+      <p>
 
-    </p>
+        <strong>
 
-    <button
-      (click)="aceptarSolicitud(solicitud.id)">
+          👤 Estudiante:
 
-      Aceptar
+        </strong>
 
-    </button>
+        {{ solicitud.student.name }}
 
-    <button
-      (click)="rechazarSolicitud(solicitud.id)">
+      </p>
 
-      Rechazar
+      <p
+        *ngIf="solicitud.student.email">
 
-    </button>
+        <strong>
 
-    <hr>
+          ✉️ Correo:
+
+        </strong>
+
+        {{ solicitud.student.email }}
+
+      </p>
+
+      <div class="mensaje-box">
+
+        <strong>
+
+          💬 Mensaje:
+
+        </strong>
+
+        <p>
+
+          {{ solicitud.mensaje || 'Sin mensaje adicional.' }}
+
+        </p>
+
+      </div>
+
+      <p
+        *ngIf="solicitud.created_at">
+
+        <strong>
+
+          🕒 Fecha:
+
+        </strong>
+
+        {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
+
+      </p>
+
+    </div>
+
+    <div class="acciones">
+
+      <button
+        class="btn-aceptar"
+        (click)="aceptarSolicitud(solicitud.id)">
+
+        ✔️ Aceptar
+
+      </button>
+
+      <button
+        class="btn-rechazar"
+        (click)="rechazarSolicitud(solicitud.id)">
+
+        ✕ Rechazar
+
+      </button>
+
+    </div>
 
   </div>
 
@@ -50,10 +126,20 @@
 
 <ng-template #sinSolicitudes>
 
-  <p>
+  <div class="empty-state">
 
-    No tienes solicitudes pendientes.
+    <h2>
 
-  </p>
+      🎉 Todo al día
+
+    </h2>
+
+    <p>
+
+      No tienes solicitudes pendientes.
+
+    </p>
+
+  </div>
 
 </ng-template>

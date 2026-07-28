@@ -1,263 +1,527 @@
 @if (project) {
 
-  <h1>{{ project.titulo }}</h1>
+<div class="project-header">
 
-  <p>{{ project.descripcion }}</p>
+  <div>
 
-  <hr>
+    <h1>
 
-  <nav>
+      {{ project.titulo }}
 
-    <button>
-      Información
-    </button>
+    </h1>
 
-    <button>
-      Documentos
-    </button>
+    <p class="project-subtitle">
 
-    <button>
-      Tutorías
-    </button>
+      {{ project.tipo_proyecto }}
 
-    <button>
-      Revisiones
-    </button>
+    </p>
 
-  </nav>
+  </div>
 
-  <hr>
+  <div class="project-status">
 
-  <h2>Información</h2>
+    {{ project.estado }}
 
-  <p>
-    Tipo: {{ project.tipo_proyecto }}
-  </p>
+  </div>
 
-  <p>
-    Estado: {{ project.estado }}
-  </p>
+</div>
 
-  <p>
-    Tutor:
-    {{ project.tutor?.name ?? 'Sin tutor' }}
-  </p>
+@if (auth.esTutor()) {
 
-  <hr>
+<div class="project-state-actions">
 
-  <h2>Documentos</h2>
+  <button class="btn-estado" (click)="abrirModalEstado(project)">
 
-  @if (puedeSubirDocumento()) {
+    🔄 Cambiar estado
 
-    <button
-      (click)="abrirFormularioDocumento()">
-      Subir documento
-    </button>
+  </button>
+
+</div>
+
+}
+
+<div class="info-card">
+
+  <h2>
+
+    Información general
+
+  </h2>
+
+  <div class="info-grid">
+
+    <div>
+
+      <strong>Autor</strong>
+
+      <p>
+
+        {{ project.owner?.name }}
+
+      </p>
+
+    </div>
+
+    <div>
+
+      <strong>Tutor</strong>
+
+      <p>
+
+        {{ project.tutor?.name ?? 'Sin tutor' }}
+
+      </p>
+
+    </div>
+
+    <div>
+
+      <strong>Tipo</strong>
+
+      <p>
+
+        {{ project.tipo_proyecto }}
+
+      </p>
+
+    </div>
+
+    <div>
+
+      <strong>Estado</strong>
+
+      <p>
+
+        {{ project.estado }}
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="stats-grid">
+
+  <div class="stat-card">
+
+    <div class="stat-number">
+
+      {{ documents.length }}
+
+    </div>
+
+    <div class="stat-label">
+
+      Avances
+
+    </div>
+
+  </div>
+
+  <div class="stat-card">
+
+    <div class="stat-number">
+
+      {{ project.estado }}
+
+    </div>
+
+    <div class="stat-label">
+
+      Estado
+
+    </div>
+
+  </div>
+
+  <div class="stat-card">
+
+    <div class="stat-number">
+
+      {{ project.tutor?.name ?? 'Sin tutor' }}
+
+    </div>
+
+    <div class="stat-label">
+
+      Tutor asignado
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="section-header">
+
+  <h2>
+
+    📄 Avances del proyecto
+
+  </h2>
+
+  @if (esPropietarioProyecto()) {
+
+  <button class="primary-btn" (click)="abrirFormularioDocumento()">
+
+    + Nuevo avance
+
+  </button>
 
   }
 
-    @if (mostrarFormularioDocumento) {
+</div>
 
-    <app-document-form
-        [projectId]="project.id"
-        [document]="documentoSeleccionado"
-        (guardado)="documentoGuardado()"
-        (cancelado)="cerrarFormularioDocumento()">
-    </app-document-form>
-    
-    
-    }
 
-  <hr>
 
-  @if (documents.length > 0) {
 
-    @for (document of documents; track document.id) {
+@if (mostrarFormularioDocumento) {
 
-      <div>
+<app-document-form [projectId]="project.id" [document]="documentoSeleccionado" (guardado)="documentoGuardado()"
+  (cancelado)="cerrarFormularioDocumento()">
+</app-document-form>
 
-        <h3>{{ document.nombre }}</h3>
 
-        <p>
+}
 
-  <strong>
-    Estado actual:
-  </strong>
+<hr>
 
-  <span
-    [class]="
+@if (documents.length > 0) {
+
+@for (document of documents; track document.id) {
+
+<div class="document-card">
+
+  <div class="document-header">
+
+    <h3>
+
+      {{ document.nombre }}
+
+    </h3>
+
+    <span [class]="
       obtenerClaseEstado(
         document.estado
       )
     ">
 
-    {{ document.estado }}
+      {{ document.estado }}
 
-  </span>
+    </span>
 
-</p>
+  </div>
 
-        <p>
-          {{ document.descripcion }}
-        </p>
 
-        <p>
-            Fecha de subida:
-            {{ document.created_at | date:'dd/MM/yyyy HH:mm' }}
-        </p>
+  <p class="document-description">
 
-        <p>
-            Última edición:
-            {{ document.updated_at | date:'dd/MM/yyyy HH:mm' }}
-       </p>
+    {{ document.descripcion }}
 
-       
-       <a
-        [href]="document.file_url"
-        target="_blank">
+  </p>
 
-    Ver PDF
-    
+  <div class="document-meta">
+
+    <span>
+
+      📅
+      {{ document.created_at | date:'dd/MM/yyyy' }}
+
+    </span>
+
+    <span>
+
+      ✏️
+      {{ document.updated_at | date:'dd/MM/yyyy' }}
+
+    </span>
+
+  </div>
+
+
+  <div class="document-actions">
+
+    <a [href]="document.file_url" target="_blank">
+
+      📄 Ver PDF
 
     </a>
 
-    <br><br>
+    @if (esPropietarioProyecto()) {
 
-    <button
-        (click)="abrirFormularioDocumento(document)">
-        Editar
+    <button (click)="abrirFormularioDocumento(document)">
+
+      ✏️ Editar
+
     </button>
 
-    <button
-        (click)="eliminarDocumento(document)">
-        Eliminar
+    <button (click)="eliminarDocumento(document)">
+
+      🗑 Eliminar
+
     </button>
 
-    @if (auth.esTutor()) {
-    <button
-        (click)="abrirFormularioRevision(document)">
-        Revisar
-    </button>
     }
 
-    @if (
+
+    @if (auth.esTutor()) {
+
+    <button (click)="abrirFormularioRevision(document)">
+
+      📝 Revisar
+
+    </button>
+
+
+    }
+
+  </div>
+
+  <br><br>
+
+
+
+
+  @if (
   document.reviews &&
   document.reviews.length > 0
-) {
+  ) {
 
   <hr>
 
-  <h4>
-    Historial de revisiones
-  </h4>
+  <button class="history-toggle" (click)="toggleRevisiones(document.id)">
 
+    {{
+    revisionesAbiertas[document.id]
+    ? '▼ Ocultar historial'
+    : '▶ Ver historial (' +
+    document.reviews.length +
+    ')'
+    }}
+
+  </button>
+  @if (
+  revisionesAbiertas[
+  document.id
+  ]
+  ) {
   @for (
-    review of document.reviews;
-    track review.id
+  review of document.reviews;
+  track review.id
   ) {
 
-    <div>
+  <div class="review-card">
 
-        
-      <p>
-
-        <strong>
-          Estado:
-        </strong>
-
-        {{ review.estado }}
-
-      </p>
-
-      <p>
-
-        <strong>
-          Tutor:
-        </strong>
-
-        {{ review.tutor?.name }}
-
-      </p>
-
-      <p>
-
-        <strong>
-          Comentario:
-        </strong>
-
-            {{ review.comentario }}
-
-        </p>
-
-        @if (review.attachment_url) {
-
-        <p>
-
-        <strong>
-        Archivo adjunto:
-        </strong>
-
-            <a
-                [href]="review.attachment_url"
-                target="_blank">
-
-                Descargar archivo
-
-            </a>
-
-        </p>
-
-        }
-
-        <p>
-
-            <strong>
-                Fecha:
-            </strong>
-
-            {{ review.created_at | date:'dd/MM/yyyy HH:mm' }}
-
-        </p>
-
-        
-        </div>
-
-        <hr>
-
-    }
-
-    }
-
-    @if (
-    mostrarFormularioRevision &&
-    documentoRevision?.id === document.id
-    ) {
-
-    <app-document-review-form
-
-        [documentId]="document.id"
-
-        (guardado)="revisionGuardada()"
-
-        (cancelado)="cerrarFormularioRevision()">
-
-    </app-document-review-form>
-
-    }
-
-
-      </div>
-
-      <hr>
-
-    }
-
-  } @else {
 
     <p>
-      Este proyecto aún no tiene documentos.
+
+      <strong>
+        Estado:
+      </strong>
+
+      {{ review.estado }}
+
     </p>
 
+    <p>
+
+      <strong>
+        Tutor:
+      </strong>
+
+      {{ review.tutor?.name }}
+
+    </p>
+
+    <p>
+
+      <strong>
+        Comentario:
+      </strong>
+
+      {{ review.comentario }}
+
+    </p>
+
+    @if (review.attachment_url) {
+
+    <p>
+
+      <strong>
+        Archivo adjunto:
+      </strong>
+
+      <a [href]="review.attachment_url" target="_blank">
+
+        Descargar archivo
+
+      </a>
+
+    </p>
+
+    }
+
+    <p>
+
+      <strong>
+        Fecha:
+      </strong>
+
+      {{ review.created_at | date:'dd/MM/yyyy HH:mm' }}
+
+    </p>
+
+
+  </div>
+
+  <hr>
+
+  }
+  }
   }
 
+
+
+</div>
+
+<hr>
+
+}
+
+
+
+} @else {
+
+<p>
+  Este proyecto aún no tiene documentos.
+</p>
+
+}
+
+@if (mostrarFormularioRevision && documentoRevision) {
+
+
+<div class="modal-backdrop">
+
+
+  <div class="modal-content">
+    <div class="modal-header">
+
+      <h2>
+
+        Nueva revisión
+
+      </h2>
+
+      <button class="close-btn" (click)="cerrarFormularioRevision()">
+
+        ✕
+
+      </button>
+
+    </div>
+    <div class="document-info">
+
+      <p>
+
+        <strong>Documento:</strong>
+
+        {{ documentoRevision?.nombre }}
+
+      </p>
+
+      <p>
+
+        <strong>Proyecto:</strong>
+
+        {{ project.titulo }}
+
+      </p>
+
+      <app-document-review-form [documentId]="documentoRevision.id" (guardado)="revisionGuardada()"
+        (cancelado)="cerrarFormularioRevision()">
+
+      </app-document-review-form>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+}
+
+@if (mostrarModalEstado) {
+
+<div class="modal-backdrop">
+
+  <div class="modal">
+
+    <h2>
+
+      Cambiar estado del proyecto
+
+    </h2>
+
+    <p>
+
+      Estado actual:
+      <strong>
+        {{ proyectoEstado?.estado }}
+      </strong>
+
+    </p>
+
+    <select [(ngModel)]="estadoSeleccionado">
+
+      <option value="Pendiente">
+
+        Pendiente
+
+      </option>
+
+      <option value="En progreso">
+
+        En progreso
+
+      </option>
+
+      <option value="Aprobado">
+
+        Aprobado
+
+      </option>
+
+      <option value="Suspendido">
+
+        Suspendido
+
+      </option>
+
+    </select>
+
+    <div class="modal-actions">
+
+      <button (click)="cerrarModalEstado()">
+
+        Cancelar
+
+      </button>
+
+      <button (click)="actualizarEstadoProyecto()">
+
+        Guardar
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}
 }

@@ -1,0 +1,103 @@
+.project-form-container {
+
+  padding-top: 10px;
+
+}
+
+.form-subtitle {
+
+  color: #6b7280;
+
+  margin-bottom: 24px;
+
+}
+
+.form-group {
+
+  display: flex;
+
+  flex-direction: column;
+
+  margin-bottom: 18px;
+
+}
+
+.form-group label {
+
+  font-weight: 600;
+
+  margin-bottom: 8px;
+
+  color: #374151;
+
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 10px;
+
+  padding: 12px;
+
+  font-size: 14px;
+
+  transition: .2s;
+
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+
+  outline: none;
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(37, 99, 235, 0.15);
+
+}
+
+.form-group textarea {
+
+  resize: vertical;
+
+}
+
+.form-actions {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  margin-top: 25px;
+
+}
+
+.btn-guardar {
+
+  border: none;
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 12px 22px;
+
+  border-radius: 10px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+}
+
+.btn-guardar:hover {
+
+  opacity: .9;
+
+}

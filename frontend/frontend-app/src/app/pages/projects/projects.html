@@ -1,109 +1,400 @@
-<h1>Proyectos</h1>
+<div class="projects-header">
 
-<div *ngIf="projects && projects.length > 0; else sinDatos">
+  <div>
 
-  <button (click)="nuevoProyecto()">
+    <h1>
 
-    Nuevo proyecto
+      📚 Proyectos
 
-</button>
+    </h1>
 
-  <table border="1">
+    <p>
 
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre del Proyecto</th>
-        <th>Tipo de Proyecto</th>
-        <th>Descripción</th>
-        <th>Estado</th>
-        <th>Propietario</th>
-        <th>Tutor</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
+      Gestiona tus proyectos y consulta los proyectos disponibles.
 
+    </p>
 
-    <tbody>
+  </div>
 
-      <tr *ngFor="let project of projects">
+  <button class="btn-nuevo" (click)="nuevoProyecto()">
 
-        <td>
-          {{ project.id }}
-        </td>
+    ➕ Nuevo proyecto
 
-        <td>
-          {{ project.titulo }}
-        </td>
+  </button>
 
-        <td>
-          {{ project.tipo_proyecto}}
-        </td>
+</div>
+  @if (mostrarFormulario) {
 
-        <td>
-          {{ project.descripcion}}
-        </td>
+<div class="modal-backdrop">
 
-        <td>
-          {{ project.estado }}
-        </td>
+  <div class="modal-content project-modal">
 
-        <td>
-          {{ project.owner?.name }}
-        </td>
+    <div class="modal-header">
 
-        <td>
-          {{ project.tutor?.name ?? 'Sin tutor' }}
-        </td>
+      <h2>
 
-        <td>
-          <button
-            *ngIf="puedeEditarProyecto(project)"
-            (click)="editarProyecto(project)">
-            Editar
-          </button>
+        {{ proyectoSeleccionado ? '✏️ Editar proyecto' : '📚 Nuevo proyecto' }}
 
-          <button
-            *ngIf="!project.tutor"
-            (click)="solicitarTutor(project)">
-            Solicitar tutor
-          </button>
+      </h2>
 
-          <button
-              *ngIf="auth.esCoordinador()"
-              (click)="eliminarProyecto(project)">
-            Eliminar
-          </button>
+      <button
+        class="close-btn"
+        (click)="cerrarFormulario()">
 
-          <button
-            (click)="verProyecto(project)">
-            Ver
-          </button>
-        </td>
-      </tr>
+        ✕
 
-    </tbody>
+      </button>
 
-  </table>
+    </div>
 
-  <app-project-form
-    *ngIf="mostrarFormulario"
-    [proyecto]="proyectoSeleccionado"
-    (guardado)="cerrarFormulario(); cargarProyectos()">
-  </app-project-form>
+    <app-project-form
 
-  <app-tutor-request-form
-    *ngIf="mostrarSolicitudTutor"
-    [proyecto]="proyectoSolicitud!">
-  </app-tutor-request-form>
+      [proyecto]="proyectoSeleccionado"
+
+      (guardado)="cerrarFormulario(); cargarProyectos()">
+
+    </app-project-form>
+
+  </div>
 
 </div>
 
+}
+
+<div *ngIf="projects && projects.length > 0; else sinDatos">
+
+
+
+  <h2>
+
+    📁 Mis proyectos
+
+  </h2>
+
+  <div class="projects-grid">
+
+    <div class="project-card" *ngFor="let project of misProyectos">
+
+      <h3>
+
+        {{ project.titulo }}
+
+      </h3>
+
+      <p>
+
+        {{ project.descripcion }}
+
+      </p>
+
+      <div class="project-meta">
+
+        <span>
+
+          📂 {{ project.tipo_proyecto }}
+
+        </span>
+
+        <span>
+
+          👤 {{ project.owner?.name }}
+
+        </span>
+
+      </div>
+
+      <div class="project-meta">
+
+        <span>
+
+          👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}
+
+        </span>
+
+      </div>
+
+      <div class="estado-badge" [ngClass]="{
+
+        'estado-activo':
+          project.estado === 'En desarrollo',
+
+        'estado-finalizado':
+          project.estado === 'Finalizado',
+
+        'estado-suspendido':
+          project.estado === 'Suspendido'
+
+      }">
+
+        {{ project.estado }}
+
+      </div>
+
+      <div class="project-actions">
+
+        <button (click)="verProyecto(project)">
+
+          Ver
+
+        </button>
+
+        <button *ngIf="puedeEditarProyecto(project)" (click)="editarProyecto(project)">
+
+          Editar
+
+        </button>
+
+        <button *ngIf="!project.tutor" (click)="solicitarTutor(project)">
+
+          Solicitar tutor
+
+        </button>
+
+<button
+  *ngIf="esPropietarioProyecto(project) || auth.esCoordinador()"
+  (click)="abrirModalEliminar(project)">
+
+  Eliminar
+
+</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <hr class="section-divider">
+
+  <h2>
+
+    📚 Otros proyectos
+
+  </h2>
+
+  <div class="projects-grid">
+
+    <div class="project-card" *ngFor="let project of proyectosExternos">
+
+      <h3>
+
+        {{ project.titulo }}
+
+      </h3>
+
+      <p>
+
+        {{ project.descripcion }}
+
+      </p>
+
+      <div class="project-meta">
+
+        <span>
+
+          📂 {{ project.tipo_proyecto }}
+
+        </span>
+
+        <span>
+
+          👤 {{ project.owner?.name }}
+
+        </span>
+
+      </div>
+
+      <div class="project-meta">
+
+        <span>
+
+          👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}
+
+        </span>
+
+      </div>
+
+      <div class="estado-badge" [ngClass]="{
+
+        'estado-activo':
+          project.estado === 'En desarrollo',
+
+        'estado-finalizado':
+          project.estado === 'Finalizado',
+
+        'estado-suspendido':
+          project.estado === 'Suspendido'
+
+      }">
+
+        {{ project.estado }}
+
+      </div>
+
+      <div class="project-actions">
+
+        <button (click)="verProyecto(project)">
+
+          Ver
+
+        </button>
+
+        <button *ngIf="puedeEditarProyecto(project)" (click)="editarProyecto(project)">
+
+          Editar
+
+        </button>
+
+        <button *ngIf="!project.tutor" (click)="solicitarTutor(project)">
+
+          Solicitar tutor
+
+        </button>
+
+        <button *ngIf="auth.esCoordinador()" (click)="eliminarProyecto(project)">
+
+          Eliminar
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <app-project-form *ngIf="mostrarFormulario" [proyecto]="proyectoSeleccionado"
+    (guardado)="cerrarFormulario(); cargarProyectos()">
+  </app-project-form>
+
+  @if (mostrarSolicitudTutor && proyectoSolicitud) {
+
+<div class="modal-backdrop">
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h2>
+
+        👩‍🏫 Solicitar tutor
+
+      </h2>
+
+      <button
+        class="close-btn"
+        (click)="cerrarSolicitudTutor()">
+
+        ✕
+
+      </button>
+
+    </div>
+
+    <div class="document-info">
+
+      <p>
+
+        <strong>Proyecto:</strong>
+
+        {{ proyectoSolicitud.titulo }}
+
+      </p>
+
+    </div>
+
+<app-tutor-request-form
+  [proyecto]="proyectoSolicitud"
+  (enviado)="cerrarSolicitudTutor()">
+</app-tutor-request-form>
+
+  </div>
+
+</div>
+
+}
+
+</div>
+@if (mostrarModalEliminar && proyectoEliminar) {
+
+<div class="modal-backdrop">
+
+  <div class="modal-content delete-modal">
+
+    <div class="modal-header">
+
+      <h2>
+
+        🗑️ Eliminar proyecto
+
+      </h2>
+
+      <button
+        class="close-btn"
+        (click)="cerrarModalEliminar()">
+
+        ✕
+
+      </button>
+
+    </div>
+
+    <p>
+
+      Estás a punto de eliminar el proyecto:
+
+    </p>
+
+    <h3>
+
+      {{ proyectoEliminar.titulo }}
+
+    </h3>
+
+    <p>
+
+      Escribe exactamente el nombre del proyecto para confirmar.
+
+    </p>
+
+    <input
+      type="text"
+      [(ngModel)]="nombreConfirmacion"
+      placeholder="Nombre del proyecto">
+
+    <div class="modal-actions">
+
+      <button
+        (click)="cerrarModalEliminar()">
+
+        Cancelar
+
+      </button>
+
+      <button
+        class="btn-danger"
+        [disabled]="
+          nombreConfirmacion !==
+          proyectoEliminar.titulo
+        "
+        (click)="confirmarEliminarProyecto()">
+
+        Eliminar definitivamente
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}
 
 <ng-template #sinDatos>
 
   <p>
-    Cargando proyectos desde Laravel...
+    Todavía no tienes proyectos, crea uno.
   </p>
 
 </ng-template>

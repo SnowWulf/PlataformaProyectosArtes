@@ -98,7 +98,8 @@ class ProjectController extends Controller
 
                 'titulo' => $request->titulo,
                 'descripcion' => $request->descripcion,
-                'tipo_proyecto' => $request->tipo_proyecto
+                'tipo_proyecto' => $request->tipo_proyecto,
+                'estado' => $request->estado
 
             ]);
 
@@ -111,25 +112,33 @@ class ProjectController extends Controller
     }
 
     public function destroy(Request $request, $id)
-    {
-        $project = Project::findOrFail($id);
+{
+    $project = Project::findOrFail($id);
 
-        $user = $request->user();
+    $user = $request->user();
 
-        if ($user->role->nombre !== 'Coordinador') {
+    if (
 
-            return response()->json([
-                'message' => 'No autorizado.'
-            ], 403);
+        $user->role->nombre !== 'Coordinador'
 
-        }
+        &&
 
-        $project->delete();
+        $project->owner_id !== $user->id
+
+    ) {
 
         return response()->json([
-            'message' => 'Proyecto eliminado correctamente.'
-        ]);
+            'message' => 'No autorizado.'
+        ], 403);
+
     }
+
+    $project->delete();
+
+    return response()->json([
+        'message' => 'Proyecto eliminado correctamente.'
+    ]);
+}
 
     public function documents(Project $project)
     {

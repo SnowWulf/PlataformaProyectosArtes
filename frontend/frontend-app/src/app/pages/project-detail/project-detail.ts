@@ -15,21 +15,25 @@ import { Auth } from '../../services/auth';
 import { DocumentForm } from '../../components/document-form/document-form';
 import { Document } from '../../models/document';
 import { DocumentReviewForm }
-from '../../components/document-review-form/document-review-form';
+  from '../../components/document-review-form/document-review-form';
 import { DocumentReviewService }
-from '../../services/document-review';
+  from '../../services/document-review';
 
+import { NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
   imports: [
+    NgClass,
     DocumentForm,
     DocumentReviewForm,
-    DatePipe
+    DatePipe,
+    FormsModule
   ],
   templateUrl: './project-detail.html',
-  styleUrl: './project-detail.scss',
+  styleUrl: './project-detail.scss'
 })
 
 export class ProjectDetail {
@@ -47,13 +51,23 @@ export class ProjectDetail {
 
   documentoRevision: any = null;
 
+  tabActiva = 'informacion';
+
+  mostrarModalEstado = false;
+
+  estadoSeleccionado = '';
+
+  proyectoEstado: Project | null = null;
+
+
   constructor(
     private projectService: ProjectService,
     private documentService: DocumentService,
     private documentReviewService: DocumentReviewService,
     private cdr: ChangeDetectorRef,
-    public auth: Auth
+    public auth: Auth,
   ) {
+
 
     this.projectId = Number(
       this.route.snapshot.paramMap.get('id')
@@ -99,42 +113,42 @@ export class ProjectDetail {
 
   cargarDocumentos(): void {
 
-  if (!this.projectId) {
-    return;
-  }
+    if (!this.projectId) {
+      return;
+    }
 
-  this.documentService
-    .getByProject(this.projectId)
-    .subscribe({
+    this.documentService
+      .getByProject(this.projectId)
+      .subscribe({
 
-      next: (documents: any) => {
+        next: (documents: any) => {
 
-        console.log('Documentos:', documents);
+          console.log('Documentos:', documents);
 
-        this.documents = documents;
+          this.documents = documents;
 
-        this.documents.forEach(
-        (document: any) => {
+          this.documents.forEach(
+            (document: any) => {
 
-          this.cargarRevisiones(
-          document
-        );
+              this.cargarRevisiones(
+                document
+              );
+
+            }
+          );
+
+          this.cdr.detectChanges();
+
+
+        },
+
+        error: (error) => {
+
+          console.error(error);
 
         }
-        );
 
-        this.cdr.detectChanges();
-
-
-      },
-
-      error: (error) => {
-
-        console.error(error);
-
-      }
-
-    });
+      });
 
   }
 
@@ -158,137 +172,259 @@ export class ProjectDetail {
 
   puedeSubirDocumento(): boolean {
 
-  const usuario = this.auth.obtenerUsuario();
+    const usuario = this.auth.obtenerUsuario();
 
-  if (!usuario || !this.project) {
-    return false;
-  }
+    if (!usuario || !this.project) {
+      return false;
+    }
 
-  return usuario.id === this.project.owner?.id;
+    return usuario.id === this.project.owner?.id;
 
   }
 
   documentoGuardado(): void {
 
-  this.cerrarFormularioDocumento();
+    this.cerrarFormularioDocumento();
 
-  this.cargarDocumentos();
+    this.cargarDocumentos();
 
-}
+  }
 
-eliminarDocumento(
-  document: Document
-): void {
+  eliminarDocumento(
+    document: Document
+  ): void {
 
-  const confirmar = confirm(
-    `¿Eliminar "${document.nombre}"?`
-  );
+    const confirmar = confirm(
+      `¿Eliminar "${document.nombre}"?`
+    );
 
-  if (!confirmar) {
+    if (!confirmar) {
+
+      return;
+
+    }
+
+    this.documentService
+      .delete(document.id)
+      .subscribe({
+
+        next: () => {
+
+          this.cargarDocumentos();
+
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+        }
+
+      });
+
+  }
+
+  abrirFormularioRevision(
+    document: any
+  ): void {
+
+    this.documentoRevision =
+      document;
+
+    this.mostrarFormularioRevision =
+      true;
+
+  }
+
+  cerrarFormularioRevision(): void {
+
+    this.mostrarFormularioRevision =
+      false;
+
+    this.documentoRevision =
+      null;
+
+  }
+
+  revisionGuardada(): void {
+
+    this.cerrarFormularioRevision();
+
+    this.cargarDocumentos();
+
+  }
+
+  cargarRevisiones(
+    document: any
+  ): void {
+
+    this.documentReviewService
+      .getByDocument(document.id)
+      .subscribe({
+
+        next: (reviews: any) => {
+
+          document.reviews = reviews;
+
+          this.cdr.detectChanges();
+
+        },
+
+        error: (error) => {
+
+          console.error(error);
+
+        }
+
+      });
+
+  }
+
+
+  obtenerClaseEstado(
+    estado: string
+  ): string {
+
+    switch (estado) {
+
+      case 'Aprobado':
+        return 'estado-aprobado';
+
+      case 'Requiere correcciones':
+        return 'estado-correcciones';
+
+      case 'En revisión':
+        return 'estado-revision';
+
+      case 'Rechazado':
+        return 'estado-rechazado';
+
+      default:
+        return 'estado-pendiente';
+
+    }
+
+  }
+
+  esPropietarioProyecto(): boolean {
+
+    const usuario =
+      this.auth.obtenerUsuario();
+
+    if (!usuario || !this.project) {
+
+      return false;
+
+    }
+
+    return usuario.id ===
+      this.project.owner_id;
+
+  }
+
+  contarPendientesProyecto(
+    projectId: number
+  ): number {
+
+    return this.documents.filter(
+
+      document =>
+
+        document.estado === 'Pendiente revisión' ||
+
+        document.estado === 'En revisión'
+
+    ).length;
+
+  }
+
+  revisionesAbiertas: Record<number, boolean> = {};
+
+  toggleRevisiones(
+    documentId: number
+  ): void {
+
+    this.revisionesAbiertas[
+      documentId
+    ] = !this.revisionesAbiertas[
+    documentId
+    ];
+
+  }
+
+  actualizarEstadoProyecto(): void {
+
+    console.log(
+  'Estado a guardar:',
+  this.estadoSeleccionado
+);
+
+  if (!this.proyectoEstado) {
 
     return;
 
   }
 
-  this.documentService
-    .delete(document.id)
-    .subscribe({
+  this.projectService
+    .updateProject(
+      this.proyectoEstado.id!,
+      {
 
-      next: () => {
+        titulo:
+          this.proyectoEstado.titulo,
 
-        this.cargarDocumentos();
+        descripcion:
+          this.proyectoEstado.descripcion,
 
-      },
+        tipo_proyecto:
+          this.proyectoEstado.tipo_proyecto,
 
-      error: (error) => {
-
-        console.error(error);
+        estado:
+          this.estadoSeleccionado
 
       }
+    )
+    .subscribe({
+
+      next: (projectActualizado) => {
+
+  this.project =
+    projectActualizado;
+
+  this.cerrarModalEstado();
+
+  this.cdr.detectChanges();
+
+}
 
     });
 
 }
+  abrirModalEstado(
+    project: Project
+  ): void {
 
-abrirFormularioRevision(
-  document: any
-): void {
+    this.proyectoEstado =
+      project;
 
-  this.documentoRevision =
-    document;
+    this.estadoSeleccionado =
+      project.estado;
 
-  this.mostrarFormularioRevision =
-    true;
+    this.mostrarModalEstado =
+      true;
 
-}
+  }
 
-cerrarFormularioRevision(): void {
+  cerrarModalEstado(): void {
 
-  this.mostrarFormularioRevision =
+  this.mostrarModalEstado =
     false;
 
-  this.documentoRevision =
+  this.proyectoEstado =
     null;
 
 }
 
-revisionGuardada(): void {
-
-  this.cerrarFormularioRevision();
-
-  this.cargarDocumentos();
-
-}
-
-cargarRevisiones(
-  document: any
-): void {
-
-  this.documentReviewService
-    .getByDocument(document.id)
-    .subscribe({
-
-      next: (reviews: any) => {
-
-        document.reviews = reviews;
-
-        this.cdr.detectChanges();
-
-      },
-
-      error: (error) => {
-
-        console.error(error);
-
-      }
-
-    });
-
-}
 
 
-obtenerClaseEstado(
-  estado: string
-): string {
-
-  switch (estado) {
-
-    case 'Aprobado':
-      return 'estado-aprobado';
-
-    case 'Requiere correcciones':
-      return 'estado-correcciones';
-
-    case 'En revisión':
-      return 'estado-revision';
-
-    case 'Rechazado':
-      return 'estado-rechazado';
-
-    default:
-      return 'estado-pendiente';
-
-  }
-
-}
 }

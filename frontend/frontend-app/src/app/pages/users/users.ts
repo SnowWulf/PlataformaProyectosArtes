@@ -14,14 +14,17 @@ import { UserForm } from '../user-form/user-form';
 
 import { DeleteUserDialog } from '../../components/delete-user-dialog/delete-user-dialog';
 
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-users',
   standalone: true,
   imports: [
   CommonModule,
   UserForm,
-  DeleteUserDialog
-  ],
+  DeleteUserDialog,
+  FormsModule
+],
   templateUrl: './users.html',
   styleUrl: './users.scss'
 })
@@ -36,6 +39,10 @@ export class Users {
   mostrarDialogoEliminar = false;
 
   usuarioAEliminar: User | null = null;
+
+  busqueda = '';
+
+  filtroRol = 'todos';
 
   constructor(
     private userService: UserService,
@@ -170,6 +177,55 @@ confirmarEliminar(password: string): void {
     this.cerrarFormulario();
 
   }
+
+  get usuariosFiltrados() {
+
+  let resultado = this.users;
+
+  // filtro por rol
+  if (this.filtroRol !== 'todos') {
+
+    resultado = resultado.filter(
+
+      usuario =>
+
+        usuario.role?.nombre ===
+        this.filtroRol
+
+    );
+
+  }
+
+  // filtro por búsqueda
+  if (
+    this.busqueda &&
+    this.busqueda.trim() !== ''
+  ) {
+
+    const texto =
+      this.busqueda.toLowerCase();
+
+    resultado = resultado.filter(
+
+      usuario =>
+
+        usuario.name
+          ?.toLowerCase()
+          .includes(texto)
+
+        ||
+
+        usuario.email
+          ?.toLowerCase()
+          .includes(texto)
+
+    );
+
+  }
+
+  return resultado;
+
+}
 
 //   eliminarUsuario(usuario: User): void {
 

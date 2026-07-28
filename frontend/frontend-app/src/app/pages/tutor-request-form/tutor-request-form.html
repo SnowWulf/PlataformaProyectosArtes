@@ -1,52 +1,82 @@
-<h2>Solicitar tutor</h2>
+<div class="request-card">
 
-<form
-  [formGroup]="form"
-  (ngSubmit)="enviarSolicitud()">
+  <div class="request-header">
 
-  <div>
+    <h2>
 
-    <label>Tutor</label>
+      👩‍🏫 Solicitar tutor
 
-    <select formControlName="tutor_id">
+    </h2>
 
-      <option value="">
-        Seleccione un tutor
-      </option>
+    <p>
 
-      <option
-        *ngFor="let tutor of tutores"
-        [value]="tutor.id">
+      Selecciona el tutor que deseas para tu proyecto y envíale una solicitud.
 
-        {{ tutor.name }}
-
-      </option>
-
-    </select>
+    </p>
 
   </div>
 
-  <br>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="enviarSolicitud()">
 
-  <div>
+    <div class="form-group">
 
-    <label>Mensaje (opcional)</label>
+      <label>
 
-    <br>
+        Tutor
 
-    <textarea
-      rows="5"
-      formControlName="mensaje">
-    </textarea>
+      </label>
 
-  </div>
+      <select formControlName="tutor_id">
 
-  <br>
+        <option value="">
 
-  <button type="submit">
+          Seleccione un tutor
 
-    Enviar solicitud
+        </option>
 
-  </button>
+        <option
+          *ngFor="let tutor of tutores"
+          [value]="tutor.id">
 
-</form>
+          {{ tutor.name }}
+
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>
+
+        Mensaje (opcional)
+
+      </label>
+
+      <textarea
+        rows="5"
+        formControlName="mensaje"
+        placeholder="Explique brevemente por qué desea trabajar con este tutor...">
+
+      </textarea>
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        type="submit"
+        class="btn-primary">
+
+        📨 Enviar solicitud
+
+      </button>
+
+    </div>
+
+  </form>
+
+</div>

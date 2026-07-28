@@ -9,9 +9,8 @@
     <nav class="sidebar-menu">
 
         <a
-            routerLink="/dashboard"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
+                [routerLink]="obtenerRutaDashboard()"
+                routerLinkActive="active">
 
             🏠 Dashboard
 

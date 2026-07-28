@@ -1,85 +1,115 @@
-<h2>
+<div class="project-form-container">
 
-  {{ proyecto ? 'Editar proyecto' : 'Nuevo proyecto' }}
+  <p class="form-subtitle">
 
-</h2>
+    Completa la información del proyecto.
 
-<form
-  [formGroup]="form"
-  (ngSubmit)="guardar()">
+  </p>
 
-  <div>
-    <label>Título</label>
-    <input
-      type="text"
-      formControlName="titulo">
-  </div>
+  <form
+    [formGroup]="form"
+    (ngSubmit)="guardar()">
 
-  <div>
-    <label>Descripción</label>
-    <textarea
+    <div class="form-group">
+
+      <label>
+
+        Título del proyecto
+
+      </label>
+
+      <input
+        type="text"
+        formControlName="titulo">
+
+    </div>
+
+    <div class="form-group">
+
+      <label>
+
+        Descripción
+
+      </label>
+
+      <textarea
         formControlName="descripcion"
-        rows="4">
-    </textarea>
-  </div>
+        rows="5">
+      </textarea>
 
-  <div>
+    </div>
 
-  <label>Tipo de proyecto</label>
+    <div class="form-group">
 
-  <select formControlName="tipo_proyecto">
+      <label>
 
-    <option value="">Seleccione un tipo de proyecto</option>
+        Tipo de proyecto
 
-    <option value="Investigación">
-      Investigación
-    </option>
+      </label>
 
-    <option value="Investigación-Creación">
-      Investigación-Creación
-    </option>
+      <select
+        formControlName="tipo_proyecto">
 
-    <option value="Creación Artística">
-      Creación Artística
-    </option>
+        <option value="">
+          Seleccione un tipo de proyecto
+        </option>
 
-    <option value="Pasantía">
-      Pasantía
-    </option>
+        <option value="Investigación">
+          Investigación
+        </option>
 
-    <option value="Extensión / Interacción Social">
-      Extensión / Interacción Social
-    </option>
+        <option value="Investigación-Creación">
+          Investigación-Creación
+        </option>
 
-    <option value="Gestión Cultural">
-      Gestión Cultural
-    </option>
+        <option value="Creación Artística">
+          Creación Artística
+        </option>
 
-    <option value="Innovación y Desarrollo">
-      Innovación y Desarrollo
-    </option>
+        <option value="Pasantía">
+          Pasantía
+        </option>
 
-    <option value="Formación Artística y Pedagógica">
-      Formación Artística y Pedagógica
-    </option>
+        <option value="Extensión / Interacción Social">
+          Extensión / Interacción Social
+        </option>
 
-    <option value="Emprendimiento e Industrias Creativas">
-      Emprendimiento e Industrias Creativas
-    </option>
+        <option value="Gestión Cultural">
+          Gestión Cultural
+        </option>
 
-    <option value="Patrimonio y Memoria Cultural">
-      Patrimonio y Memoria Cultural
-    </option>
+        <option value="Innovación y Desarrollo">
+          Innovación y Desarrollo
+        </option>
 
-  </select>
+        <option value="Formación Artística y Pedagógica">
+          Formación Artística y Pedagógica
+        </option>
+
+        <option value="Emprendimiento e Industrias Creativas">
+          Emprendimiento e Industrias Creativas
+        </option>
+
+        <option value="Patrimonio y Memoria Cultural">
+          Patrimonio y Memoria Cultural
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="form-actions">
+
+      <button
+        type="submit"
+        class="btn-guardar">
+
+        💾 Guardar proyecto
+
+      </button>
+
+    </div>
+
+  </form>
 
 </div>
-
-<button type="submit">
-
-  Guardar
-
-</button>
-</form>
-
-
