@@ -8,45 +8,49 @@
 
     <nav class="sidebar-menu">
 
-        <a
-                [routerLink]="obtenerRutaDashboard()"
-                routerLinkActive="active">
+        <a [routerLink]="obtenerRutaDashboard()" routerLinkActive="active">
 
             🏠 Dashboard
 
         </a>
 
-        <a
-            routerLink="/dashboard/projects"
-            routerLinkActive="active">
+        <a routerLink="/dashboard/projects" routerLinkActive="active">
 
             📁 Proyectos
 
         </a>
 
+        <a routerLink="/dashboard/requests" routerLinkActive="active">
+
+            🤝 Solicitudes
+
+        </a>
+
         @if(auth.esTutor()){
 
-            <a
-                routerLink="/dashboard/tutor-requests"
-                routerLinkActive="active">
+        <a routerLink="/dashboard/tutor-requests" routerLinkActive="active">
 
-                👨‍🏫 Solicitudes de Tutor
+            👨‍🏫 Solicitudes de Tutor
 
-            </a>
+        </a>
 
         }
 
         @if(auth.esCoordinador()){
 
-            <a
-                routerLink="/dashboard/users"
-                routerLinkActive="active">
+        <a routerLink="/dashboard/users" routerLinkActive="active">
 
-                👥 Usuarios
+            👥 Usuarios
 
-            </a>
+        </a>
 
         }
+
+        <a routerLink="/dashboard/community" routerLinkActive="active">
+
+            🌐 Comunidad
+
+        </a>
 
     </nav>
 

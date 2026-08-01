@@ -1,0 +1,169 @@
+/* Contenedor Principal con fondo verde bosque oscuro */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #062319 0%, #0d3b2e 50%, #184e3d 100%);
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  padding: 1.5rem;
+}
+
+/* Tarjeta Cristalina (Glassmorphism Menta) */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(167, 243, 208, 0.2); // Borde verde agua suave
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  
+  // Animación al cargar la página
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Encabezado */
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .logo-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  h2 {
+    color: #e6f7f0; // Verde blanco brillante
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    color: #a7f3d0; // Verde menta pastel suave
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.8;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Inputs con Labels Flotantes */
+.input-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  input {
+    width: 100%;
+    padding: 1.2rem 1rem 0.6rem 1rem;
+    background: rgba(6, 35, 25, 0.6);
+    border: 1px solid rgba(167, 243, 208, 0.25);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: #34d399; // Verde esmeralda claro brillante
+      background: rgba(6, 35, 25, 0.85);
+      box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
+    }
+  }
+
+  /* Etiqueta animada */
+  label {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    color: #a7f3d0; // Menta claro
+    font-size: 0.95rem;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    transform-origin: left top;
+    opacity: 0.7;
+  }
+
+  /* Lógica de Floating Label (Sube la etiqueta al escribir o enfocar) */
+  input:focus ~ label,
+  input:not(:placeholder-shown) ~ label {
+    transform: translateY(-0.6rem) scale(0.75);
+    color: #6ee7b7; // Menta vibrante
+    font-weight: 600;
+    opacity: 1;
+  }
+}
+
+/* Botón Verde Claro Radiante */
+.btn-submit {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  border: none;
+  border-radius: 12px;
+  color: #022c22; // Texto verde oscuro profundo para alto contraste y legibilidad
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(52, 211, 153, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .btn-arrow {
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 211, 153, 0.5);
+    background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+
+    .btn-arrow {
+      transform: translateX(5px);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* --- ANIMACIONES --- */
+
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}

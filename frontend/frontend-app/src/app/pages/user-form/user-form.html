@@ -112,45 +112,101 @@
 
     <br>
 
-    <div>
+<div>
 
-        <label>
+    <label>
 
-            Rol
+        Rol
 
-        </label>
+    </label>
 
-        <select formControlName="role_id">
+    <select formControlName="role_id">
 
-            <option value="">
+        <option value="">
 
-                Seleccione un rol
+            Seleccione un rol
+
+        </option>
+
+        @for (rol of roles; track rol.id) {
+
+            <option [value]="rol.id">
+
+                {{ rol.nombre }}
 
             </option>
 
-            @for (rol of roles; track rol.id) {
+        }
 
-                <option [value]="rol.id">
+    </select>
 
-                    {{ rol.nombre }}
+    @if(form.get('role_id')?.invalid && form.get('role_id')?.touched){
+
+        <small class="error">
+
+            Debe seleccionar un rol.
+
+        </small>
+
+    }
+
+</div>
+
+<br>
+
+@if (esEstudiante()) {
+
+<div>
+
+    <label>
+
+        Programa académico
+
+    </label>
+
+    <select formControlName="programa">
+
+        <option value="">
+
+            Seleccione un programa
+
+        </option>
+
+        <optgroup label="Pregrado">
+
+            @for (programa of programasPregrado; track programa) {
+
+                <option [value]="programa">
+
+                    {{ programa }}
 
                 </option>
 
             }
 
-        </select>
+        </optgroup>
 
-        @if(form.get('role_id')?.invalid && form.get('role_id')?.touched){
+        <optgroup label="Posgrado">
 
-            <small class="error">
+            @for (programa of programasPosgrado; track programa) {
 
-                Debe seleccionar un rol.
+                <option [value]="programa">
 
-            </small>
+                    {{ programa }}
 
-        }
+                </option>
 
-    </div>
+            }
+
+        </optgroup>
+
+    </select>
+
+</div>
+
+<br>
+
+}
 
     <br>
 

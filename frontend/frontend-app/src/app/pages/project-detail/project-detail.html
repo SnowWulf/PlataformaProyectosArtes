@@ -102,6 +102,111 @@
 
 </div>
 
+<div class="info-card">
+
+  <h2>
+
+    👥 Equipo del proyecto
+
+  </h2>
+
+  <div class="team-list">
+
+    <div class="team-member owner">
+
+      <strong>
+
+        👑 {{ project.owner?.name }}
+
+      </strong>
+
+      <span>
+
+        Propietario
+
+      </span>
+
+    </div>
+
+    <div class="team-member tutor">
+
+      <strong>
+
+        🎓
+        {{ project.tutor?.name ?? 'Sin tutor asignado' }}
+
+      </strong>
+
+      <span>
+
+        Tutor
+
+      </span>
+
+    </div>
+
+    @if (
+    project.collaborators &&
+    project.collaborators.length > 0
+    ) {
+
+    @for (
+    colaborador of project.collaborators;
+    track colaborador.id
+    ) {
+
+    <div class="team-member collaborator">
+
+      <div>
+
+        <strong>
+
+          👤 {{ colaborador.name }}
+
+        </strong>
+
+      </div>
+
+      @if (
+      esPropietarioProyecto()
+      ) {
+
+      <button (click)="
+          eliminarColaborador(
+            colaborador.id
+          )
+        ">
+
+        ❌ Eliminar
+
+      </button>
+
+      }
+
+      <span>
+
+        Colaborador
+
+      </span>
+    </div>
+
+    }
+
+    } @else {
+
+    <p>
+
+      No hay colaboradores asignados.
+
+    </p>
+
+    }
+
+
+  </div>
+
+</div>
+
 <div class="stats-grid">
 
   <div class="stat-card">
@@ -163,7 +268,7 @@
 
   </h2>
 
-  @if (esPropietarioProyecto()) {
+@if (puedeCrearDocumento()) {
 
   <button class="primary-btn" (click)="abrirFormularioDocumento()">
 
@@ -202,6 +307,18 @@
       {{ document.nombre }}
 
     </h3>
+
+    <div class="document-author">
+
+  👤 Subido por:
+
+  <strong>
+
+    {{ document.user?.name }}
+
+  </strong>
+
+</div>
 
     <span [class]="
       obtenerClaseEstado(
@@ -249,7 +366,11 @@
 
     </a>
 
-    @if (esPropietarioProyecto()) {
+    @if (
+  puedeEditarDocumento(
+    document
+  )
+) {
 
     <button (click)="abrirFormularioDocumento(document)">
 
@@ -518,6 +639,104 @@
       </button>
 
     </div>
+
+  </div>
+
+</div>
+
+}
+
+
+<button class="chat-float-btn" (click)="toggleChat()">
+
+  💬 Chat
+
+</button>
+
+@if (chatAbierto) {
+
+<div class="chat-window">
+
+  <div class="chat-header">
+
+    <span>
+
+      💬 Chat del proyecto
+
+    </span>
+
+    <button type="button" (click)="toggleChat()">
+
+      ✕
+
+    </button>
+
+  </div>
+
+  <div class="chat-messages" #chatMessages>
+
+    @for (
+    mensaje of mensajes;
+    track mensaje.id
+    ) {
+
+    <div
+
+  class="message"
+
+  [class.mine]="
+    esMiMensaje(
+      mensaje
+    )
+  "
+
+>
+
+      @if (
+      !esMismoAutor($index)
+      ) {
+
+      <div class="message-author">
+
+        {{ mensaje.user.name }}
+
+      </div>
+
+      }
+
+      <div class="message-bubble">
+
+        {{ mensaje.mensaje }}
+
+      </div>
+
+      @if (
+      mostrarHora($index)
+      ) {
+
+      <div class="message-time">
+
+        {{ mensaje.created_at | date:'HH:mm' }}
+
+      </div>
+
+      }
+
+    </div>
+
+    }
+
+  </div>
+
+  <div class="chat-footer">
+
+    <textarea [(ngModel)]="nuevoMensaje" placeholder="Escribe un mensaje..."></textarea>
+
+    <button type="button" (click)="enviarMensaje()">
+
+      Enviar
+
+    </button>
 
   </div>
 

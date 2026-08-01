@@ -1,0 +1,191 @@
+<div class="requests-container">
+
+  <h1>
+
+    🤝 Solicitudes de colaboración
+
+  </h1>
+
+  <div class="tabs">
+
+    <button
+      [class.active]="vistaActiva === 'recibidas'"
+      (click)="vistaActiva = 'recibidas'">
+
+      📥 Recibidas
+
+    </button>
+
+    <button
+      [class.active]="vistaActiva === 'enviadas'"
+      (click)="vistaActiva = 'enviadas'">
+
+      📤 Enviadas
+
+    </button>
+
+    <button
+      [class.active]="vistaActiva === 'historial'"
+      (click)="vistaActiva = 'historial'">
+
+      🕒 Historial
+
+    </button>
+
+  </div>
+
+  <!-- RECIBIDAS -->
+
+  <div *ngIf="vistaActiva === 'recibidas'">
+
+    <div
+      class="request-card"
+      *ngFor="let solicitud of recibidasPendientes">
+
+      <div class="request-info">
+
+        <h3>
+
+          {{ solicitud.requester?.name }}
+
+        </h3>
+
+        <p>
+
+          Quiere colaborar en:
+
+          <strong>
+
+            {{ solicitud.project?.titulo }}
+
+          </strong>
+
+        </p>
+
+      </div>
+
+      <div class="request-actions">
+
+        <button
+          class="accept-btn"
+          (click)="aceptarSolicitud(
+            solicitud.id
+          )">
+
+          ✅ Aceptar
+
+        </button>
+
+        <button
+          class="reject-btn"
+          (click)="rechazarSolicitud(
+            solicitud.id
+          )">
+
+          ❌ Rechazar
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <p
+      class="empty-state"
+      *ngIf="recibidasPendientes.length === 0">
+
+      No tienes solicitudes pendientes.
+
+    </p>
+
+  </div>
+
+  <!-- ENVIADAS -->
+
+  <div *ngIf="vistaActiva === 'enviadas'">
+
+    <div
+      class="request-card"
+      *ngFor="let solicitud of enviadasPendientes">
+
+      <div>
+
+        <h3>
+
+          {{ solicitud.project?.titulo }}
+
+        </h3>
+
+      </div>
+
+      <span
+        class="status pending">
+
+        ⏳ Pendiente
+
+      </span>
+
+    </div>
+
+    <p
+      class="empty-state"
+      *ngIf="enviadasPendientes.length === 0">
+
+      No tienes solicitudes pendientes.
+
+    </p>
+
+  </div>
+
+  <!-- HISTORIAL -->
+
+  <div *ngIf="vistaActiva === 'historial'">
+
+    <div
+      class="request-card"
+      *ngFor="let solicitud of historial">
+
+      <div>
+
+        <h3>
+
+          {{ solicitud.project?.titulo }}
+
+        </h3>
+
+        <p>
+
+          {{ solicitud.requester?.name }}
+
+        </p>
+
+      </div>
+
+      <span
+        [ngClass]="{
+
+          'status accepted':
+            solicitud.estado === 'Aceptada',
+
+          'status rejected':
+            solicitud.estado === 'Rechazada'
+
+        }">
+
+        {{ solicitud.estado }}
+
+      </span>
+
+    </div>
+
+    <p
+      class="empty-state"
+      *ngIf="historial.length === 0">
+
+      No hay solicitudes procesadas.
+
+    </p>
+
+  </div>
+
+</div>

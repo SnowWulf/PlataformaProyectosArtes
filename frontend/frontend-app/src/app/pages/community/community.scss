@@ -1,0 +1,125 @@
+.community-container {
+
+  padding: 2rem;
+
+}
+
+.community-header {
+
+  margin-bottom: 2rem;
+
+}
+
+.community-header p {
+
+  color: #64748b;
+
+}
+
+.community-filters {
+
+  margin-bottom: 2rem;
+
+}
+
+.community-filters input {
+
+  width: 100%;
+  padding: .8rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+
+}
+
+.role-filters {
+
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+
+}
+
+.role-filters button {
+
+  border: none;
+  padding: .6rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  background: #e2e8f0;
+
+}
+
+.role-filters button.active {
+
+  background: #2563eb;
+  color: white;
+
+}
+
+.community-grid {
+
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(260px, 1fr));
+
+  gap: 1.5rem;
+
+}
+
+.profile-card {
+
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+
+  box-shadow:
+    0 4px 20px rgba(0,0,0,.08);
+
+}
+
+.profile-avatar {
+
+  font-size: 3rem;
+  margin-bottom: 1rem;
+
+}
+
+.role-badge {
+
+  display: inline-block;
+
+  padding:
+    .4rem
+    .8rem;
+
+  border-radius: 999px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  margin-bottom: 1rem;
+
+}
+
+.profile-card button {
+
+  margin-top: 1rem;
+
+  width: 100%;
+
+  border: none;
+
+  padding: .8rem;
+
+  border-radius: 10px;
+
+  background: #2563eb;
+
+  color: white;
+
+  cursor: pointer;
+
+}

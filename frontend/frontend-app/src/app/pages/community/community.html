@@ -1,0 +1,98 @@
+<div class="community-container">
+
+    <div class="community-header">
+
+        <h1>
+
+            🤝 Comunidad Académica
+
+        </h1>
+
+        <p>
+
+            Explora estudiantes, tutores y coordinadores.
+
+        </p>
+
+    </div>
+
+    <div class="community-filters">
+
+        <input type="text" placeholder="🔍 Buscar por nombre o programa" [(ngModel)]="busqueda">
+
+        <div class="role-filters">
+
+            <button [class.active]="filtroRol === 'todos'" (click)="filtroRol = 'todos'">
+
+                Todos
+
+            </button>
+
+            <button [class.active]="filtroRol === 'Estudiante'" (click)="filtroRol = 'Estudiante'">
+
+                Estudiantes
+
+            </button>
+
+            <button [class.active]="filtroRol === 'Tutor'" (click)="filtroRol = 'Tutor'">
+
+                Tutores
+
+            </button>
+
+            <button [class.active]="filtroRol === 'Coordinador'" (click)="filtroRol = 'Coordinador'">
+
+                Coordinadores
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="community-grid">
+
+        @for (
+        usuario of usuariosFiltrados;
+        track usuario.id
+        ) {
+
+        <div class="profile-card">
+
+            <div class="profile-avatar">
+
+                👤
+
+            </div>
+
+            <h3>
+
+                {{ usuario.name }}
+
+            </h3>
+
+            <span class="role-badge">
+
+                {{ usuario.role?.nombre }}
+
+            </span>
+
+            <p>
+
+                {{ usuario.programa ?? 'Programa no especificado' }}
+
+            </p>
+
+            <button [routerLink]="['/dashboard/community/profile',usuario.id]">
+
+                Ver perfil
+
+            </button>
+
+        </div>
+
+        }
+
+    </div>
+
+</div>

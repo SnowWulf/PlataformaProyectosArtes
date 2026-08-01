@@ -122,11 +122,53 @@
 
     </div>
 
+<div class="search-area">
+
     <div class="search-box">
 
-        <input type="text" placeholder="🔍 Buscar usuario por nombre o correo..." [(ngModel)]="busqueda">
+        <input 
+            type="text" 
+            placeholder="🔍 Buscar usuario por nombre o correo..." 
+            [(ngModel)]="busqueda">
 
     </div>
+
+
+
+<div class="program-filter">
+
+    <button 
+        class="btn-filter"
+        (click)="toggleFiltroPrograma()">
+        ⬇️
+    </button>
+
+    @if (mostrarFiltroPrograma) {
+        <div class="program-list">
+
+            <!-- Cambiamos las asignaciones directas por el nuevo método -->
+            <button
+                class="program-item"
+                [class.active]="filtroPrograma === 'todos'"
+                (click)="seleccionarPrograma('todos')">
+                Todos
+            </button>
+
+            @for(programa of programasDisponibles; track programa) {
+                <button
+                    class="program-item"
+                    [class.active]="filtroPrograma === programa"
+                    (click)="seleccionarPrograma(programa)">
+                    {{ programa }}
+                </button>
+            }
+
+        </div>
+    }
+
+</div>
+
+</div>
 
     <div class="table-container">
 
@@ -141,6 +183,8 @@
                     <th>Correo</th>
 
                     <th>Rol</th>
+
+                    <th>Programa</th>
 
                     <th>Acciones</th>
 
@@ -183,6 +227,10 @@
 
                         </span>
 
+                    </td>
+
+                    <td>
+                        {{ usuario.programa ?? 'N/A' }}
                     </td>
 
                     <td>

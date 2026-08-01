@@ -168,6 +168,88 @@
 
   <h2>
 
+  🤝 Proyectos donde colaboro
+
+</h2>
+
+<div class="projects-grid">
+
+  <div
+    class="project-card"
+    *ngFor="
+      let project
+      of proyectosColaborando
+    "
+  >
+
+    <h3>
+
+      {{ project.titulo }}
+
+    </h3>
+
+    <p>
+
+      {{ project.descripcion }}
+
+    </p>
+
+    <div class="project-meta">
+
+      <span>
+
+        📂 {{ project.tipo_proyecto }}
+
+      </span>
+
+      <span>
+
+        👤 {{ project.owner?.name }}
+
+      </span>
+
+    </div>
+
+    <div class="project-meta">
+
+      <span>
+
+        👩‍🏫
+        {{ project.tutor?.name ?? 'Sin tutor' }}
+
+      </span>
+
+    </div>
+
+    <div
+      class="estado-badge"
+    >
+
+      {{ project.estado }}
+
+    </div>
+
+    <div
+      class="project-actions"
+    >
+
+      <button
+        (click)="verProyecto(project)"
+      >
+
+        Ver
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<hr class="section-divider">
+  <h2>
+
     📚 Otros proyectos
 
   </h2>

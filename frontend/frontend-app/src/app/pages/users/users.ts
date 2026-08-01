@@ -20,11 +20,11 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-users',
   standalone: true,
   imports: [
-  CommonModule,
-  UserForm,
-  DeleteUserDialog,
-  FormsModule
-],
+    CommonModule,
+    UserForm,
+    DeleteUserDialog,
+    FormsModule
+  ],
   templateUrl: './users.html',
   styleUrl: './users.scss'
 })
@@ -43,6 +43,10 @@ export class Users {
   busqueda = '';
 
   filtroRol = 'todos';
+
+  filtroPrograma = 'todos';
+
+  mostrarFiltroPrograma = false;
 
   constructor(
     private userService: UserService,
@@ -107,68 +111,68 @@ export class Users {
 
   abrirEliminar(usuario: User): void {
 
-  this.usuarioAEliminar = usuario;
+    this.usuarioAEliminar = usuario;
 
-  this.mostrarDialogoEliminar = true;
-
-}
-
-cerrarEliminar(): void {
-
-  this.mostrarDialogoEliminar = false;
-
-  this.usuarioAEliminar = null;
-
-}
-
-confirmarEliminar(password: string): void {
-
-  if (!this.usuarioAEliminar) {
-
-    return;
+    this.mostrarDialogoEliminar = true;
 
   }
 
-  this.userService
-    .deleteUserWithPassword(
-      this.usuarioAEliminar.id,
-      password
-    )
-    .subscribe({
+  cerrarEliminar(): void {
 
-      next: (response) => {
+    this.mostrarDialogoEliminar = false;
 
-        alert(response.message);
+    this.usuarioAEliminar = null;
 
-        this.cerrarEliminar();
+  }
 
-        this.cargarUsuarios();
+  confirmarEliminar(password: string): void {
 
-      },
+    if (!this.usuarioAEliminar) {
 
-      error: (err) => {
+      return;
 
-        console.error(err);
+    }
 
-        if (err.status === 401) {
+    this.userService
+      .deleteUserWithPassword(
+        this.usuarioAEliminar.id,
+        password
+      )
+      .subscribe({
 
-          alert('Contraseña incorrecta.');
+        next: (response) => {
 
-        } else if (err.status === 400) {
+          alert(response.message);
 
-          alert(err.error.message);
+          this.cerrarEliminar();
 
-        } else {
+          this.cargarUsuarios();
 
-          alert('No fue posible eliminar el usuario.');
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          if (err.status === 401) {
+
+            alert('Contraseña incorrecta.');
+
+          } else if (err.status === 400) {
+
+            alert(err.error.message);
+
+          } else {
+
+            alert('No fue posible eliminar el usuario.');
+
+          }
 
         }
 
-      }
+      });
 
-    });
-
-}
+  }
 
   usuarioGuardado(): void {
 
@@ -180,52 +184,72 @@ confirmarEliminar(password: string): void {
 
   get usuariosFiltrados() {
 
-  let resultado = this.users;
+    return this.users.filter(usuario => {
 
-  // filtro por rol
-  if (this.filtroRol !== 'todos') {
-
-    resultado = resultado.filter(
-
-      usuario =>
-
-        usuario.role?.nombre ===
-        this.filtroRol
-
-    );
-
-  }
-
-  // filtro por búsqueda
-  if (
-    this.busqueda &&
-    this.busqueda.trim() !== ''
-  ) {
-
-    const texto =
-      this.busqueda.toLowerCase();
-
-    resultado = resultado.filter(
-
-      usuario =>
+      const coincideBusqueda =
 
         usuario.name
-          ?.toLowerCase()
-          .includes(texto)
-
-        ||
+          .toLowerCase()
+          .includes(
+            this.busqueda.toLowerCase()
+          ) ||
 
         usuario.email
-          ?.toLowerCase()
-          .includes(texto)
+          .toLowerCase()
+          .includes(
+            this.busqueda.toLowerCase()
+          );
 
-    );
+      const coincideRol =
+
+        this.filtroRol === 'todos' ||
+
+        usuario.role?.nombre ===
+        this.filtroRol;
+
+      const coincidePrograma =
+
+        this.filtroPrograma ===
+        'todos' ||
+
+        usuario.programa ===
+        this.filtroPrograma;
+
+      return (
+        coincideBusqueda &&
+        coincideRol &&
+        coincidePrograma
+      );
+
+    });
+
 
   }
 
-  return resultado;
+get programasDisponibles(): string[] {
+
+  return [
+    ...new Set(
+      this.users
+        .map(usuario => usuario.programa)
+        .filter((programa): programa is string => !!programa)
+    )
+  ];
 
 }
+toggleFiltroPrograma() {
+
+  this.mostrarFiltroPrograma = !this.mostrarFiltroPrograma;
+
+}
+
+seleccionarPrograma(programa: string) {
+  this.filtroPrograma = programa;
+  this.mostrarFiltroPrograma = false; // <--- Cierra el menú desplegable
+}
+}
+
+
 
 //   eliminarUsuario(usuario: User): void {
 
@@ -265,4 +289,3 @@ confirmarEliminar(password: string): void {
 
 // }
 
-}

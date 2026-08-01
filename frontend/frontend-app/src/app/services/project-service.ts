@@ -11,7 +11,7 @@ export class ProjectService {
 
   private apiUrl = 'http://localhost:8000/api/projects';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(this.apiUrl);
@@ -23,28 +23,78 @@ export class ProjectService {
 
   createProject(project: Partial<Project>): Observable<Project> {
 
-  return this.http.post<Project>(
-    this.apiUrl,
-    project
-  );
+    return this.http.post<Project>(
+      this.apiUrl,
+      project
+    );
   }
   updateProject(
-  id: number,
-  project: Partial<Project>
-): Observable<Project> {
+    id: number,
+    project: Partial<Project>
+  ): Observable<Project> {
 
-  return this.http.put<Project>(
-    `${this.apiUrl}/${id}`,
-    project
-  );
+    return this.http.put<Project>(
+      `${this.apiUrl}/${id}`,
+      project
+    );
   }
 
   deleteProject(id: number): Observable<any> {
 
+    return this.http.delete(
+      `${this.apiUrl}/${id}`
+    );
+  }
+
+removeCollaborator(
+  projectId: number,
+  userId: number
+) {
   return this.http.delete(
-    `${this.apiUrl}/${id}`
+
+    `${this.apiUrl}/${projectId}/collaborators/${userId}`
+
+  );
+}
+
+getMessages(
+  projectId: number
+)
+{
+  return this.http.get<any[]>(
+
+    `${this.apiUrl}/${projectId}/messages`
+
+  );
+}
+
+sendMessage(
+  projectId: number,
+  mensaje: string
+)
+{
+  return this.http.post(
+
+    `${this.apiUrl}/${projectId}/messages`,
+
+    {
+      mensaje
+    }
+
+  );
+}
+
+getProjectActivity(
+  projectId: number
+) {
+
+  return this.http.get<any[]>(
+
+    `${this.apiUrl}/${projectId}/activity`
+
   );
 
 }
+
 
 }

@@ -1,0 +1,142 @@
+@if (usuario) {
+
+<div class="profile-container">
+
+    <div class="profile-header">
+
+        <div class="avatar">
+
+            👤
+
+        </div>
+
+        <div>
+
+            <h1>
+
+                {{ usuario.name }}
+
+            </h1>
+
+            <p>
+
+                {{ usuario.role?.nombre }}
+
+            </p>
+
+            @if (usuario.programa) {
+
+            <p>
+
+                {{ usuario.programa }}
+
+            </p>
+
+            }
+
+        </div>
+
+    </div>
+
+    @if (usuario.bio) {
+
+    <section class="profile-section">
+
+        <h2>
+
+            Acerca de
+
+        </h2>
+
+        <p>
+
+            {{ usuario.bio }}
+
+        </p>
+
+    </section>
+
+    }
+
+    @if (usuario.mostrar_correo) {
+
+    <section class="profile-section">
+
+        <h2>
+
+            Contacto
+
+        </h2>
+
+        <p>
+
+            {{ usuario.email }}
+
+        </p>
+
+    </section>
+
+    }
+
+    <section class="profile-section">
+
+        <h2>
+
+            Proyectos
+
+        </h2>
+
+        @if (proyectos.length > 0) {
+
+        @for (
+        proyecto of proyectos;
+        track proyecto.id
+        ) {
+
+        <div class="project-card">
+
+            <h3>
+
+                {{ proyecto.titulo }}
+
+            </h3>
+
+            <p>
+
+                {{ proyecto.tipo_proyecto }}
+
+            </p>
+
+            <span>
+
+                {{ proyecto.estado }}
+
+            </span>
+
+            <button (click)="
+    solicitarColaboracion(
+      proyecto.id
+    )">
+
+                Solicitar colaboración
+
+            </button>
+        </div>
+
+        }
+
+        } @else {
+
+        <p>
+
+            Este usuario no tiene proyectos públicos.
+
+        </p>
+
+        }
+
+    </section>
+
+</div>
+
+}

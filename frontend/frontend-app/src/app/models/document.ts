@@ -22,5 +22,7 @@ export interface Document {
   updated_at: string;
 
   reviews?: DocumentReview[];
+
+  user?: any;
   
 }

@@ -51,11 +51,11 @@ export class StudentHome implements OnInit {
 
   ultimoDocumento: any = null;
 
-  actividadReciente: any[] = [];
-
   proyectoActual: any = null;
 
   alertasProyectos: any[] = [];
+
+  actividadProyecto: any[] = [];
 
   constructor(
     private projectService: ProjectService,
@@ -83,8 +83,6 @@ export class StudentHome implements OnInit {
 
   }
   cargarResumen(): void {
-
-    this.actividadReciente = [];
 
     this.alertasProyectos = [];
 
@@ -123,13 +121,10 @@ export class StudentHome implements OnInit {
           if (projects.length > 0) {
 
             this.proyectoActual = projects[0];
+
             this.cdr.detectChanges();
 
-
-            console.log(
-              'Proyecto actual:',
-              this.proyectoActual
-            );
+            this.cargarActividad();
 
           }
           projects.forEach(project => {
@@ -142,30 +137,30 @@ export class StudentHome implements OnInit {
 
                   documents.forEach((document: any) => {
 
-  const fechaDocumento =
-    new Date(
-      document.updated_at ??
-      document.created_at
-    );
+                    const fechaDocumento =
+                      new Date(
+                        document.updated_at ??
+                        document.created_at
+                      );
 
-  if (
+                    if (
 
-    !this.ultimoMovimientoProyecto ||
+                      !this.ultimoMovimientoProyecto ||
 
-    fechaDocumento >
-    this.ultimoMovimientoProyecto
+                      fechaDocumento >
+                      this.ultimoMovimientoProyecto
 
-  ) {
+                    ) {
 
-    this.ultimoMovimientoProyecto =
-      fechaDocumento;
+                      this.ultimoMovimientoProyecto =
+                        fechaDocumento;
 
-    this.proyectoActual =
-      project;
+                      this.proyectoActual =
+                        project;
 
-  }
+                    }
 
-});
+                  });
 
                   this.procesarDocumentos(
                     documents
@@ -247,47 +242,6 @@ export class StudentHome implements OnInit {
       }
 
 
-      // Documento subido
-
-      this.actividadReciente.push({
-
-        fecha:
-          document.created_at,
-
-        tipo:
-          'subida',
-
-        documento:
-          document.nombre
-
-      });
-
-      // Documento actualizado
-
-      if (
-
-        document.updated_at &&
-
-        document.updated_at !==
-        document.created_at
-
-      ) {
-
-        this.actividadReciente.push({
-
-          fecha:
-            document.updated_at,
-
-          tipo:
-            'edicion',
-
-          documento:
-            document.nombre
-
-        });
-
-      }
-
     });
 
     console.log({
@@ -333,50 +287,38 @@ export class StudentHome implements OnInit {
 
               this.historialRevisiones.push({
 
-  fecha:
-    review.created_at,
+                fecha:
+                  review.created_at,
 
-  proyecto:
-    project.titulo,
+                proyecto:
+                  project.titulo,
 
-  documento:
-    document.nombre,
+                documento:
+                  document.nombre,
 
-  estado:
-    review.estado,
+                estado:
+                  review.estado,
 
-  comentario:
-    review.comentario,
+                comentario:
+                  review.comentario,
 
-  tutor:
-    review.tutor?.name
+                tutor:
+                  review.tutor?.name
 
-});
-this.historialRevisiones.sort(
+              });
+              this.historialRevisiones.sort(
 
-  (a, b) =>
+                (a, b) =>
 
-    new Date(b.fecha).getTime()
+                  new Date(b.fecha).getTime()
 
-    -
+                  -
 
-    new Date(a.fecha).getTime()
+                  new Date(a.fecha).getTime()
 
-);
+              );
 
             });
-
-            this.actividadReciente.sort(
-
-              (a, b) =>
-
-                new Date(b.fecha).getTime()
-
-                -
-
-                new Date(a.fecha).getTime()
-
-            );
 
             if (
               !this.ultimaRevision ||
@@ -556,19 +498,63 @@ this.historialRevisiones.sort(
   }
 
   abrirDocumento(
-  document: any
-): void {
+    document: any
+  ): void {
 
-  this.router.navigate([
+    this.router.navigate([
 
-    '/dashboard/projects',
+      '/dashboard/projects',
 
-    document.project_id
+      document.project_id
 
-  ]);
+    ]);
 
-}
+  }
 
+  cargarActividad(): void {
 
+    if (!this.proyectoActual) {
 
+      console.log(
+        'No hay proyecto actual'
+      );
+
+      return;
+
+    }
+
+    console.log(
+      'cargarActividad ejecutado'
+    );
+
+    this.projectService
+      .getProjectActivity(
+        this.proyectoActual.id
+      )
+      .subscribe({
+
+        next: data => {
+
+          console.log(
+            'Actividad recibida:',
+            data
+          );
+
+          this.actividadProyecto =
+            data;
+
+        },
+
+        error: err => {
+
+          console.error(
+            'Error actividad:',
+            err
+          );
+
+        }
+
+      });
+
+  }
 }

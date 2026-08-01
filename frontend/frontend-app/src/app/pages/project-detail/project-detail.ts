@@ -21,6 +21,8 @@ import { DocumentReviewService }
 
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ElementRef, ViewChild } from '@angular/core';
+
 
 @Component({
   selector: 'app-project-detail',
@@ -35,6 +37,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './project-detail.html',
   styleUrl: './project-detail.scss'
 })
+
 
 export class ProjectDetail {
 
@@ -59,13 +62,27 @@ export class ProjectDetail {
 
   proyectoEstado: Project | null = null;
 
+  mensajes: any[] = [];
+
+  nuevoMensaje = '';
+
+  chatAbierto = false;
+
+  actividadProyecto: any[] = [];
+
+  @ViewChild(
+    'chatMessages'
+  )
+  chatMessages!:
+    ElementRef;
 
   constructor(
     private projectService: ProjectService,
     private documentService: DocumentService,
     private documentReviewService: DocumentReviewService,
     private cdr: ChangeDetectorRef,
-    public auth: Auth,
+    public auth: Auth
+
   ) {
 
 
@@ -93,11 +110,11 @@ export class ProjectDetail {
 
         next: (project) => {
 
-          console.log('Proyecto:', project);
-
+          this.cargarActividad();
           this.project = project;
-
+          this.cargarMensajes();
           this.cdr.detectChanges();
+
 
         },
 
@@ -355,51 +372,51 @@ export class ProjectDetail {
   actualizarEstadoProyecto(): void {
 
     console.log(
-  'Estado a guardar:',
-  this.estadoSeleccionado
-);
+      'Estado a guardar:',
+      this.estadoSeleccionado
+    );
 
-  if (!this.proyectoEstado) {
+    if (!this.proyectoEstado) {
 
-    return;
+      return;
+
+    }
+
+    this.projectService
+      .updateProject(
+        this.proyectoEstado.id!,
+        {
+
+          titulo:
+            this.proyectoEstado.titulo,
+
+          descripcion:
+            this.proyectoEstado.descripcion,
+
+          tipo_proyecto:
+            this.proyectoEstado.tipo_proyecto,
+
+          estado:
+            this.estadoSeleccionado
+
+        }
+      )
+      .subscribe({
+
+        next: (projectActualizado) => {
+
+          this.project =
+            projectActualizado;
+
+          this.cerrarModalEstado();
+
+          this.cdr.detectChanges();
+
+        }
+
+      });
 
   }
-
-  this.projectService
-    .updateProject(
-      this.proyectoEstado.id!,
-      {
-
-        titulo:
-          this.proyectoEstado.titulo,
-
-        descripcion:
-          this.proyectoEstado.descripcion,
-
-        tipo_proyecto:
-          this.proyectoEstado.tipo_proyecto,
-
-        estado:
-          this.estadoSeleccionado
-
-      }
-    )
-    .subscribe({
-
-      next: (projectActualizado) => {
-
-  this.project =
-    projectActualizado;
-
-  this.cerrarModalEstado();
-
-  this.cdr.detectChanges();
-
-}
-
-    });
-
-}
   abrirModalEstado(
     project: Project
   ): void {
@@ -417,14 +434,346 @@ export class ProjectDetail {
 
   cerrarModalEstado(): void {
 
-  this.mostrarModalEstado =
-    false;
+    this.mostrarModalEstado =
+      false;
 
-  this.proyectoEstado =
-    null;
+    this.proyectoEstado =
+      null;
+
+  }
+
+
+  eliminarColaborador(
+    userId: number
+  ): void {
+
+    if (
+      !confirm(
+        '¿Eliminar colaborador?'
+      )
+    ) {
+
+      return;
+
+    }
+
+    this.projectService
+      .removeCollaborator(
+        this.project!.id,
+        userId
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.project!.collaborators =
+            this.project!.collaborators!
+              .filter(
+
+                c => c.id !== userId
+
+              );
+          this.cdr.detectChanges();
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+        }
+
+      });
+
+  }
+  cargarMensajes(): void {
+
+    this.projectService
+      .getMessages(
+        this.project!.id
+      )
+      .subscribe({
+
+        next: data => {
+
+          this.mensajes =
+            data;
+
+          this.scrollAlFinal();
+        }
+
+      });
+
+  }
+  enviarMensaje(): void {
+
+    console.log(
+      'Mensaje actual:',
+      this.nuevoMensaje
+    );
+
+    if (
+      !this.nuevoMensaje.trim()
+    ) {
+
+      return;
+
+    }
+
+    this.projectService
+      .sendMessage(
+
+        this.project!.id,
+
+        this.nuevoMensaje
+
+      )
+      .subscribe({
+
+        next: mensaje => {
+
+          this.mensajes = [
+
+            ...this.mensajes,
+
+            mensaje
+
+          ];
+
+          this.nuevoMensaje =
+            '';
+
+
+          this.scrollAlFinal();
+          this.cdr.detectChanges();
+          this.cargarMensajes();
+        }
+
+      });
+
+  }
+  toggleChat(): void {
+
+    this.chatAbierto =
+      !this.chatAbierto;
+    this.scrollAlFinal();
+
+  }
+
+  esMismoAutor(
+    index: number
+  ): boolean {
+
+    if (
+      index === 0
+    ) {
+
+      return false;
+
+    }
+
+    return (
+
+      this.mensajes[index]
+        .user.id
+
+      ===
+
+      this.mensajes[index - 1]
+        .user.id
+
+    );
+
+  }
+
+  scrollAlFinal(): void {
+
+    setTimeout(() => {
+
+      if (
+
+        !this.chatMessages
+
+      ) {
+
+        return;
+
+      }
+
+      this.chatMessages
+        .nativeElement
+        .scrollTop =
+
+        this.chatMessages
+          .nativeElement
+          .scrollHeight;
+
+    });
+
+  }
+
+  mostrarHora(
+    index: number
+  ): boolean {
+
+    const actual =
+      this.mensajes[index];
+
+    const siguiente =
+      this.mensajes[index + 1];
+
+    if (!siguiente) {
+
+      return true;
+    }
+
+    if (
+
+      actual.user.id
+      !==
+      siguiente.user.id
+
+    ) {
+
+      return true;
+    }
+
+    const actualFecha =
+      new Date(
+        actual.created_at
+      );
+
+    const siguienteFecha =
+      new Date(
+        siguiente.created_at
+      );
+
+    const diferencia =
+      (
+        siguienteFecha.getTime()
+        -
+        actualFecha.getTime()
+      )
+      / 60000;
+
+    return diferencia > 5;
+
+  }
+
+
+  esMiMensaje(
+    mensaje: any
+  ): boolean {
+
+    const usuario =
+      this.auth
+        .obtenerUsuario();
+
+    return (
+
+      usuario?.id ===
+      mensaje.user.id
+
+    );
+
+  }
+
+  puedeEditarDocumento(
+    document: any
+  ): boolean {
+
+    const usuario =
+      this.auth.obtenerUsuario();
+
+    if (!usuario) {
+
+      return false;
+
+    }
+
+    const esAutor =
+
+      document.user?.id ===
+      usuario.id;
+
+    const esPropietario =
+
+      this.project?.owner?.id ===
+      usuario.id;
+
+    return (
+      esAutor ||
+      esPropietario
+    );
+
+  }
+
+  puedeCrearDocumento(): boolean {
+
+  const usuario =
+    this.auth.obtenerUsuario();
+
+  if (
+    !usuario ||
+    !this.project
+  ) {
+
+    return false;
+
+  }
+
+  const esPropietario =
+
+    this.project.owner?.id ===
+    usuario.id;
+
+  const esColaborador =
+
+    this.project.collaborators?.some(
+
+      (c: any) =>
+
+        c.id === usuario.id
+
+    ) ?? false;
+
+  return (
+    esPropietario ||
+    esColaborador
+  );
 
 }
 
+cargarActividad(): void {
 
+  if (!this.project?.id) {
 
+    return;
+
+  }
+
+  this.projectService
+    .getProjectActivity(
+      this.project.id
+    )
+    .subscribe({
+
+      next: data => {
+
+        this.actividadProyecto =
+          data;
+
+      },
+
+      error: err => {
+
+        console.error(
+          'Error cargando actividad',
+          err
+        );
+
+      }
+
+    });
+
+}
 }

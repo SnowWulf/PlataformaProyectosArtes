@@ -227,18 +227,54 @@ export class Projects {
 
   }
 
-  get proyectosExternos(): Project[] {
+  
+get proyectosColaborando(): Project[] {
 
-    return this.projects.filter(
+  return this.projects.filter(
 
-      project =>
+    project =>
 
-        project.owner?.id !==
-        this.usuarioActual?.id
+      project.owner?.id !==
+      this.usuarioActual?.id
 
-    );
+      &&
 
-  }
+      project.collaborators?.some(
+
+        (c: any) =>
+
+          c.id ===
+          this.usuarioActual?.id
+
+      )
+
+  );
+
+}
+
+get proyectosExternos(): Project[] {
+
+  return this.projects.filter(
+
+    project =>
+
+      project.owner?.id !==
+      this.usuarioActual?.id
+
+      &&
+
+      !project.collaborators?.some(
+
+        (c: any) =>
+
+          c.id ===
+          this.usuarioActual?.id
+
+      )
+
+  );
+
+}
   irANuevoProyecto(): void {
 
     this.router.navigate([

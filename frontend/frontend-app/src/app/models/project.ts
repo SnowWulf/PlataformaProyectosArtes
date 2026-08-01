@@ -14,4 +14,6 @@ export interface Project {
 
   owner?: User;
   tutor?: User;
+
+  collaborators?: User[];
 }

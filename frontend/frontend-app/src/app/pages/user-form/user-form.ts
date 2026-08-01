@@ -47,11 +47,31 @@ export class UserForm implements OnChanges, OnInit {
 
   roles: Role[] = [];
 
+  programasPregrado = [
+
+  'Arquitectura',
+  'Artes Visuales',
+  'Diseño Gráfico',
+  'Diseño Industrial',
+  'Licenciatura en Artes Visuales',
+  'Licenciatura en Música'
+
+];
+
+programasPosgrado = [
+
+  'Maestría en Diseño para la Innovación Social',
+  'Maestría en Investigación / Creación Arte y Contexto'
+
+];
+
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private roleService: RoleService
   ) {
+
+    
 
     this.form = this.fb.group({
 
@@ -73,7 +93,26 @@ export class UserForm implements OnChanges, OnInit {
       role_id: [
         '',
         Validators.required
-      ]
+      ],
+
+      programa: ['']
+
+    });
+
+    this.form
+    .get('role_id')
+    ?.valueChanges
+    .subscribe(() => {
+
+      if (!this.esEstudiante()) {
+
+        this.form.patchValue({
+
+          programa: ''
+
+        });
+
+      }
 
     });
 
@@ -82,156 +121,172 @@ export class UserForm implements OnChanges, OnInit {
   ngOnInit(): void {
 
     this.cargarRoles();
-    
+
 
   }
 
   ngOnChanges(): void {
 
-  this.cargarDatosUsuario();
+    this.cargarDatosUsuario();
 
   }
 
   cargarRoles(): void {
 
-  this.roleService.getRoles().subscribe({
+    this.roleService.getRoles().subscribe({
 
-    next: (data) => {
+      next: (data) => {
 
-      this.roles = data;
+        this.roles = data;
 
-      this.cargarDatosUsuario();
+        this.cargarDatosUsuario();
 
-    },
+      },
 
-    error: (err) => {
+      error: (err) => {
 
-      console.error(
-        'Error al cargar roles',
-        err
-      );
+        console.error(
+          'Error al cargar roles',
+          err
+        );
 
-    }
+      }
 
-  });
+    });
 
   }
 
   private cargarDatosUsuario(): void {
 
-  const passwordControl = this.form.get('password');
+    const passwordControl = this.form.get('password');
 
-  if (!this.usuario) {
+    if (!this.usuario) {
 
-    passwordControl?.setValidators([
-      Validators.required,
-      Validators.minLength(6)
-    ]);
+      passwordControl?.setValidators([
+        Validators.required,
+        Validators.minLength(6)
+      ]);
+
+      passwordControl?.updateValueAndValidity();
+
+      this.form.reset();
+
+
+      return;
+
+    }
+
+    passwordControl?.clearValidators();
 
     passwordControl?.updateValueAndValidity();
 
-    this.form.reset();
-    
-    
-    return;
+    this.form.patchValue({
+
+      name: this.usuario.name,
+
+      email: this.usuario.email,
+
+      role_id: this.usuario.role_id,
+
+      password: ''
+
+    });
 
   }
-
-  passwordControl?.clearValidators();
-
-  passwordControl?.updateValueAndValidity();
-
-  this.form.patchValue({
-
-    name: this.usuario.name,
-
-    email: this.usuario.email,
-
-    role_id: this.usuario.role_id,
-
-    password: ''
-
-  });
-
-}
 
   guardar(): void {
 
-  if (this.form.invalid) {
+    if (this.form.invalid) {
 
-    this.form.markAllAsTouched();
+      this.form.markAllAsTouched();
 
-    return;
+      return;
+
+    }
+
+    // EDITAR
+    if (this.usuario) {
+
+      this.userService.updateUser(
+
+        this.usuario.id,
+
+        this.form.value
+
+      ).subscribe({
+
+        next: () => {
+
+          alert('Usuario actualizado correctamente.');
+
+          this.guardado.emit();
+
+          this.cerrar.emit();
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          alert('No fue posible actualizar el usuario.');
+
+        }
+
+      });
+
+    }
+
+    // CREAR
+    else {
+
+      this.userService.createUser(
+
+        this.form.value
+
+      ).subscribe({
+
+        next: () => {
+
+          alert('Usuario creado correctamente.');
+
+          this.form.reset();
+          this.cargarDatosUsuario();
+
+          this.guardado.emit();
+
+          this.cerrar.emit();
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          alert('No fue posible crear el usuario.');
+
+        }
+
+      });
+
+    }
 
   }
 
-  // EDITAR
-  if (this.usuario) {
+  esEstudiante(): boolean {
 
-    this.userService.updateUser(
+  const rolId =
+    Number(
+      this.form.get('role_id')?.value
+    );
 
-      this.usuario.id,
+  const rol =
+    this.roles.find(
+      r => r.id === rolId
+    );
 
-      this.form.value
+  return rol?.nombre === 'Estudiante';
 
-    ).subscribe({
-
-      next: () => {
-
-        alert('Usuario actualizado correctamente.');
-
-        this.guardado.emit();
-
-        this.cerrar.emit();
-
-      },
-
-      error: (err) => {
-
-        console.error(err);
-
-        alert('No fue posible actualizar el usuario.');
-
-      }
-
-    });
-
-  }
-
-  // CREAR
-  else {
-
-    this.userService.createUser(
-
-      this.form.value
-
-    ).subscribe({
-
-      next: () => {
-
-        alert('Usuario creado correctamente.');
-
-        this.form.reset();
-        this.cargarDatosUsuario();
-
-        this.guardado.emit();
-
-        this.cerrar.emit();
-
-      },
-
-      error: (err) => {
-
-        console.error(err);
-
-        alert('No fue posible crear el usuario.');
-
-      }
-
-    });
-
-  }
-
-  }
+}
 
 }

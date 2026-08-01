@@ -40,7 +40,7 @@ export const routes: Routes = [
         path: 'student-home',
         component: StudentHome
       },
-      
+
       {
         path: 'tutor-home',
         component: TutorHome
@@ -82,6 +82,27 @@ export const routes: Routes = [
         data: {
           role: 'Tutor'
         }
+      },
+      {
+        path: 'community',
+        loadComponent: () =>
+          import('./pages/community/community')
+            .then(m => m.Community)
+      },
+      {
+        path: 'community/profile/:id',
+        loadComponent: () =>
+          import('./pages/community-profile/community-profile')
+            .then(m => m.CommunityProfile)
+      },
+      {
+        path: 'requests',
+        loadComponent: () =>
+          import(
+            './pages/collaboration-requests/collaboration-requests'
+          ).then(
+            m => m.CollaborationRequests
+          )
       }
 
     ]

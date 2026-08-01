@@ -336,11 +336,11 @@ track alerta.proyectoId
       revision of historialRevisiones;
       track $index
     ) {
-
+      <hr>
       <div class="review-card">
 
         <div class="review-row">
-          <hr>
+          <br>
           <strong>
             Proyecto:
           </strong>
@@ -438,147 +438,42 @@ track alerta.proyectoId
   </h2>
 
   @if (
-  actividadReciente.length > 0
+    actividadProyecto.length > 0
   ) {
 
-  @for (
-  actividad of actividadReciente.slice(0, 10);
-  track $index
-  ) {
-
-  <div class="activity-item">
-
-    <div class="activity-date">
-
-      {{ actividad.fecha | date:'dd/MM/yyyy HH:mm' }}
-
-    </div>
-
-    @if (
-    actividad.tipo === 'revision'
+    @for (
+      actividad of actividadProyecto.slice(0, 10);
+      track actividad.id
     ) {
 
-    <div class="activity-title">
+      <div class="activity-item">
 
-      📝 Revisión registrada
+        <div class="activity-date">
 
-    </div>
+          {{
+            actividad.created_at
+            | date:'dd/MM/yyyy HH:mm'
+          }}
 
-    <p>
+        </div>
 
-      <strong>
-        Documento:
-      </strong>
+        <div class="activity-title">
 
-      {{ actividad.documento }}
+          {{ actividad.descripcion }}
 
-    </p>
+        </div>
 
-    <p>
-
-      <strong>
-        Estado:
-      </strong>
-
-      {{ actividad.estado }}
-
-    </p>
-
-    <p>
-
-      <strong>
-        Tutor:
-      </strong>
-
-      {{ actividad.tutor }}
-
-    </p>
-
-    @if (
-    actividad.comentario
-    ) {
-
-    <p>
-
-      <strong>
-        Comentario:
-      </strong>
-
-      {{ actividad.comentario }}
-
-    </p>
+      </div>
 
     }
-
-    @if (
-    actividad.attachment_url
-    ) {
-
-    <a [href]="actividad.attachment_url" target="_blank">
-
-      Ver archivo adjunto
-
-    </a>
-
-    }
-
-    }
-
-    @else if (
-    actividad.tipo === 'subida'
-    ) {
-
-    <div class="activity-title">
-
-      📤 Documento subido
-
-    </div>
-
-    <p>
-
-      <strong>
-        Documento:
-      </strong>
-
-      {{ actividad.documento }}
-
-    </p>
-
-    }
-
-    @else if (
-    actividad.tipo === 'edicion'
-    ) {
-
-    <div class="activity-title">
-
-      📄 Documento actualizado
-
-    </div>
-
-    <p>
-
-      <strong>
-        Documento:
-      </strong>
-
-      {{ actividad.documento }}
-
-    </p>
-
-    }
-
-  </div>
-
-  }
 
   } @else {
 
-  <p>
+    <p>
 
-    No hay actividad reciente.
+      No hay actividad reciente.
 
-  </p>
+    </p>
 
   }
 

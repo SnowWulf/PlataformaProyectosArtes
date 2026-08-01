@@ -1,0 +1,44 @@
+.requests-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.request-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.request-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.accept-btn {
+  background: #2e7d32;
+  color: white;
+}
+
+.reject-btn {
+  background: #c62828;
+  color: white;
+}
+
+.pending {
+  color: #f57c00;
+}
+
+.accepted {
+  color: #2e7d32;
+}
+
+.rejected {
+  color: #c62828;
+}
