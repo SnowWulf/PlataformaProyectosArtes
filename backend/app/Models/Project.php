@@ -39,5 +39,32 @@ class Project extends Model
     {
         return $this->hasMany(Document::class);
     }
+    public function collaborators()
+    {
+        return $this->belongsToMany(
+
+            User::class,
+
+            'project_collaborators',
+
+            'project_id',
+
+            'user_id'
+
+        );
+    }
+    public function messages()
+    {
+        return $this->hasMany(
+            ProjectMessage::class
+        );
+    }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(
+            ActivityLog::class
+        );
+    }
     
 }

@@ -10,6 +10,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TutorRequestController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentReviewController;
+use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\ProjectMessageController;
 
 Route::post('/login',[AuthController::class,'login']);
 
@@ -25,6 +27,11 @@ Route::middleware('auth:sanctum')->group(function(){
         return $request->user()->load('role');
 
     });
+
+    Route::get(
+        '/community/users',
+        [CommunityController::class, 'users']
+    );
 
 
 
@@ -117,5 +124,76 @@ Route::middleware('auth:sanctum')->group(function(){
         '/documents/{document}/reviews',
         [DocumentReviewController::class, 'index']
     );
+
+    Route::get(
+        '/community/users',
+        [CommunityController::class, 'users']
+    );
+
+    Route::get(
+        '/community/users/{id}',
+        [CommunityController::class, 'user']
+    );
+
+    Route::get(
+        '/community/users/{id}/projects',
+        [CommunityController::class, 'projects']
+    );
     
+    Route::post(
+        '/community/request-collaboration',
+        [CommunityController::class,
+         'requestCollaboration']
+    );
+    Route::get(
+        '/community/requests/received/{id}',
+        [CommunityController::class,
+         'receivedRequests']
+    );
+
+    Route::get(
+        '/community/requests/sent/{id}',
+        [CommunityController::class,
+        'sentRequests']
+    );
+
+    Route::post(
+        '/community/requests/{id}/accept',
+        [CommunityController::class,
+        'acceptRequest']
+    );
+
+    Route::post(
+        '/community/requests/{id}/reject',
+        [CommunityController::class,
+        'rejectRequest']
+    );
+
+    Route::delete(
+        '/projects/{projectId}/collaborators/{userId}',
+        [ProjectController::class,
+        'removeCollaborator']
+    )->middleware('auth:sanctum');
+
+    Route::get(
+        '/projects/{projectId}/messages',
+        [ProjectMessageController::class,
+         'index']
+    );
+
+    Route::post(
+        '/projects/{projectId}/messages',
+        [ProjectMessageController::class,
+        'store']
+    );
+
+    Route::get(
+        '/projects/{project}/activity',
+        [ProjectController::class, 'activity']
+    );
+  
+    Route::get(
+        '/activity',
+        [ProjectController::class, 'studentActivity']
+    );
 });

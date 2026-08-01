@@ -18,7 +18,8 @@ use Laravel\Sanctum\HasApiTokens;
     'name',
     'email',
     'password',
-    'role_id'
+    'role_id',
+    'programa'
 ])]
 #[Hidden(['password', 'remember_token'])]
 
@@ -78,6 +79,19 @@ class User extends Authenticatable
         return $this->hasMany(
             DocumentReview::class,
             'tutor_id'
+        );
+    }
+
+    public function user($id)
+    {
+        return User::with('role')
+            ->findOrFail($id);
+    }
+    
+    public function activityLogs()
+    {
+        return $this->hasMany(
+            ActivityLog::class
         );
     }
 }

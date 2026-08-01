@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\ActivityLogger;
 
 class DocumentController extends Controller
 {
@@ -45,10 +46,36 @@ class DocumentController extends Controller
         'estado' => 'submitted',
     ]);
 
+ActivityLogger::log(
+
+    $document->project_id,
+
+    auth()->id(),
+
+    'document_created',
+
+    auth()->user()->name .
+    ' subió el avance "' .
+    $document->nombre .
+    '"',
+
+    [
+
+        'document_id' =>
+            $document->id,
+
+        'documento' =>
+            $document->nombre
+
+    ]
+
+);
+
     return response()->json([
         'message' => 'Documento creado correctamente',
         'document' => $document
     ], 201);
+
     }
 
 
@@ -57,6 +84,34 @@ class DocumentController extends Controller
     Document $document
 )
 {
+    $user = auth()->user();
+
+$esAutor =
+
+    $document->user_id ===
+    $user->id;
+
+$esPropietario =
+
+    $document
+        ->project
+        ->owner_id ===
+    $user->id;
+
+if (
+    !$esAutor &&
+    !$esPropietario
+) {
+
+    return response()->json([
+
+        'message' =>
+            'No autorizado.'
+
+    ], 403);
+
+}
+
     $validated = $request->validate([
 
         'nombre' => 'required|string|max:255',
@@ -90,25 +145,107 @@ class DocumentController extends Controller
 
     $document->save();
 
+    ActivityLogger::log(
+
+    $document->project_id,
+
+    auth()->id(),
+
+    'document_updated',
+
+    auth()->user()->name .
+    ' actualizó el avance "' .
+    $document->nombre .
+    '"',
+
+    [
+
+        'document_id' =>
+            $document->id,
+
+        'documento' =>
+            $document->nombre
+
+    ]
+
+);
     return response()->json([
         'message' => 'Documento actualizado correctamente',
         'document' => $document
     ]);
     }
 
-    public function destroy(Document $document)
-    {
-    if ($document->file_path) {
-        Storage::disk('public')
-            ->delete($document->file_path);
+    public function destroy(
+    Document $document
+)
+{
+    $user = auth()->user();
+
+    $esAutor =
+
+        $document->user_id ===
+        $user->id;
+
+    $esPropietario =
+
+        $document
+            ->project
+            ->owner_id ===
+        $user->id;
+
+    if (
+        !$esAutor &&
+        !$esPropietario
+    ) {
+
+        return response()->json([
+
+            'message' =>
+                'No autorizado.'
+
+        ], 403);
+
     }
 
+    if ($document->file_path) {
+
+        Storage::disk('public')
+            ->delete(
+                $document->file_path
+            );
+
+    }
+
+    ActivityLogger::log(
+
+    $document->project_id,
+
+    auth()->id(),
+
+    'document_deleted',
+
+    auth()->user()->name .
+    ' eliminó el avance "' .
+    $document->nombre .
+    '"',
+
+    [
+
+        'documento' =>
+            $document->nombre
+
+    ]
+
+);
     $document->delete();
 
     return response()->json([
-        'message' => 'Documento eliminado correctamente'
+
+        'message' =>
+            'Documento eliminado correctamente'
+
     ]);
-    }
+}
 }
 
 

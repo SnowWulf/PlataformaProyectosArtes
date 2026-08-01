@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use App\Models\DocumentReview;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityLogger;
 
 class DocumentReviewController extends Controller
 {
@@ -83,6 +84,31 @@ class DocumentReviewController extends Controller
             $validated['estado'];
 
         $document->save();
+
+        ActivityLogger::log(
+
+    $document->project_id,
+
+    auth()->id(),
+
+    'review_created',
+
+    auth()->user()->name .
+    ' revisó el avance "' .
+    $document->nombre .
+    '"',
+
+    [
+
+        'estado' =>
+            $review->estado,
+
+        'comentario' =>
+            $review->comentario
+
+    ]
+
+);
 
         return response()->json([
             'message' => 'Revisión registrada correctamente',
