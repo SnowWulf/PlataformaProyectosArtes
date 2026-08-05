@@ -15,8 +15,11 @@ import { ProjectDetail } from './pages/project-detail/project-detail';
 import { StudentHome } from './pages/student-home/student-home';
 import { TutorHome } from './pages/tutor-home/tutor-home';
 import { CoordinatorHome } from './pages/coordinator-home/coordinator-home';
+import { Profile } from './pages/profile/profile';
 
 export const routes: Routes = [
+
+
 
   {
     path: 'login',
@@ -103,8 +106,11 @@ export const routes: Routes = [
           ).then(
             m => m.CollaborationRequests
           )
+      },
+      {
+        path: 'profile',
+        component: Profile
       }
-
     ]
 
   },

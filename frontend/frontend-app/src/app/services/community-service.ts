@@ -130,4 +130,46 @@ export class CommunityService {
     );
 
   }
+
+  inviteToProject(
+  projectId: number,
+  receiverId: number
+) {
+
+  return this.http.post(
+
+    'http://localhost:8000/api/community/invite',
+
+    {
+
+      project_id: projectId,
+
+      receiver_id: receiverId
+
+    }
+
+  );
+
+}
+requestTutor(
+  projectId: number,
+  tutorId: number
+) {
+
+  return this.http.post(
+
+    'http://localhost:8000/api/tutor-requests',
+
+    {
+
+      project_id: projectId,
+
+      tutor_id: tutorId
+
+    }
+
+  );
+
+}
+
 }

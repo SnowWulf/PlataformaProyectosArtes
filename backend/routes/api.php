@@ -12,6 +12,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentReviewController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ProjectMessageController;
+use App\Http\Controllers\ProjectDeliveryController;
 
 Route::post('/login',[AuthController::class,'login']);
 
@@ -196,4 +197,52 @@ Route::middleware('auth:sanctum')->group(function(){
         '/activity',
         [ProjectController::class, 'studentActivity']
     );
+
+    Route::post(
+        '/community/invite',
+        [CommunityController::class, 'inviteToProject']
+    );
+
+    Route::post(
+    '/community/invite',
+        [CommunityController::class,
+        'inviteToProject']
+    );
+
+    Route::post(
+        '/profile',
+        [UserController::class, 'updateProfile']
+    );
+
+    Route::get(
+        '/profile',
+        [UserController::class, 'myProfile']
+    );
+
+    Route::post(
+        '/profile',
+        [UserController::class, 'updateProfile']
+    );
+
+    Route::get(
+        '/projects/{project}/deliveries',
+        [ProjectDeliveryController::class, 'index']
+    );
+
+    Route::post(
+        '/projects/{project}/deliveries',
+        [ProjectDeliveryController::class, 'store']
+    );
+
+    Route::put(
+        '/deliveries/{delivery}',
+        [ProjectDeliveryController::class, 'update']
+    );
+
+    Route::delete(
+        '/deliveries/{delivery}',
+        [ProjectDeliveryController::class, 'destroy']
+    );
+    
+
 });

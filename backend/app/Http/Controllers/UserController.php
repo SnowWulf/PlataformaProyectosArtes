@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -17,7 +17,10 @@ class UserController extends Controller
 
     public function show($id)
     {
-	return User::with('role')->findOrFail($id);
+	$user = User::with('role')
+    ->findOrFail($id);
+
+    return response()->json($user);
     }
 
     public function store(Request $request)
@@ -132,4 +135,76 @@ class UserController extends Controller
         'message' => 'Usuario eliminado correctamente.'
     ]);
     }
+
+
+    public function updateProfile(Request $request)
+{
+    $user = $request->user();
+
+    $validated = $request->validate([
+
+        'bio' => 'nullable|string|max:500',
+
+        'mostrar_proyectos' => 'boolean',
+
+        'mostrar_correo' => 'boolean',
+
+        'foto' => 'nullable|image|max:2048'
+
+    ]);
+
+    if ($request->hasFile('foto')) {
+
+    if ($user->foto) {
+
+        Storage::disk('public')
+            ->delete($user->foto);
+
+    }
+
+    $path = $request->file('foto')->store(
+
+        'profile_photos',
+
+        'public'
+
+    );
+
+    $user->foto = $path;
+}
+
+    $user->bio =
+        $validated['bio'] ?? $user->bio;
+
+    $user->mostrar_proyectos =
+        $validated['mostrar_proyectos']
+        ?? $user->mostrar_proyectos;
+
+    $user->mostrar_correo =
+        $validated['mostrar_correo']
+        ?? $user->mostrar_correo;
+
+    $user->save();
+
+    return response()->json([
+
+    'message' =>
+        'Perfil actualizado.',
+
+    'user' =>
+        $user->load('role')
+
+]);
+    
+}
+
+public function myProfile(Request $request)
+{
+    return response()->json(
+
+        $request->user()
+            ->load('role')
+
+    );
+}
 }

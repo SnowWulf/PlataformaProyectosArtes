@@ -19,8 +19,13 @@ use Laravel\Sanctum\HasApiTokens;
     'email',
     'password',
     'role_id',
-    'programa'
+    'programa',
+    'bio',
+    'foto',
+    'mostrar_proyectos',
+    'mostrar_correo'
 ])]
+
 #[Hidden(['password', 'remember_token'])]
 
 class User extends Authenticatable
@@ -34,12 +39,30 @@ class User extends Authenticatable
      * @return array<string, string>
      */
     protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+{
+    return [
+
+        'email_verified_at' =>
+            'datetime',
+
+        'password' =>
+            'hashed',
+
+        'mostrar_proyectos' =>
+            'boolean',
+
+        'mostrar_correo' =>
+            'boolean'
+
+    ];
+}
+
+    protected $appends = [
+
+        'foto_url'
+
+    ];
+    
     public function role(): BelongsTo
 	{
    	 return $this->belongsTo(Role::class);
@@ -81,17 +104,29 @@ class User extends Authenticatable
             'tutor_id'
         );
     }
-
-    public function user($id)
-    {
-        return User::with('role')
-            ->findOrFail($id);
-    }
     
     public function activityLogs()
     {
         return $this->hasMany(
             ActivityLog::class
+        );
+    }
+
+    public function getFotoUrlAttribute()
+    {
+    if (!$this->foto) {
+            return null;
+        }
+            return asset(
+        'storage/' . $this->foto
+        );
+    }
+
+    public function deliveries()
+    {
+        return $this->hasMany(
+            ProjectDelivery::class,
+        'tutor_id'
         );
     }
 }

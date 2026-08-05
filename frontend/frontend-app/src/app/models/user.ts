@@ -12,14 +12,16 @@ export interface User {
 
   role?: Role;
 
-  programa?: string | null;
+  programa?: string;
 
-  bio?: string | null;
+  bio?: string;
+
+  foto?: string;
+
+  foto_url?: string;
 
   mostrar_proyectos?: boolean;
 
   mostrar_correo?: boolean;
-
-  foto?: string | null;
 
 }

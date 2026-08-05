@@ -73,4 +73,32 @@ deleteUserWithPassword(id: number, password: string): Observable<any> {
 
 }
 
+getProfile() {
+
+  return this.http.get<any>(
+    'http://localhost:8000/api/profile'
+  );
+
+}
+
+updateProfile(
+  formData: FormData
+) {
+
+  return this.http.post<{
+
+    message: string;
+
+    user: any;
+
+  }>(
+
+    'http://localhost:8000/api/profile',
+
+    formData
+
+  );
+
+}
+
 }

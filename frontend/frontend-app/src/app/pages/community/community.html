@@ -59,11 +59,19 @@
 
         <div class="profile-card">
 
-            <div class="profile-avatar">
+<div class="profile-avatar">
 
-                👤
+    <img
 
-            </div>
+        [src]="usuario.foto_url || '/user.webp'"
+
+        [alt]="usuario.name"
+
+        class="user-avatar"
+
+    >
+
+</div>
 
             <h3>
 

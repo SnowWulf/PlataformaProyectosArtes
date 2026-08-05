@@ -14,15 +14,15 @@ import { DocumentService } from '../../services/document';
 import { Auth } from '../../services/auth';
 import { DocumentForm } from '../../components/document-form/document-form';
 import { Document } from '../../models/document';
-import { DocumentReviewForm }
-  from '../../components/document-review-form/document-review-form';
-import { DocumentReviewService }
-  from '../../services/document-review';
-
+import { DocumentReviewForm } from '../../components/document-review-form/document-review-form';
+import { DocumentReviewService } from '../../services/document-review';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ElementRef, ViewChild } from '@angular/core';
 
+import { ProjectDelivery } from '../../models/project-delivery';
+import { ProjectDeliveryService } from '../../services/project-delivery-service';
+import { DeliveryModal } from '../../components/delivery-modal/delivery-modal';
 
 @Component({
   selector: 'app-project-detail',
@@ -32,7 +32,8 @@ import { ElementRef, ViewChild } from '@angular/core';
     DocumentForm,
     DocumentReviewForm,
     DatePipe,
-    FormsModule
+    FormsModule,
+    DeliveryModal
   ],
   templateUrl: './project-detail.html',
   styleUrl: './project-detail.scss'
@@ -41,6 +42,8 @@ import { ElementRef, ViewChild } from '@angular/core';
 
 export class ProjectDetail {
 
+  deliveries: ProjectDelivery[] = [];
+  
   mostrarFormularioDocumento = false;
   documents: Document[] = [];
   documentoSeleccionado: Document | null = null;
@@ -70,6 +73,24 @@ export class ProjectDetail {
 
   actividadProyecto: any[] = [];
 
+  mostrarModalEntrega = false;
+
+  modoEdicionEntrega = false;
+
+  entregaActual: any = {
+
+    titulo: '',
+
+    descripcion: '',
+
+    fecha_limite: '',
+
+    obligatorio: true
+
+  };  
+
+  guardandoEntrega = false;
+
   @ViewChild(
     'chatMessages'
   )
@@ -81,7 +102,8 @@ export class ProjectDetail {
     private documentService: DocumentService,
     private documentReviewService: DocumentReviewService,
     private cdr: ChangeDetectorRef,
-    public auth: Auth
+    public auth: Auth,
+    private deliveryService: ProjectDeliveryService,
 
   ) {
 
@@ -112,6 +134,7 @@ export class ProjectDetail {
 
           this.cargarActividad();
           this.project = project;
+          this.cargarEntregas(); 
           this.cargarMensajes();
           this.cdr.detectChanges();
 
@@ -228,6 +251,8 @@ export class ProjectDetail {
         next: () => {
 
           this.cargarDocumentos();
+
+          
 
         },
 
@@ -709,67 +734,204 @@ export class ProjectDetail {
 
   puedeCrearDocumento(): boolean {
 
-  const usuario =
-    this.auth.obtenerUsuario();
+    const usuario =
+      this.auth.obtenerUsuario();
 
-  if (
-    !usuario ||
-    !this.project
-  ) {
+    if (
+      !usuario ||
+      !this.project
+    ) {
 
-    return false;
+      return false;
+
+    }
+
+    const esPropietario =
+
+      this.project.owner?.id ===
+      usuario.id;
+
+    const esColaborador =
+
+      this.project.collaborators?.some(
+
+        (c: any) =>
+
+          c.id === usuario.id
+
+      ) ?? false;
+
+    return (
+      esPropietario ||
+      esColaborador
+    );
 
   }
 
-  const esPropietario =
+  cargarActividad(): void {
 
-    this.project.owner?.id ===
-    usuario.id;
+    if (!this.project?.id) {
 
-  const esColaborador =
+      return;
 
-    this.project.collaborators?.some(
+    }
 
-      (c: any) =>
+    this.projectService
+      .getProjectActivity(
+        this.project.id
+      )
+      .subscribe({
 
-        c.id === usuario.id
+        next: data => {
 
-    ) ?? false;
+          this.actividadProyecto =
+            data;
 
-  return (
-    esPropietario ||
-    esColaborador
-  );
+        },
+
+        error: err => {
+
+          console.error(
+            'Error cargando actividad',
+            err
+          );
+
+        }
+
+      });
+
+  }
+
+cargarEntregas() {
+  if (!this.project?.id) {
+    return;
+  }
+
+  this.deliveryService
+    .getDeliveries(this.project.id)
+    .subscribe({
+      next: (data: any) => {
+        console.log('📦 Entregas recibidas:', data);
+        
+        // Maneja si la API devuelve directamente el Array o un objeto con data/deliveries
+        this.deliveries = Array.isArray(data) ? data : (data.deliveries || data.data || []);
+        
+        // Forzar actualización de la vista para Angular SSR / Hydration
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        console.error('Error al cargar entregas:', err);
+      }
+    });
+}
+
+abrirNuevaEntrega() {
+
+  this.modoEdicionEntrega = false;
+
+  this.entregaActual = {
+
+    titulo: '',
+
+    descripcion: '',
+
+    fecha_limite: '',
+
+    obligatorio: true
+
+  };
+
+  this.mostrarModalEntrega = true;
 
 }
 
-cargarActividad(): void {
+editarEntrega(
+  entrega: ProjectDelivery
+) {
 
-  if (!this.project?.id) {
+  this.modoEdicionEntrega = true;
+
+  this.entregaActual = {
+
+    ...entrega
+
+  };
+
+  this.mostrarModalEntrega = true;
+
+}
+
+
+cerrarModalEntrega() {
+  this.mostrarModalEntrega = false;
+  this.guardandoEntrega = false;
+  this.cdr.detectChanges(); // 👈 Forzar a Angular a refrescar el DOM
+}
+
+guardarEntrega() {
+  if (!this.project || this.guardandoEntrega) {
+    return;
+  }
+
+  this.guardandoEntrega = true;
+
+  const request = this.modoEdicionEntrega
+    ? this.deliveryService.updateDelivery(
+        this.entregaActual.id,
+        this.entregaActual
+      )
+    : this.deliveryService.createDelivery(
+        this.project.id,
+        this.entregaActual
+      );
+
+  request.subscribe({
+    next: (respuesta) => {
+      console.log('✅ NEXT ejecutado', respuesta);
+      this.cargarEntregas();
+      this.cerrarModalEntrega(); // 👈 Llama a cerrar con detectChanges()
+    },
+    error: err => {
+      console.error('❌ ERROR ejecutado', err);
+      this.guardandoEntrega = false;
+      this.cdr.detectChanges(); // 👈 Forzar refresco en caso de error
+    }
+  });
+}
+
+eliminarEntrega(
+  id: number
+) {
+
+  if (
+
+    !confirm(
+
+      '¿Eliminar esta entrega?'
+
+    )
+
+  ) {
 
     return;
 
   }
 
-  this.projectService
-    .getProjectActivity(
-      this.project.id
-    )
+  this.deliveryService
+    .deleteDelivery(id)
     .subscribe({
 
-      next: data => {
+      next: () => {
 
-        this.actividadProyecto =
-          data;
+        this.cargarEntregas();
+
+    this.cerrarModalEntrega();
 
       },
 
       error: err => {
 
-        console.error(
-          'Error cargando actividad',
-          err
-        );
+        console.error(err);
 
       }
 

@@ -96,5 +96,15 @@ getProjectActivity(
 
 }
 
+getStudentActivity() {
+
+  return this.http.get<any[]>(
+
+    'http://localhost:8000/api/activity'
+
+  );
+
+}
+
 
 }

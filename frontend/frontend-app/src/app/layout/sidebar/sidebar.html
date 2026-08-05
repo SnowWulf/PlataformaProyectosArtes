@@ -52,6 +52,54 @@
 
         </a>
 
+
+        <a routerLink="/dashboard/profile" routerLinkActive="active">
+
+ 🔧 Herramientas 
+
+        </a>
+
     </nav>
+
+    <div class="sidebar-user">
+
+  <button
+    class="user-menu-btn"
+    (click)="mostrarMenuUsuario = !mostrarMenuUsuario">
+
+    <span>⚙️</span>
+
+
+  </button>
+
+  <div
+    class="user-dropdown"
+    *ngIf="mostrarMenuUsuario">
+
+   <button
+  type="button"
+  (click)="irAMiPerfil()">
+
+  👤 Mi perfil
+
+</button>
+
+    <button
+      routerLink="/dashboard/profile">
+
+      Configuración
+
+    </button>
+
+    <button
+      (click)="logout()">
+
+      Cerrar sesión
+
+    </button>
+
+  </div>
+
+</div>
 
 </div>

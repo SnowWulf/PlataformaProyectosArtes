@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TutorRequest;
 use App\Models\Project;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\ActivityLogger;
 
 class TutorRequestController extends Controller
 {
@@ -13,7 +14,6 @@ class TutorRequestController extends Controller
 {
     $user = $request->user();
 
-    // Solo los estudiantes pueden solicitar tutor
     if ($user->role->nombre !== 'Estudiante') {
 
         return response()->json([
@@ -22,10 +22,20 @@ class TutorRequestController extends Controller
 
     }
 
-    // Buscar el proyecto
-    $project = Project::findOrFail($request->project_id);
+    $request->validate([
 
-    // Verificar que el proyecto pertenezca al estudiante
+        'project_id' => 'required|exists:projects,id',
+
+        'tutor_id' => 'required|exists:users,id',
+
+        'mensaje' => 'nullable|string|max:1000'
+
+    ]);
+
+    $project = Project::findOrFail(
+        $request->project_id
+    );
+
     if ($project->owner_id !== $user->id) {
 
         return response()->json([
@@ -34,7 +44,6 @@ class TutorRequestController extends Controller
 
     }
 
-    // Verificar que aún no tenga tutor asignado
     if ($project->tutor_id) {
 
         return response()->json([
@@ -43,31 +52,75 @@ class TutorRequestController extends Controller
 
     }
 
-    // Verificar que no exista una solicitud pendiente
-    $pendiente = TutorRequest::where('project_id', $project->id)
-        ->where('estado', 'Pendiente')
-        ->exists();
-
-    if ($pendiente) {
+    if ($project->tutor_id == $request->tutor_id) {
 
         return response()->json([
-            'message' => 'Ya existe una solicitud pendiente para este proyecto.'
+            'message' => 'Ese tutor ya está asignado al proyecto.'
         ], 400);
 
     }
 
-    // Crear la solicitud
+    $exists = TutorRequest::where(
+        'project_id',
+        $project->id
+    )
+    ->where(
+        'tutor_id',
+        $request->tutor_id
+    )
+    ->where(
+        'estado',
+        'Pendiente'
+    )
+    ->exists();
+
+    if ($exists) {
+
+        return response()->json([
+            'message' => 'Ya existe una solicitud pendiente para este tutor.'
+        ], 422);
+
+    }
+
     $solicitud = TutorRequest::create([
 
         'project_id' => $project->id,
+
         'student_id' => $user->id,
+
         'tutor_id' => $request->tutor_id,
+
         'mensaje' => $request->mensaje,
+
         'estado' => 'Pendiente'
 
     ]);
 
-    return response()->json($solicitud, 201);
+    ActivityLogger::log(
+
+        $project->id,
+
+        $user->id,
+
+        'tutor_request_sent',
+
+        'Solicitud de tutoría enviada.',
+
+        [
+
+            'tutor_id' => $request->tutor_id
+
+        ]
+
+    );
+
+    return response()->json(
+
+        $solicitud,
+
+        201
+
+    );
 }
 
 public function pending(Request $request)
@@ -129,6 +182,20 @@ public function accept(Request $request, $id)
         $proyecto->tutor_id = $user->id;
 
         $proyecto->save();
+
+        ActivityLogger::log(
+
+    $proyecto->id,
+
+    $user->id,
+
+    'tutor_assigned',
+
+    $user->name . ' fue asignado como tutor',
+
+    []
+
+);
 
         // 3. Rechazar las demás solicitudes del mismo proyecto
         TutorRequest::where('project_id', $proyecto->id)

@@ -44,23 +44,33 @@
 
       <div class="request-info">
 
-        <h3>
+<h3>
+  {{ solicitud.requester?.name }}
+</h3>
 
-          {{ solicitud.requester?.name }}
+<p *ngIf="solicitud.tipo === 'request'">
 
-        </h3>
+  Quiere colaborar en:
 
-        <p>
+  <strong>
 
-          Quiere colaborar en:
+    {{ solicitud.project?.titulo }}
 
-          <strong>
+  </strong>
 
-            {{ solicitud.project?.titulo }}
+</p>
 
-          </strong>
+<p *ngIf="solicitud.tipo === 'invite'">
 
-        </p>
+  Te invitó a colaborar en:
+
+  <strong>
+
+    {{ solicitud.project?.titulo }}
+
+  </strong>
+
+</p>
 
       </div>
 

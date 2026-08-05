@@ -4,12 +4,18 @@ import { CommonModule } from '@angular/common';
 
 import { ActivatedRoute } from '@angular/router';
 
+import { Project } from '../../models/project';
+
 import { CommunityService }
   from '../../services/community-service';
 
 import { User } from '../../models/user';
 
 import { ChangeDetectorRef } from '@angular/core';
+
+import { FormsModule } from '@angular/forms';
+
+import { ProjectService } from '../../services/project-service';
 
 import {
   CommunityProject
@@ -18,34 +24,67 @@ import {
 import { Auth }
 from '../../services/auth';
 
+
 @Component({
   selector: 'app-community-profile',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   templateUrl:
     './community-profile.html',
   styleUrl:
     './community-profile.scss'
 })
-export class CommunityProfile
-  implements OnInit {
+export class CommunityProfile implements OnInit {
 
+  
   usuario:
     User | null = null;
 
     proyectos:
   CommunityProject[] = [];
 
+  misProyectos: Project[] = [];
+
+  mostrarSelectorProyecto = false;
+
+  proyectoSeleccionado: number | null = null;
+
+  esTutor = false;
+
+  mostrarModalTutoria = false;
+  
+
   constructor(
   private route: ActivatedRoute,
   private communityService: CommunityService,
+  private projectService: ProjectService,
   private cdr: ChangeDetectorRef,
   private auth: Auth
+    
+
 ) {}
 
   ngOnInit(): void {
+
+    const usuario =
+  this.auth.obtenerUsuario();
+
+if (usuario?.role?.nombre === 'Estudiante') {
+
+  this.projectService
+    .getProjects()
+    .subscribe(data => {
+
+      this.misProyectos = data;
+
+    });
+
+}
+
+    this.cargarMisProyectos();
 
     this.route.paramMap
       .subscribe(params => {
@@ -69,6 +108,9 @@ export class CommunityProfile
     id: number
   ): void {
 
+
+
+
     this.communityService
       .getUser(id)
       .subscribe({
@@ -81,7 +123,10 @@ export class CommunityProfile
 
   this.usuario = usuario;
 
+  this.esTutor = usuario.role?.nombre === 'Tutor';
+
   this.cdr.detectChanges();
+  
 
 },
 
@@ -169,4 +214,134 @@ solicitarColaboracion(
 
 }
 
+
+cargarMisProyectos(): void {
+
+  this.projectService
+    .getProjects()
+    .subscribe({
+
+      next: proyectos => {
+
+        const usuario =
+          this.auth.obtenerUsuario();
+
+        this.misProyectos =
+          proyectos.filter(
+
+            p =>
+
+              p.owner_id ===
+              usuario?.id
+
+          );
+
+      },
+
+      error: err => {
+
+        console.error(err);
+
+      }
+
+    });
+
+}
+
+invitarAProyecto(): void {
+
+  if (
+
+    !this.usuario ||
+
+    !this.proyectoSeleccionado
+
+  ) {
+
+    return;
+
+  }
+
+  this.communityService
+    .inviteToProject(
+
+      this.proyectoSeleccionado,
+
+      this.usuario.id
+
+    )
+    .subscribe({
+
+      next: () => {
+
+        alert(
+          'Invitación enviada.'
+        );
+
+        this.mostrarSelectorProyecto =
+          false;
+
+        this.proyectoSeleccionado =
+          null;
+
+      },
+
+      error: err => {
+
+        console.error(err);
+
+        alert(
+
+          err.error?.message ??
+
+          'Error al enviar invitación.'
+
+        );
+
+      }
+
+    });
+
+}
+
+solicitarTutoria(
+  projectId: number
+): void {
+
+  if (!this.usuario) {
+    return;
+  }
+
+  this.communityService
+    .requestTutor(
+
+      projectId,
+
+      this.usuario.id
+
+    )
+    .subscribe({
+
+      next: () => {
+
+        alert(
+          'Solicitud enviada'
+        );
+
+        this.mostrarModalTutoria =
+          false;
+
+      },
+
+      error: err => {
+
+        alert(
+          err.error?.message
+        );
+
+      }
+
+    });
+
+}
 }

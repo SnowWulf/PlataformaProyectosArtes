@@ -9,8 +9,14 @@ class CollaborationRequest extends Model
     protected $fillable = [
 
         'project_id',
+
         'requester_id',
-        'estado'
+
+        'receiver_id',
+
+        'estado',
+
+        'tipo'
 
     ];
 
@@ -24,6 +30,14 @@ class CollaborationRequest extends Model
         return $this->belongsTo(
             User::class,
             'requester_id'
+        );
+    }
+
+    public function receiver()
+    {
+        return $this->belongsTo(
+            User::class,
+            'receiver_id'
         );
     }
 }

@@ -1,0 +1,69 @@
+<div class="perfil-container">
+
+  <h2>Mi perfil</h2>
+
+  <!-- Sección de Foto de Perfil -->
+  <div class="foto-section">
+    <div class="avatar-wrapper">
+      <img
+        [src]="usuario.foto_url || '/user.webp'"
+        alt="Foto de perfil"
+        class="profile-photo"
+      >
+      <label class="btn-change-photo" title="Cambiar foto">
+        📷
+        <input
+          type="file"
+          accept="image/*"
+          (change)="seleccionarFoto($event)"
+        >
+      </label>
+    </div>
+  </div>
+
+  <!-- Información Básica -->
+  <div class="datos-section">
+    <h3>
+      {{ usuario.name }}
+    </h3>
+    <p>
+      {{ usuario.programa }}
+    </p>
+  </div>
+
+  <!-- Campo de Biografía -->
+  <label for="bio">
+    Biografía
+  </label>
+  <textarea
+    id="bio"
+    [(ngModel)]="usuario.bio"
+    rows="5"
+    placeholder="Cuéntanos sobre ti"
+  ></textarea>
+
+  <!-- Opciones de Privacidad -->
+  <div class="privacidad">
+    <label>
+      <input
+        type="checkbox"
+        [(ngModel)]="usuario.mostrar_proyectos"
+      >
+      Mostrar mis proyectos públicamente
+    </label>
+
+    <label>
+      <input
+        type="checkbox"
+        [(ngModel)]="usuario.mostrar_correo"
+      >
+      Mostrar mi correo públicamente
+    </label>
+  </div>
+
+  <!-- Botón de Acción -->
+  <button (click)="guardarPerfil()">
+    Guardar cambios
+  </button>
+
+</div>

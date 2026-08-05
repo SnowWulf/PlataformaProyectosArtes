@@ -192,6 +192,8 @@ export class StudentHome implements OnInit {
 
                 }
 
+                
+
               });
 
           });
@@ -513,48 +515,31 @@ export class StudentHome implements OnInit {
 
   cargarActividad(): void {
 
-    if (!this.proyectoActual) {
+  this.projectService
+    .getStudentActivity()
+    .subscribe({
 
-      console.log(
-        'No hay proyecto actual'
-      );
+      next: data => {
 
-      return;
+        console.log(
+          'Actividad recibida:',
+          data
+        );
 
-    }
+        this.actividadProyecto = data;
 
-    console.log(
-      'cargarActividad ejecutado'
-    );
+      },
 
-    this.projectService
-      .getProjectActivity(
-        this.proyectoActual.id
-      )
-      .subscribe({
+      error: err => {
 
-        next: data => {
+        console.error(
+          'Error actividad:',
+          err
+        );
 
-          console.log(
-            'Actividad recibida:',
-            data
-          );
+      }
 
-          this.actividadProyecto =
-            data;
+    });
 
-        },
-
-        error: err => {
-
-          console.error(
-            'Error actividad:',
-            err
-          );
-
-        }
-
-      });
-
-  }
+}
 }

@@ -169,7 +169,7 @@ track alerta.proyectoId
   </h2>
 
   <div class="stats-grid">
-  
+
 
     <div class="stat-card" (click)="filtrarDocumentos('Todos')">
 
@@ -261,57 +261,54 @@ track alerta.proyectoId
 
   <h3>
 
-  Mostrando:
+    Mostrando:
 
-  {{ filtroEstado }}
+    {{ filtroEstado }}
 
-</h3>
-<br>
+  </h3>
+  <br>
 
 
   @if (
-    documentosFiltrados.length > 0
+  documentosFiltrados.length > 0
   ) {
 
-    @for (
-      document of documentosFiltrados;
-      track document.id
-    ) {
+  @for (
+  document of documentosFiltrados;
+  track document.id
+  ) {
 
-      <div
-  class="document-card"
-  (click)="abrirDocumento(document)">
+  <div class="document-card" (click)="abrirDocumento(document)">
 
-        <h4>
+    <h4>
 
-          {{ document.nombre }}
+      {{ document.nombre }}
 
-        </h4>
-
-        <p>
-
-          {{ document.descripcion }}
-
-        </p>
-
-        <span
-          class="estado-badge">
-
-          {{ document.estado }}
-
-        </span>
-
-      </div>
-
-    }
-
-  } @else {
+    </h4>
 
     <p>
 
-      No existen documentos para este filtro.
+      {{ document.descripcion }}
 
     </p>
+
+    <span class="estado-badge">
+
+      {{ document.estado }}
+
+    </span>
+
+  </div>
+
+  }
+
+  } @else {
+
+  <p>
+
+    No existen documentos para este filtro.
+
+  </p>
 
   }
 
@@ -329,97 +326,97 @@ track alerta.proyectoId
   </h2>
 
   @if (
-    historialRevisiones.length > 0
+  historialRevisiones.length > 0
   ) {
 
-    @for (
-      revision of historialRevisiones;
-      track $index
+  @for (
+  revision of historialRevisiones;
+  track $index
+  ) {
+  <hr>
+  <div class="review-card">
+
+    <div class="review-row">
+      <br>
+      <strong>
+        Proyecto:
+      </strong>
+
+      {{ revision.proyecto }}
+
+    </div>
+
+    <div class="review-row">
+
+      <strong>
+        Documento:
+      </strong>
+
+      {{ revision.documento }}
+
+    </div>
+
+    <div class="review-row">
+
+      <strong>
+        Estado:
+      </strong>
+
+      <span class="estado-badge">
+
+        {{ revision.estado }}
+
+      </span>
+
+    </div>
+
+    <div class="review-row">
+
+      <strong>
+        Tutor:
+      </strong>
+
+      {{ revision.tutor }}
+
+    </div>
+
+    @if (
+    revision.comentario
     ) {
-      <hr>
-      <div class="review-card">
 
-        <div class="review-row">
-          <br>
-          <strong>
-            Proyecto:
-          </strong>
+    <div class="review-row">
 
-          {{ revision.proyecto }}
+      <strong>
+        Comentario:
+      </strong>
 
-        </div>
+      {{ revision.comentario }}
 
-        <div class="review-row">
-
-          <strong>
-            Documento:
-          </strong>
-
-          {{ revision.documento }}
-
-        </div>
-
-        <div class="review-row">
-
-          <strong>
-            Estado:
-          </strong>
-
-          <span class="estado-badge">
-
-            {{ revision.estado }}
-
-          </span>
-
-        </div>
-
-        <div class="review-row">
-
-          <strong>
-            Tutor:
-          </strong>
-
-          {{ revision.tutor }}
-
-        </div>
-
-        @if (
-          revision.comentario
-        ) {
-
-          <div class="review-row">
-
-            <strong>
-              Comentario:
-            </strong>
-
-            {{ revision.comentario }}
-
-          </div>
-
-        }
-
-        <div class="review-row">
-
-          <strong>
-            Fecha:
-          </strong>
-
-          {{ revision.fecha | date:'dd/MM/yyyy HH:mm' }}
-
-        </div>
-
-      </div>
+    </div>
 
     }
 
+    <div class="review-row">
+
+      <strong>
+        Fecha:
+      </strong>
+
+      {{ revision.fecha | date:'dd/MM/yyyy HH:mm' }}
+
+    </div>
+
+  </div>
+
+  }
+
   } @else {
 
-    <p>
+  <p>
 
-      No existen revisiones todavía.
+    No existen revisiones todavía.
 
-    </p>
+  </p>
 
   }
 
@@ -438,42 +435,43 @@ track alerta.proyectoId
   </h2>
 
   @if (
-    actividadProyecto.length > 0
+  actividadProyecto.length > 0
   ) {
 
-    @for (
-      actividad of actividadProyecto.slice(0, 10);
-      track actividad.id
-    ) {
+  @for (
+  actividad of actividadProyecto.slice(0, 10);
+  track actividad.id
+  ) {
 
-      <div class="activity-item">
+  <div class="activity-item">
 
-        <div class="activity-date">
+    <div class="activity-date">
 
-          {{
-            actividad.created_at
-            | date:'dd/MM/yyyy HH:mm'
-          }}
+      {{
+      actividad.created_at
+      | date:'dd/MM/yyyy HH:mm'
+      }}
 
-        </div>
+    </div>
 
-        <div class="activity-title">
+    <div class="activity-title">
 
-          {{ actividad.descripcion }}
+      {{ actividad.descripcion }}
 
-        </div>
+    </div>
+    
 
-      </div>
+  </div>
 
-    }
+  }
 
   } @else {
 
-    <p>
+  <p>
 
-      No hay actividad reciente.
+    No hay actividad reciente.
 
-    </p>
+  </p>
 
   }
 

@@ -166,6 +166,7 @@ if ($esColaborador) {
 
     $user = $request->user();
 
+    $collaborator = User::find($userId);
 
     if (
         $user->role->nombre !== 'Coordinador'
@@ -267,19 +268,27 @@ if ($esColaborador) {
 }
 
 
-public function activity(
-    Project $project
-)
+public function activity(Project $project)
 {
+    $activities = $project
+        ->activityLogs()
+        ->with([
+            'user',
+            'project'
+        ])
+        ->latest()
+        ->take(100)
+        ->get();
+
+    $activities->each(function ($activity) {
+
+        $activity->project_name =
+            $activity->project?->titulo;
+
+    });
+
     return response()->json(
-
-        $project
-            ->activityLogs()
-            ->with('user')
-            ->latest()
-            ->take(100)
-            ->get()
-
+        $activities
     );
 }
 
@@ -289,36 +298,18 @@ public function studentActivity(
 {
     $user = $request->user();
 
-    $activities = ActivityLog::whereHas(
-        'project',
-        function ($query) use ($user) {
+    $projectIds = Project::where(
+        'owner_id',
+        $user->id
+    )
+    ->pluck('id');
 
-            $query->where(
-                'owner_id',
-                $user->id
-            )
-
-            ->orWhereHas(
-                'collaborators',
-                function ($q) use ($user) {
-
-                    $q->where(
-                        'users.id',
-                        $user->id
-                    );
-
-                }
-            );
-
-        }
+    return ActivityLog::whereIn(
+        'project_id',
+        $projectIds
     )
     ->latest()
     ->take(50)
     ->get();
-
-    return response()->json(
-        $activities
-    );
 }
-
 }

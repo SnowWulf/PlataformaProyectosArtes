@@ -123,3 +123,26 @@
   cursor: pointer;
 
 }
+.profile-avatar {
+
+    display: flex;
+
+    justify-content: center;
+
+    margin-bottom: 1rem;
+
+}
+
+.user-avatar {
+
+    width: 90px;
+
+    height: 90px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 3px solid #ddd;
+
+}

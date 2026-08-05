@@ -66,5 +66,12 @@ class Project extends Model
             ActivityLog::class
         );
     }
+
+    public function deliveries()
+    {
+        return $this->hasMany(
+            ProjectDelivery::class
+        );
+    }
     
 }

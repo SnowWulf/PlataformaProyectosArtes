@@ -1,0 +1,95 @@
+@if (visible) {
+
+<div class="modal-backdrop">
+
+    <div class="modal">
+
+        <h2>
+
+            @if (delivery) {
+
+                Editar entrega
+
+            } @else {
+
+                Nueva entrega
+
+            }
+
+        </h2>
+
+        <label>
+
+            Título
+
+        </label>
+
+        <input
+
+            [(ngModel)]="form.titulo"
+
+        >
+
+        <label>
+
+            Descripción
+
+        </label>
+
+        <textarea
+
+            rows="4"
+
+            [(ngModel)]="form.descripcion">
+
+        </textarea>
+
+        <label>
+
+            Fecha límite
+
+        </label>
+
+        <input
+
+            type="datetime-local"
+
+            [(ngModel)]="form.fecha_limite">
+
+        <label>
+
+            <input
+
+                type="checkbox"
+
+                [(ngModel)]="form.obligatorio">
+
+            Entrega obligatoria
+
+        </label>
+
+        <div class="buttons">
+
+            <button
+
+                (click)="guardar()">
+
+                Guardar
+
+            </button>
+
+            <button
+
+                (click)="close.emit()">
+
+                Cancelar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+}

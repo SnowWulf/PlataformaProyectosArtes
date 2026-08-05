@@ -268,7 +268,7 @@
 
   </h2>
 
-@if (puedeCrearDocumento()) {
+  @if (puedeCrearDocumento()) {
 
   <button class="primary-btn" (click)="abrirFormularioDocumento()">
 
@@ -310,15 +310,15 @@
 
     <div class="document-author">
 
-  👤 Subido por:
+      👤 Subido por:
 
-  <strong>
+      <strong>
 
-    {{ document.user?.name }}
+        {{ document.user?.name }}
 
-  </strong>
+      </strong>
 
-</div>
+    </div>
 
     <span [class]="
       obtenerClaseEstado(
@@ -367,10 +367,10 @@
     </a>
 
     @if (
-  puedeEditarDocumento(
+    puedeEditarDocumento(
     document
-  )
-) {
+    )
+    ) {
 
     <button (click)="abrirFormularioDocumento(document)">
 
@@ -680,17 +680,11 @@
     track mensaje.id
     ) {
 
-    <div
-
-  class="message"
-
-  [class.mine]="
+    <div class="message" [class.mine]="
     esMiMensaje(
       mensaje
     )
-  "
-
->
+  ">
 
       @if (
       !esMismoAutor($index)
@@ -743,4 +737,167 @@
 </div>
 
 }
+<h2>📌 Entregas</h2>
+@if (auth.esTutor() || auth.esCoordinador()) {
+
+<button
+  class="btn-primary"
+  (click)="abrirNuevaEntrega()">
+  + Nueva entrega
+</button>
+}
+
+<!-- Renderizado de la lista con bloque @empty para diagnóstico -->
+<div class="deliveries-list">
+  @for (entrega of deliveries; track entrega.id) {
+    <div class="delivery-card">
+      <div class="delivery-info">
+        <h3>{{ entrega.titulo }}</h3>
+        <p>{{ entrega.descripcion }}</p>
+        <p>📅 {{ entrega.fecha_limite }}</p>
+        <p>
+          @if (entrega.obligatorio) {
+            <span class="badge obligatorio">Obligatoria</span>
+          } @else {
+            <span class="badge opcional">Opcional</span>
+          }
+        </p>
+      </div>
+
+      <div class="delivery-actions">
+        <button class="btn-edit" (click)="editarEntrega(entrega)">
+          ✏ Editar
+        </button>
+        <button class="btn-delete" (click)="eliminarEntrega(entrega.id)">
+          🗑 Eliminar
+        </button>
+      </div>
+    </div>
+  } @empty {
+    <div class="empty-state">
+      <p>No hay entregas registradas en este proyecto.</p>
+    </div>
+  }
+</div>
+
+
+
+@if (mostrarModalEntrega) {
+
+<div class="modal-backdrop">
+
+  <div class="modal">
+
+    <h2>
+
+      @if (modoEdicionEntrega) {
+
+        Editar entrega
+
+      } @else {
+
+        Nueva entrega
+
+      }
+
+    </h2>
+
+    <label>
+
+      Título
+
+    </label>
+
+    <input
+
+      type="text"
+
+      [(ngModel)]="entregaActual.titulo"
+
+    >
+
+    <label>
+
+      Descripción
+
+    </label>
+
+    <textarea
+
+      rows="5"
+
+      [(ngModel)]="entregaActual.descripcion">
+
+    </textarea>
+
+    <label>
+
+      Fecha límite
+
+    </label>
+
+    <input
+
+      type="datetime-local"
+
+      [(ngModel)]="entregaActual.fecha_limite"
+
+    >
+
+    <label>
+
+      <input
+
+        type="checkbox"
+
+        [(ngModel)]="entregaActual.obligatorio"
+
+      >
+
+      Entrega obligatoria
+
+    </label>
+
+    <div class="modal-buttons">
+
+      <button
+
+        type="button"
+
+        [disabled]="guardandoEntrega"
+
+        (click)="guardarEntrega()">
+
+        @if (guardandoEntrega) {
+
+          Guardando...
+
+        } @else {
+
+          Guardar
+
+        }
+
+      </button>
+
+      <button
+
+        type="button"
+
+        [disabled]="guardandoEntrega"
+
+        (click)="cerrarModalEntrega()">
+
+        Cancelar
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}
+
 }

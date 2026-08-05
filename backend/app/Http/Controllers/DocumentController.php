@@ -45,6 +45,7 @@ class DocumentController extends Controller
         'file_path' => $path,
         'estado' => 'submitted',
     ]);
+    $document->load('project');
 
 ActivityLogger::log(
 
@@ -60,6 +61,12 @@ ActivityLogger::log(
     '"',
 
     [
+
+        'project_id' =>
+            $document->project_id,
+
+        'project_name' =>
+            $document->project->titulo,
 
         'document_id' =>
             $document->id,
