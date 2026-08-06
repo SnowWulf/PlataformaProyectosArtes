@@ -1,0 +1,90 @@
+<div class="modal-backdrop">
+  <div class="modal">
+    <h2>
+      @if (modoEdicion) {
+        Editar evento
+      } @else {
+        Nuevo evento
+      }
+    </h2>
+
+    <div class="form-grid">
+      <!-- Título (Ocupa todo el ancho) -->
+      <div class="form-group full-width">
+        <label>Título</label>
+        <input
+          type="text"
+          [(ngModel)]="evento.titulo"
+          placeholder="Ej. Reunión de avance"
+        >
+      </div>
+
+      <!-- Descripción (Ocupa todo el ancho) -->
+      <div class="form-group full-width">
+        <label>Descripción</label>
+        <textarea
+          rows="2"
+          [(ngModel)]="evento.descripcion"
+          placeholder="Detalles opcionales..."
+        ></textarea>
+      </div>
+
+      <!-- Fecha Inicio y Fin en una misma fila -->
+      <div class="form-group">
+        <label>Fecha inicio</label>
+        <input
+          type="datetime-local"
+          [(ngModel)]="evento.fecha_inicio"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Fecha fin</label>
+        <input
+          type="datetime-local"
+          [(ngModel)]="evento.fecha_fin"
+        >
+      </div>
+
+      <!-- Tipo y Color en una misma fila -->
+      <div class="form-group">
+        <label>Tipo</label>
+        <select [(ngModel)]="evento.tipo">
+          <option value="personal">Personal</option>
+          <option value="academico">Académico</option>
+          <option value="reunion">Reunión</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Color</label>
+        <input
+          type="color"
+          [(ngModel)]="evento.color"
+        >
+      </div>
+
+      <!-- Checkbox (Ocupa todo el ancho) -->
+      <div class="form-group full-width">
+        <label class="checkbox-group">
+          <input
+            type="checkbox"
+            [(ngModel)]="evento.recordatorio"
+          >
+          <span>Activar recordatorio</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="modal-buttons">
+      <button class="btn-cancel" (click)="cancelarModal()">
+        Cancelar
+      </button>
+      <button class="btn-save" (click)="guardarEvento()">
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>

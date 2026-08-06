@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-
 import { HttpClient } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,65 +7,27 @@ import { Observable } from 'rxjs';
 })
 export class ProjectDeliveryService {
 
-  private apiUrl =
-    'http://localhost:8000/api';
+  private apiUrl = 'http://localhost:8000/api';
 
-  constructor(
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
-  getDeliveries(
-    projectId: number
-  ): Observable<any[]> {
-
-    return this.http.get<any[]>(
-
-      `${this.apiUrl}/projects/${projectId}/deliveries`
-
-    );
-
+  getDeliveries(projectId?: number): Observable<any[]> {
+    if (projectId) {
+      return this.http.get<any[]>(`${this.apiUrl}/projects/${projectId}/deliveries`);
+    }
+    // Si no se especifica un proyecto, obtiene todas las entregas asignadas
+    return this.http.get<any[]>(`${this.apiUrl}/deliveries`);
   }
 
-  createDelivery(
-    projectId: number,
-    data: any
-  ) {
-
-    return this.http.post(
-
-      `${this.apiUrl}/projects/${projectId}/deliveries`,
-
-      data
-
-    );
-
+  createDelivery(projectId: number, data: any) {
+    return this.http.post(`${this.apiUrl}/projects/${projectId}/deliveries`, data);
   }
 
-  updateDelivery(
-    deliveryId: number,
-    data: any
-  ) {
-
-    return this.http.put(
-
-      `${this.apiUrl}/deliveries/${deliveryId}`,
-
-      data
-
-    );
-
+  updateDelivery(deliveryId: number, data: any) {
+    return this.http.put(`${this.apiUrl}/deliveries/${deliveryId}`, data);
   }
 
-  deleteDelivery(
-    deliveryId: number
-  ) {
-
-    return this.http.delete(
-
-      `${this.apiUrl}/deliveries/${deliveryId}`
-
-    );
-
+  deleteDelivery(deliveryId: number) {
+    return this.http.delete(`${this.apiUrl}/deliveries/${deliveryId}`);
   }
-
 }

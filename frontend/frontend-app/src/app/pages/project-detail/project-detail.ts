@@ -7,7 +7,8 @@ import {
 
 import { ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
-
+import { CommonModule } from '@angular/common';
+import { DeliverySubmission } from '../../models/delivery-submission';
 import { Project } from '../../models/project';
 import { ProjectService } from '../../services/project-service';
 import { DocumentService } from '../../services/document';
@@ -16,24 +17,26 @@ import { DocumentForm } from '../../components/document-form/document-form';
 import { Document } from '../../models/document';
 import { DocumentReviewForm } from '../../components/document-review-form/document-review-form';
 import { DocumentReviewService } from '../../services/document-review';
-import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ElementRef, ViewChild } from '@angular/core';
 
 import { ProjectDelivery } from '../../models/project-delivery';
 import { ProjectDeliveryService } from '../../services/project-delivery-service';
-import { DeliveryModal } from '../../components/delivery-modal/delivery-modal';
+
+import { DeliverySubmissionModal } from '../../components/delivery-submission-modal/delivery-submission-modal';
+import { DeliverySubmissionService } from '../../services/delivery-submission';
+
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
   imports: [
-    NgClass,
+    CommonModule,
     DocumentForm,
     DocumentReviewForm,
     DatePipe,
     FormsModule,
-    DeliveryModal
+    DeliverySubmissionModal
   ],
   templateUrl: './project-detail.html',
   styleUrl: './project-detail.scss'
@@ -91,6 +94,10 @@ export class ProjectDetail {
 
   guardandoEntrega = false;
 
+  mostrarModalRespuesta = false;
+
+  entregaResponder: ProjectDelivery | null = null;
+
   @ViewChild(
     'chatMessages'
   )
@@ -104,6 +111,7 @@ export class ProjectDetail {
     private cdr: ChangeDetectorRef,
     public auth: Auth,
     private deliveryService: ProjectDeliveryService,
+    private submissionService: DeliverySubmissionService,
 
   ) {
 
@@ -803,25 +811,16 @@ export class ProjectDetail {
   }
 
 cargarEntregas() {
-  if (!this.project?.id) {
-    return;
-  }
+  if (!this.project?.id) return;
 
   this.deliveryService
     .getDeliveries(this.project.id)
     .subscribe({
       next: (data: any) => {
-        console.log('📦 Entregas recibidas:', data);
-        
-        // Maneja si la API devuelve directamente el Array o un objeto con data/deliveries
         this.deliveries = Array.isArray(data) ? data : (data.deliveries || data.data || []);
-        
-        // Forzar actualización de la vista para Angular SSR / Hydration
-        this.cdr.detectChanges();
+        this.cdr.detectChanges(); // Refresca la vista en Angular
       },
-      error: err => {
-        console.error('Error al cargar entregas:', err);
-      }
+      error: err => console.error('Error al cargar entregas:', err)
     });
 }
 
@@ -938,4 +937,69 @@ eliminarEntrega(
     });
 
 }
+
+abrirRespuesta(
+  entrega: ProjectDelivery
+) {
+
+  this.entregaResponder = entrega;
+
+  this.mostrarModalRespuesta = true;
+
+}
+
+cerrarRespuesta() {
+
+  this.mostrarModalRespuesta = false;
+
+  this.entregaResponder = null;
+
+}
+
+guardarRespuesta(formData: FormData) {
+  if (!this.entregaResponder) {
+    return;
+  }
+
+  const idEntregaActual = this.entregaResponder.id;
+
+  this.submissionService
+    .submitDelivery(idEntregaActual, formData)
+    .subscribe({
+      next: (res: any) => {
+        console.log('🔍 Respuesta recibida del backend al entregar:', res);
+        alert('Entrega enviada correctamente.');
+
+        // Reemplazamos la entrega en el arreglo creando un nuevo objeto para forzar la detección de cambios
+        this.deliveries = this.deliveries.map(entrega => {
+          if (entrega.id === idEntregaActual) {
+            return {
+              ...entrega,
+              respuesta: res || {
+                id: Date.now(),
+                delivery_id: idEntregaActual,
+                student_id: 0,
+                file_path: '',
+                estado: 'submitted',
+                created_at: new Date().toISOString()
+              }
+            };
+          }
+          return entrega;
+        });
+
+        console.log('📦 Entregas actualizadas localmente:', this.deliveries);
+
+        this.cerrarRespuesta();
+        this.cdr.detectChanges(); // Forzar actualización de pantalla
+      },
+      error: (err) => {
+        console.error('Error al enviar entrega:', err);
+        alert(err.error?.message ?? 'Error al enviar.');
+      }
+    });
+}
+
+
+
 }

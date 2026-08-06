@@ -1,0 +1,77 @@
+<div class="modal-backdrop">
+  <div class="modal-card">
+    
+    <!-- Encabezado del Modal -->
+    <header class="modal-header">
+      <div class="header-title">
+        <span class="icon">📤</span>
+        <h3>Responder entrega</h3>
+      </div>
+      <button class="btn-close" (click)="cancelar.emit()" aria-label="Cerrar modal">✕</button>
+    </header>
+
+    <!-- Cuerpo del Formulario -->
+    <div class="modal-body">
+      
+      <!-- Título de la entrega (Lectura) -->
+      <div class="form-group">
+        <label>Entrega</label>
+        <input 
+          type="text" 
+          [value]="entrega.titulo" 
+          readonly 
+          class="input-readonly"
+        >
+      </div>
+
+      <!-- Descripción de la entrega (Lectura) -->
+      <div class="form-group">
+        <label>Instrucciones / Descripción</label>
+        <textarea 
+          rows="3" 
+          readonly 
+          class="input-readonly"
+        >{{ entrega.descripcion }}</textarea>
+      </div>
+
+      <!-- Subir Archivo -->
+      <div class="form-group">
+        <label>Archivo adjunto</label>
+        <div class="file-upload-wrapper">
+          <input 
+            type="file" 
+            id="fileInput"
+            (change)="seleccionarArchivo($event)"
+            class="file-input-hidden"
+          >
+          <label for="fileInput" class="file-upload-button">
+            <span>📁 Seleccionar archivo</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Comentario (Editable) -->
+      <div class="form-group">
+        <label>Comentario u observaciones</label>
+        <textarea 
+          rows="3" 
+          [(ngModel)]="comentario" 
+          placeholder="Escribe un mensaje o comentario opcional..."
+        ></textarea>
+      </div>
+
+    </div>
+
+    <!-- Acciones del Modal -->
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="cancelar.emit()">
+        Cancelar
+      </button>
+      <button type="button" class="btn btn-primary" (click)="enviar()">
+        Enviar respuesta
+      </button>
+    </footer>
+
+  </div>
+</div>
+

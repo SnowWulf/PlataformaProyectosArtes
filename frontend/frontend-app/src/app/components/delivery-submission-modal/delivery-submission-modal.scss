@@ -1,0 +1,185 @@
+/* Fondo oscuro translúcido */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6); /* Oscuro elegante */
+  backdrop-filter: blur(4px); /* Efecto desfoque */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+/* Tarjeta del Modal */
+.modal-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 580px;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .icon {
+      font-size: 1.25rem;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+  }
+
+  .btn-close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #64748b;
+    cursor: pointer;
+    transition: color 0.15s;
+
+    &:hover {
+      color: #0f172a;
+    }
+  }
+}
+
+/* Cuerpo del Formulario */
+.modal-body {
+  padding: 1.5rem;
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+
+    &.full-width {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #334155;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      color: #0f172a;
+      background-color: #ffffff;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+
+      &:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  }
+}
+
+/* Footer / Botones */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+
+  .btn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.1s;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &.btn-secondary {
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+
+      &:hover {
+        background-color: #f1f5f9;
+      }
+    }
+
+    &.btn-primary {
+      background-color: #2563eb;
+      color: #ffffff;
+
+      &:hover {
+        background-color: #1d4ed8;
+      }
+    }
+  }
+}
+
+/* Responsivo para móviles */
+@media (max-width: 640px) {
+  .modal-body .form-grid {
+    grid-template-columns: 1fr;
+
+    .form-group.full-width {
+      grid-column: span 1;
+    }
+  }
+}

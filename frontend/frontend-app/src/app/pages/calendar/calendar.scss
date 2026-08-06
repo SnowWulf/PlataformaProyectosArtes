@@ -1,0 +1,213 @@
+.calendar-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  .view-toggle {
+    display: flex;
+    background-color: #1e293b;
+    padding: 4px;
+    border-radius: 8px;
+
+    button {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.active {
+        background-color: #3b82f6;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.calendar-container {
+  background-color: #0f172a;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+
+  .calendar-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+
+    h2 {
+      margin: 0;
+      color: #f8fafc;
+      font-size: 1.3rem;
+      text-transform: capitalize;
+    }
+
+    .nav-button {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      &:hover { background: #334155; }
+    }
+
+    .btn-today {
+      background: #334155;
+      border: none;
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      margin-left: auto;
+      cursor: pointer;
+    }
+  }
+
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: 700;
+    color: #64748b;
+    padding-bottom: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background-color: #334155;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .calendar-cell {
+      background-color: #1e293b;
+      min-height: 100px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.15s;
+
+      &:hover {
+        background-color: #273549;
+      }
+
+      &.other-month {
+        opacity: 0.35;
+      }
+
+      &.is-today {
+        background-color: rgba(59, 130, 246, 0.08);
+        .day-number {
+          background-color: #3b82f6;
+          color: white;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+      .cell-header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 4px;
+
+        .day-number {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #cbd5e1;
+        }
+      }
+
+      .events-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+
+        .calendar-event {
+          font-size: 0.72rem;
+          padding: 3px 6px;
+          background: rgba(255, 255, 255, 0.06);
+          border-left: 3px solid #3b82f6;
+          border-radius: 3px;
+          color: #f1f5f9;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          cursor: pointer;
+
+          &:hover {
+            filter: brightness(1.2);
+          }
+
+          &.is-task {
+            background: rgba(239, 68, 68, 0.12);
+          }
+        }
+
+        .more-events {
+          font-size: 0.68rem;
+          color: #94a3b8;
+          font-weight: 600;
+          cursor: pointer;
+          margin-top: 2px;
+          &:hover { color: #3b82f6; }
+        }
+      }
+    }
+  }
+}
+
+.event-card {
+  display: flex;
+  align-items: center;
+  background-color: #1e293b;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+
+  .color-indicator {
+    width: 6px;
+    height: 48px;
+    border-radius: 4px;
+  }
+
+  .event-info {
+    flex: 1;
+
+    .event-type-tag {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      margin: 2px 0 4px;
+      font-size: 1rem;
+      color: #f8fafc;
+    }
+
+    p {
+      margin: 0 0 6px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .event-dates small {
+      color: #64748b;
+      font-size: 0.8rem;
+    }
+  }
+}

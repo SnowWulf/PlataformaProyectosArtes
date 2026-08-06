@@ -1,903 +1,390 @@
 @if (project) {
+<div class="project-container">
 
-<div class="project-header">
-
-  <div>
-
-    <h1>
-
-      {{ project.titulo }}
-
-    </h1>
-
-    <p class="project-subtitle">
-
-      {{ project.tipo_proyecto }}
-
-    </p>
-
-  </div>
-
-  <div class="project-status">
-
-    {{ project.estado }}
-
-  </div>
-
-</div>
-
-@if (auth.esTutor()) {
-
-<div class="project-state-actions">
-
-  <button class="btn-estado" (click)="abrirModalEstado(project)">
-
-    🔄 Cambiar estado
-
-  </button>
-
-</div>
-
-}
-
-<div class="info-card">
-
-  <h2>
-
-    Información general
-
-  </h2>
-
-  <div class="info-grid">
-
-    <div>
-
-      <strong>Autor</strong>
-
-      <p>
-
-        {{ project.owner?.name }}
-
-      </p>
-
+  <!-- HEADER DEL PROYECTO -->
+  <header class="project-header">
+    <div class="header-main">
+      <h1>{{ project.titulo }}</h1>
+      <span class="project-subtitle">{{ project.tipo_proyecto }}</span>
     </div>
-
-    <div>
-
-      <strong>Tutor</strong>
-
-      <p>
-
-        {{ project.tutor?.name ?? 'Sin tutor' }}
-
-      </p>
-
-    </div>
-
-    <div>
-
-      <strong>Tipo</strong>
-
-      <p>
-
-        {{ project.tipo_proyecto }}
-
-      </p>
-
-    </div>
-
-    <div>
-
-      <strong>Estado</strong>
-
-      <p>
-
+    
+    <div class="header-actions">
+      <span class="status-tag" [ngClass]="project.estado.toLowerCase().replace(' ', '-')">
         {{ project.estado }}
-
-      </p>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div class="info-card">
-
-  <h2>
-
-    👥 Equipo del proyecto
-
-  </h2>
-
-  <div class="team-list">
-
-    <div class="team-member owner">
-
-      <strong>
-
-        👑 {{ project.owner?.name }}
-
-      </strong>
-
-      <span>
-
-        Propietario
-
       </span>
-
-    </div>
-
-    <div class="team-member tutor">
-
-      <strong>
-
-        🎓
-        {{ project.tutor?.name ?? 'Sin tutor asignado' }}
-
-      </strong>
-
-      <span>
-
-        Tutor
-
-      </span>
-
-    </div>
-
-    @if (
-    project.collaborators &&
-    project.collaborators.length > 0
-    ) {
-
-    @for (
-    colaborador of project.collaborators;
-    track colaborador.id
-    ) {
-
-    <div class="team-member collaborator">
-
-      <div>
-
-        <strong>
-
-          👤 {{ colaborador.name }}
-
-        </strong>
-
-      </div>
-
-      @if (
-      esPropietarioProyecto()
-      ) {
-
-      <button (click)="
-          eliminarColaborador(
-            colaborador.id
-          )
-        ">
-
-        ❌ Eliminar
-
-      </button>
-
+      
+      @if (auth.esTutor()) {
+        <button class="btn-secondary" (click)="abrirModalEstado(project)">
+          🔄 Cambiar estado
+        </button>
       }
+    </div>
+  </header>
 
-      <span>
+  <!-- MÉTRICAS / STATS -->
+  <section class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-number">{{ documents.length }}</span>
+      <span class="stat-label">Avances Subidos</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ project.estado }}</span>
+      <span class="stat-label">Estado Actual</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">{{ project.tutor?.name ?? 'Sin tutor' }}</span>
+      <span class="stat-label">Tutor Asignado</span>
+    </div>
+  </section>
 
-        Colaborador
+  <!-- INFORMACIÓN GENERAL Y EQUIPO -->
+  <div class="grid-two-columns">
+    
+    <!-- Info General -->
+    <section class="info-card">
+      <h2>ℹ️ Información General</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>Autor Principal</strong>
+          <p>{{ project.owner?.name }}</p>
+        </div>
+        <div class="info-item">
+          <strong>Tutor Asignado</strong>
+          <p>{{ project.tutor?.name ?? 'Sin tutor' }}</p>
+        </div>
+        <div class="info-item">
+          <strong>Tipo de Proyecto</strong>
+          <p>{{ project.tipo_proyecto }}</p>
+        </div>
+        <div class="info-item">
+          <strong>Estado</strong>
+          <p>{{ project.estado }}</p>
+        </div>
+      </div>
+    </section>
 
-      </span>
+    <!-- Equipo -->
+    <section class="info-card">
+      <h2>👥 Equipo del Proyecto</h2>
+      <div class="team-list">
+        <div class="team-member owner">
+          <div class="member-info">
+            <strong>👑 {{ project.owner?.name }}</strong>
+            <span class="role">Propietario</span>
+          </div>
+        </div>
+
+        <div class="team-member tutor">
+          <div class="member-info">
+            <strong>🎓 {{ project.tutor?.name ?? 'Sin tutor asignado' }}</strong>
+            <span class="role">Tutor</span>
+          </div>
+        </div>
+
+        @if (project.collaborators && project.collaborators.length > 0) {
+          @for (colaborador of project.collaborators; track colaborador.id) {
+            <div class="team-member collaborator">
+              <div class="member-info">
+                <strong>👤 {{ colaborador.name }}</strong>
+                <span class="role">Colaborador</span>
+              </div>
+              @if (esPropietarioProyecto()) {
+                <button class="btn-danger-sm" (click)="eliminarColaborador(colaborador.id)">
+                  ❌
+                </button>
+              }
+            </div>
+          }
+        } @else {
+          <p class="empty-text">No hay colaboradores asignados.</p>
+        }
+      </div>
+    </section>
+  </div>
+
+  <!-- SECCIÓN ENTREGAS (TAREAS) -->
+  <section class="content-section">
+    <div class="section-header">
+      <h2>📌 Entregas Programadas</h2>
+      @if (auth.esTutor() || auth.esCoordinador()) {
+        <button class="btn-primary" (click)="abrirNuevaEntrega()">
+          + Nueva entrega
+        </button>
+      }
     </div>
 
+    <div class="deliveries-grid">
+     
+     @for (entrega of deliveries; track entrega.id) {
+<div class="delivery-card">
+    
+    <!-- Encabezado con título y distintivo Obligatorio / Opcional -->
+    <div class="delivery-header">
+      <div class="title-container">
+        <!-- Distintivo Obligatorio / Opcional -->
+        <span class="type-badge" [ngClass]="entrega.obligatorio ? 'badge-obligatorio' : 'badge-opcional'">
+          {{ entrega.obligatorio ? 'Obligatoria' : 'Opcional' }}
+        </span>
+
+        <h4>{{ entrega.titulo }}</h4>
+      </div>
+    </div>
+
+    <p class="delivery-description">{{ entrega.descripcion }}</p>
+
+    <div class="delivery-footer">
+      <span class="date">📅 Límite: {{ entrega.fecha_limite | date:'dd/MM/yyyy HH:mm' }}</span>
+
+      <!-- Bloque del Estudiante -->
+      @if (auth.esEstudiante()) {
+        @if (entrega.respuesta) {
+          <div class="submission-status">
+            <span class="status-submitted">
+              @if (entrega.respuesta.updated_at && entrega.respuesta.updated_at !== entrega.respuesta.created_at) {
+                ✏️ Editado el {{ entrega.respuesta.updated_at | date:'dd/MM/yyyy' }} a las {{ entrega.respuesta.updated_at | date:'HH:mm' }} hs
+              } @else {
+                ✅ Enviado el {{ entrega.respuesta.created_at | date:'dd/MM/yyyy' }} a las {{ entrega.respuesta.created_at | date:'HH:mm' }} hs
+              }
+            </span>
+            <button class="btn-secondary-sm" (click)="abrirRespuesta(entrega)">
+              ✏️ Editar entrega
+            </button>
+          </div>
+        } @else {
+          <button class="btn-primary-sm" (click)="abrirRespuesta(entrega)">
+            📤 Responder
+          </button>
+        }
+      }
+    </div>
+
+  </div>
+} @empty {
+        <div class="empty-state">
+          <p>No hay entregas registradas en este proyecto.</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- SECCIÓN AVANCES Y DOCUMENTOS -->
+  <section class="content-section">
+    <div class="section-header">
+      <h2>📄 Avances del Proyecto</h2>
+      @if (puedeCrearDocumento()) {
+        <button class="btn-primary" (click)="abrirFormularioDocumento()">
+          + Nuevo avance
+        </button>
+      }
+    </div>
+
+    @if (mostrarFormularioDocumento) {
+      <div class="form-container">
+        <app-document-form 
+          [projectId]="project.id" 
+          [document]="documentoSeleccionado" 
+          (guardado)="documentoGuardado()"
+          (cancelado)="cerrarFormularioDocumento()">
+        </app-document-form>
+      </div>
     }
 
-    } @else {
+    <div class="documents-list">
+      @if (documents.length > 0) {
+        @for (document of documents; track document.id) {
+          <div class="document-card">
+            <div class="document-header">
+              <div class="doc-title-group">
+                <h3>{{ document.nombre }}</h3>
+                <span class="author">👤 {{ document.user?.name }}</span>
+              </div>
+              <span class="status-badge" [ngClass]="obtenerClaseEstado(document.estado)">
+                {{ document.estado }}
+              </span>
+            </div>
 
-    <p>
+            <p class="document-description">{{ document.descripcion }}</p>
 
-      No hay colaboradores asignados.
+            <div class="document-meta">
+              <span>📅 Creado: {{ document.created_at | date:'dd/MM/yyyy' }}</span>
+              <span>✏️ Editado: {{ document.updated_at | date:'dd/MM/yyyy' }}</span>
+            </div>
 
-    </p>
+            <div class="document-actions">
+              <a [href]="document.file_url" target="_blank" class="btn-link">
+                📄 Ver PDF
+              </a>
 
-    }
+              @if (puedeEditarDocumento(document)) {
+                <button class="btn-secondary-sm" (click)="abrirFormularioDocumento(document)">✏️ Editar</button>
+                <button class="btn-danger-sm" (click)="eliminarDocumento(document)">🗑 Eliminar</button>
+              }
 
+              @if (auth.esTutor()) {
+                <button class="btn-accent-sm" (click)="abrirFormularioRevision(document)">📝 Revisar</button>
+              }
+            </div>
 
-  </div>
+            <!-- HISTORIAL DE REVISIONES -->
+            @if (document.reviews && document.reviews.length > 0) {
+              <div class="reviews-section">
+                <button class="history-toggle" (click)="toggleRevisiones(document.id)">
+                  {{ revisionesAbiertas[document.id] ? '▼ Ocultar historial' : '▶ Ver historial (' + document.reviews.length + ')' }}
+                </button>
+
+                @if (revisionesAbiertas[document.id]) {
+                  <div class="reviews-list">
+                    @for (review of document.reviews; track review.id) {
+                      <div class="review-card">
+                        <div class="review-meta">
+                          <span><strong>Tutor:</strong> {{ review.tutor?.name }}</span>
+                          <span class="status">{{ review.estado }}</span>
+                        </div>
+                        <p class="comment"><strong>Comentario:</strong> {{ review.comentario }}</p>
+                        @if (review.attachment_url) {
+                          <a [href]="review.attachment_url" target="_blank" class="btn-link-sm">📎 Descargar archivo adjunto</a>
+                        }
+                        <span class="date">{{ review.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      } @else {
+        <div class="empty-state">
+          <p>Este proyecto aún no tiene documentos subidos.</p>
+        </div>
+      }
+    </div>
+  </section>
 
 </div>
-
-<div class="stats-grid">
-
-  <div class="stat-card">
-
-    <div class="stat-number">
-
-      {{ documents.length }}
-
-    </div>
-
-    <div class="stat-label">
-
-      Avances
-
-    </div>
-
-  </div>
-
-  <div class="stat-card">
-
-    <div class="stat-number">
-
-      {{ project.estado }}
-
-    </div>
-
-    <div class="stat-label">
-
-      Estado
-
-    </div>
-
-  </div>
-
-  <div class="stat-card">
-
-    <div class="stat-number">
-
-      {{ project.tutor?.name ?? 'Sin tutor' }}
-
-    </div>
-
-    <div class="stat-label">
-
-      Tutor asignado
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<div class="section-header">
-
-  <h2>
-
-    📄 Avances del proyecto
-
-  </h2>
-
-  @if (puedeCrearDocumento()) {
-
-  <button class="primary-btn" (click)="abrirFormularioDocumento()">
-
-    + Nuevo avance
-
-  </button>
-
-  }
-
-</div>
-
-
-
-
-@if (mostrarFormularioDocumento) {
-
-<app-document-form [projectId]="project.id" [document]="documentoSeleccionado" (guardado)="documentoGuardado()"
-  (cancelado)="cerrarFormularioDocumento()">
-</app-document-form>
-
-
 }
 
-<hr>
+<!-- MODALES -->
 
-@if (documents.length > 0) {
-
-@for (document of documents; track document.id) {
-
-<div class="document-card">
-
-  <div class="document-header">
-
-    <h3>
-
-      {{ document.nombre }}
-
-    </h3>
-
-    <div class="document-author">
-
-      👤 Subido por:
-
-      <strong>
-
-        {{ document.user?.name }}
-
-      </strong>
-
-    </div>
-
-    <span [class]="
-      obtenerClaseEstado(
-        document.estado
-      )
-    ">
-
-      {{ document.estado }}
-
-    </span>
-
-  </div>
-
-
-  <p class="document-description">
-
-    {{ document.descripcion }}
-
-  </p>
-
-  <div class="document-meta">
-
-    <span>
-
-      📅
-      {{ document.created_at | date:'dd/MM/yyyy' }}
-
-    </span>
-
-    <span>
-
-      ✏️
-      {{ document.updated_at | date:'dd/MM/yyyy' }}
-
-    </span>
-
-  </div>
-
-
-  <div class="document-actions">
-
-    <a [href]="document.file_url" target="_blank">
-
-      📄 Ver PDF
-
-    </a>
-
-    @if (
-    puedeEditarDocumento(
-    document
-    )
-    ) {
-
-    <button (click)="abrirFormularioDocumento(document)">
-
-      ✏️ Editar
-
-    </button>
-
-    <button (click)="eliminarDocumento(document)">
-
-      🗑 Eliminar
-
-    </button>
-
-    }
-
-
-    @if (auth.esTutor()) {
-
-    <button (click)="abrirFormularioRevision(document)">
-
-      📝 Revisar
-
-    </button>
-
-
-    }
-
-  </div>
-
-  <br><br>
-
-
-
-
-  @if (
-  document.reviews &&
-  document.reviews.length > 0
-  ) {
-
-  <hr>
-
-  <button class="history-toggle" (click)="toggleRevisiones(document.id)">
-
-    {{
-    revisionesAbiertas[document.id]
-    ? '▼ Ocultar historial'
-    : '▶ Ver historial (' +
-    document.reviews.length +
-    ')'
-    }}
-
-  </button>
-  @if (
-  revisionesAbiertas[
-  document.id
-  ]
-  ) {
-  @for (
-  review of document.reviews;
-  track review.id
-  ) {
-
-  <div class="review-card">
-
-
-    <p>
-
-      <strong>
-        Estado:
-      </strong>
-
-      {{ review.estado }}
-
-    </p>
-
-    <p>
-
-      <strong>
-        Tutor:
-      </strong>
-
-      {{ review.tutor?.name }}
-
-    </p>
-
-    <p>
-
-      <strong>
-        Comentario:
-      </strong>
-
-      {{ review.comentario }}
-
-    </p>
-
-    @if (review.attachment_url) {
-
-    <p>
-
-      <strong>
-        Archivo adjunto:
-      </strong>
-
-      <a [href]="review.attachment_url" target="_blank">
-
-        Descargar archivo
-
-      </a>
-
-    </p>
-
-    }
-
-    <p>
-
-      <strong>
-        Fecha:
-      </strong>
-
-      {{ review.created_at | date:'dd/MM/yyyy HH:mm' }}
-
-    </p>
-
-
-  </div>
-
-  <hr>
-
-  }
-  }
-  }
-
-
-
-</div>
-
-<hr>
-
-}
-
-
-
-} @else {
-
-<p>
-  Este proyecto aún no tiene documentos.
-</p>
-
-}
-
-@if (mostrarFormularioRevision && documentoRevision) {
-
-
-<div class="modal-backdrop">
-
-
-  <div class="modal-content">
-    <div class="modal-header">
-
-      <h2>
-
-        Nueva revisión
-
-      </h2>
-
-      <button class="close-btn" (click)="cerrarFormularioRevision()">
-
-        ✕
-
-      </button>
-
-    </div>
-    <div class="document-info">
-
-      <p>
-
-        <strong>Documento:</strong>
-
-        {{ documentoRevision?.nombre }}
-
-      </p>
-
-      <p>
-
-        <strong>Proyecto:</strong>
-
-        {{ project.titulo }}
-
-      </p>
-
-      <app-document-review-form [documentId]="documentoRevision.id" (guardado)="revisionGuardada()"
-        (cancelado)="cerrarFormularioRevision()">
-
-      </app-document-review-form>
-
-    </div>
-
-
-  </div>
-
-</div>
-
-}
-
+<!-- Modal de Modificar Estado del Proyecto -->
 @if (mostrarModalEstado) {
-
 <div class="modal-backdrop">
-
   <div class="modal">
+    <h2>Cambiar estado del proyecto</h2>
+    <p class="modal-sub">Estado actual: <strong>{{ proyectoEstado?.estado }}</strong></p>
 
-    <h2>
-
-      Cambiar estado del proyecto
-
-    </h2>
-
-    <p>
-
-      Estado actual:
-      <strong>
-        {{ proyectoEstado?.estado }}
-      </strong>
-
-    </p>
-
-    <select [(ngModel)]="estadoSeleccionado">
-
-      <option value="Pendiente">
-
-        Pendiente
-
-      </option>
-
-      <option value="En progreso">
-
-        En progreso
-
-      </option>
-
-      <option value="Aprobado">
-
-        Aprobado
-
-      </option>
-
-      <option value="Suspendido">
-
-        Suspendido
-
-      </option>
-
-    </select>
+    <div class="form-group">
+      <select [(ngModel)]="estadoSeleccionado">
+        <option value="Pendiente">Pendiente</option>
+        <option value="En progreso">En progreso</option>
+        <option value="Aprobado">Aprobado</option>
+        <option value="Suspendido">Suspendido</option>
+      </select>
+    </div>
 
     <div class="modal-actions">
-
-      <button (click)="cerrarModalEstado()">
-
-        Cancelar
-
-      </button>
-
-      <button (click)="actualizarEstadoProyecto()">
-
-        Guardar
-
-      </button>
-
+      <button class="btn-cancel" (click)="cerrarModalEstado()">Cancelar</button>
+      <button class="btn-save" (click)="actualizarEstadoProyecto()">Guardar</button>
     </div>
-
   </div>
-
 </div>
-
 }
 
+<!-- Modal de Entregas -->
+@if (mostrarModalEntrega) {
+<div class="modal-backdrop">
+  <div class="modal">
+    <h2>{{ modoEdicionEntrega ? 'Editar entrega' : 'Nueva entrega' }}</h2>
 
+    <div class="form-group">
+      <label>Título</label>
+      <input type="text" [(ngModel)]="entregaActual.titulo">
+    </div>
+
+    <div class="form-group">
+      <label>Descripción</label>
+      <textarea rows="3" [(ngModel)]="entregaActual.descripcion"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Fecha límite</label>
+      <input type="datetime-local" [(ngModel)]="entregaActual.fecha_limite">
+    </div>
+
+    <label class="checkbox-group">
+      <input type="checkbox" [(ngModel)]="entregaActual.obligatorio">
+      <span>Entrega obligatoria</span>
+    </label>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" [disabled]="guardandoEntrega" (click)="cerrarModalEntrega()">Cancelar</button>
+      <button class="btn-save" [disabled]="guardandoEntrega" (click)="guardarEntrega()">
+        {{ guardandoEntrega ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- Modal Respuesta Estudiante -->
+@if (mostrarModalRespuesta && entregaResponder) {
+  <app-delivery-submission-modal
+    [entrega]="entregaResponder"
+    (guardar)="guardarRespuesta($event)"
+    (cancelar)="cerrarRespuesta()">
+  </app-delivery-submission-modal>
+}
+
+<!-- Modal Formulario Revisión -->
+@if (mostrarFormularioRevision && documentoRevision) {
+<div class="modal-backdrop">
+  <div class="modal large">
+    <div class="modal-header">
+      <h2>Nueva revisión</h2>
+      <button class="close-btn" (click)="cerrarFormularioRevision()">✕</button>
+    </div>
+    <div class="document-info">
+      <p><strong>Documento:</strong> {{ documentoRevision?.nombre }}</p>
+      <p><strong>Proyecto:</strong> {{ project?.titulo }}</p>
+    </div>
+    <app-document-review-form 
+      [documentId]="documentoRevision.id" 
+      (guardado)="revisionGuardada()"
+      (cancelado)="cerrarFormularioRevision()">
+    </app-document-review-form>
+  </div>
+</div>
+}
+
+<!-- CHAT FLOTANTE -->
 <button class="chat-float-btn" (click)="toggleChat()">
-
   💬 Chat
-
 </button>
 
 @if (chatAbierto) {
-
 <div class="chat-window">
-
   <div class="chat-header">
-
-    <span>
-
-      💬 Chat del proyecto
-
-    </span>
-
-    <button type="button" (click)="toggleChat()">
-
-      ✕
-
-    </button>
-
+    <span>💬 Chat del proyecto</span>
+    <button type="button" class="close-chat" (click)="toggleChat()">✕</button>
   </div>
 
   <div class="chat-messages" #chatMessages>
-
-    @for (
-    mensaje of mensajes;
-    track mensaje.id
-    ) {
-
-    <div class="message" [class.mine]="
-    esMiMensaje(
-      mensaje
-    )
-  ">
-
-      @if (
-      !esMismoAutor($index)
-      ) {
-
-      <div class="message-author">
-
-        {{ mensaje.user.name }}
-
+    @for (mensaje of mensajes; track mensaje.id) {
+      <div class="message" [class.mine]="esMiMensaje(mensaje)">
+        @if (!esMismoAutor($index)) {
+          <div class="message-author">{{ mensaje.user.name }}</div>
+        }
+        <div class="message-bubble">{{ mensaje.mensaje }}</div>
+        @if (mostrarHora($index)) {
+          <div class="message-time">{{ mensaje.created_at | date:'HH:mm' }}</div>
+        }
       </div>
-
-      }
-
-      <div class="message-bubble">
-
-        {{ mensaje.mensaje }}
-
-      </div>
-
-      @if (
-      mostrarHora($index)
-      ) {
-
-      <div class="message-time">
-
-        {{ mensaje.created_at | date:'HH:mm' }}
-
-      </div>
-
-      }
-
-    </div>
-
     }
-
   </div>
 
   <div class="chat-footer">
-
     <textarea [(ngModel)]="nuevoMensaje" placeholder="Escribe un mensaje..."></textarea>
-
-    <button type="button" (click)="enviarMensaje()">
-
-      Enviar
-
-    </button>
-
+    <button type="button" (click)="enviarMensaje()">Enviar</button>
   </div>
-
 </div>
-
-}
-<h2>📌 Entregas</h2>
-@if (auth.esTutor() || auth.esCoordinador()) {
-
-<button
-  class="btn-primary"
-  (click)="abrirNuevaEntrega()">
-  + Nueva entrega
-</button>
-}
-
-<!-- Renderizado de la lista con bloque @empty para diagnóstico -->
-<div class="deliveries-list">
-  @for (entrega of deliveries; track entrega.id) {
-    <div class="delivery-card">
-      <div class="delivery-info">
-        <h3>{{ entrega.titulo }}</h3>
-        <p>{{ entrega.descripcion }}</p>
-        <p>📅 {{ entrega.fecha_limite }}</p>
-        <p>
-          @if (entrega.obligatorio) {
-            <span class="badge obligatorio">Obligatoria</span>
-          } @else {
-            <span class="badge opcional">Opcional</span>
-          }
-        </p>
-      </div>
-
-      <div class="delivery-actions">
-        <button class="btn-edit" (click)="editarEntrega(entrega)">
-          ✏ Editar
-        </button>
-        <button class="btn-delete" (click)="eliminarEntrega(entrega.id)">
-          🗑 Eliminar
-        </button>
-      </div>
-    </div>
-  } @empty {
-    <div class="empty-state">
-      <p>No hay entregas registradas en este proyecto.</p>
-    </div>
-  }
-</div>
-
-
-
-@if (mostrarModalEntrega) {
-
-<div class="modal-backdrop">
-
-  <div class="modal">
-
-    <h2>
-
-      @if (modoEdicionEntrega) {
-
-        Editar entrega
-
-      } @else {
-
-        Nueva entrega
-
-      }
-
-    </h2>
-
-    <label>
-
-      Título
-
-    </label>
-
-    <input
-
-      type="text"
-
-      [(ngModel)]="entregaActual.titulo"
-
-    >
-
-    <label>
-
-      Descripción
-
-    </label>
-
-    <textarea
-
-      rows="5"
-
-      [(ngModel)]="entregaActual.descripcion">
-
-    </textarea>
-
-    <label>
-
-      Fecha límite
-
-    </label>
-
-    <input
-
-      type="datetime-local"
-
-      [(ngModel)]="entregaActual.fecha_limite"
-
-    >
-
-    <label>
-
-      <input
-
-        type="checkbox"
-
-        [(ngModel)]="entregaActual.obligatorio"
-
-      >
-
-      Entrega obligatoria
-
-    </label>
-
-    <div class="modal-buttons">
-
-      <button
-
-        type="button"
-
-        [disabled]="guardandoEntrega"
-
-        (click)="guardarEntrega()">
-
-        @if (guardandoEntrega) {
-
-          Guardando...
-
-        } @else {
-
-          Guardar
-
-        }
-
-      </button>
-
-      <button
-
-        type="button"
-
-        [disabled]="guardandoEntrega"
-
-        (click)="cerrarModalEntrega()">
-
-        Cancelar
-
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-}
-
 }

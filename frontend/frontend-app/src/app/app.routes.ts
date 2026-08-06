@@ -110,6 +110,20 @@ export const routes: Routes = [
       {
         path: 'profile',
         component: Profile
+      },
+      {
+        path: 'tools',
+          loadComponent: () =>
+          import('./pages/tools/tools')
+          .then(m => m.Tools)
+      },
+      {
+        path: 'tools/calendar',
+          loadComponent: () =>
+          import('./pages/calendar/calendar')
+          .then(
+          m => m.Calendar
+        )
       }
     ]
 
