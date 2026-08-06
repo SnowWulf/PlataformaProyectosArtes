@@ -13,6 +13,8 @@ use App\Http\Controllers\DocumentReviewController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ProjectMessageController;
 use App\Http\Controllers\ProjectDeliveryController;
+use App\Http\Controllers\CalendarEventController;
+use App\Http\Controllers\DeliverySubmissionController;
 
 Route::post('/login',[AuthController::class,'login']);
 
@@ -244,5 +246,35 @@ Route::middleware('auth:sanctum')->group(function(){
         [ProjectDeliveryController::class, 'destroy']
     );
     
+    Route::middleware('auth:sanctum')
+    ->group(function () {
+
+        Route::apiResource(
+
+            'calendar-events',
+
+            CalendarEventController::class
+
+        );
+
+    });
+
+    Route::post(
+        '/deliveries/{delivery}/submit',
+        [DeliverySubmissionController::class, 'store']
+    );
+
+    Route::get(
+        '/deliveries/{delivery}/submissions',
+        [DeliverySubmissionController::class, 'index']
+    );
+
+    Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/deliveries', [ProjectDeliveryController::class, 'getAllDeliveries']);
+});
+
+    Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/deliveries', [ProjectDeliveryController::class, 'getAllDeliveries']);
+});
 
 });

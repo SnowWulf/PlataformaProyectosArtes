@@ -52,4 +52,14 @@ class ProjectDelivery extends Model
 
         );
     }
+
+    public function submissions()
+    {
+        return $this->hasMany(DeliverySubmission::class, 'delivery_id');
+    }
+
+    public function respuesta()
+    {
+        return $this->hasOne(DeliverySubmission::class, 'delivery_id');
+    }
 }

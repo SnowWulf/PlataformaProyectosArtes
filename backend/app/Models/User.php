@@ -129,4 +129,14 @@ class User extends Authenticatable
         'tutor_id'
         );
     }
+
+    public function calendarEvents()
+    {
+        return $this->hasMany(CalendarEvent::class);
+    }
+
+    public function deliverySubmissions()
+    {
+        return $this->hasMany(DeliverySubmission::class, 'student_id');
+    }
 }
