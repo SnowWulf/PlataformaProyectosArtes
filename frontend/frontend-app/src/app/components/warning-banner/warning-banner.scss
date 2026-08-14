@@ -1,0 +1,69 @@
+.deadline-banner {
+  background-color: #fff8e6;
+  border-left: 5px solid #f59e0b;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+  .banner-content {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .banner-icon {
+    font-size: 1.5rem;
+  }
+
+  .banner-text {
+    color: #78350f;
+    font-size: 0.95rem;
+
+    strong {
+      color: #92400e;
+    }
+  }
+
+  .projects-list {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .project-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-link {
+    background: none;
+    border: none;
+    color: #d97706;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.875rem;
+    padding: 0;
+
+    &:hover {
+      color: #b45309;
+    }
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #92400e;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+  }
+}

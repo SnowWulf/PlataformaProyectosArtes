@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\ProjectDelivery;
 use App\Helpers\ActivityLogger;
+use App\Services\NotificationEngineService; // 1. Importamos el servicio
 
 class ProjectDeliveryController extends Controller
 {
@@ -28,7 +29,8 @@ class ProjectDeliveryController extends Controller
 
     public function store(
         Request $request,
-        Project $project
+        Project $project,
+        NotificationEngineService $notifier // 2. Inyectamos el servicio
     )
     {
         $user = $request->user();
@@ -62,18 +64,42 @@ class ProjectDeliveryController extends Controller
                 ...$validated,
                 'tutor_id' => $user->id
             ]);
-ActivityLogger::log(
-    $project->id,
-    $user->id,
-    'delivery_created',
-    $user->name . ' asignó la tarea "' . $delivery->titulo . '"',
-    [
-        'project_id' => $project->id,
-        'project_name' => $project->titulo,
-        'delivery_id' => $delivery->id,
-        'delivery_title' => $delivery->titulo
-    ]
-);
+
+        ActivityLogger::log(
+            $project->id,
+            $user->id,
+            'delivery_created',
+            $user->name . ' asignó la tarea "' . $delivery->titulo . '"',
+            [
+                'project_id' => $project->id,
+                'project_name' => $project->titulo,
+                'delivery_id' => $delivery->id,
+                'delivery_title' => $delivery->titulo
+            ]
+        );
+
+        // 3. Notificar a los miembros del proyecto (Líder + Colaboradores si aplica)
+        $destinatariosIds = collect([$project->owner_id]);
+
+        // Si el proyecto tiene relación de colaboradores, los sumamos
+        if (method_exists($project, 'collaborators')) {
+            $collaboratorIds = $project->collaborators()->pluck('users.id');
+            $destinatariosIds = $destinatariosIds->merge($collaboratorIds);
+        }
+
+        foreach ($destinatariosIds->unique() as $studentId) {
+            // No autonotificar si el asignador fuera el propio estudiante
+            if ($studentId !== $user->id) {
+                $notifier->notify(
+                    user: $studentId,
+                    tipoClave: 'nueva_entrega',
+                    titulo: '📌 Nueva Entrega Publicada',
+                    mensaje: $user->name . ' asignó la tarea: "' . $delivery->titulo . '" en el proyecto "' . $project->titulo . '".',
+                    link: '/dashboard/projects/' . $project->id
+                );
+            }
+        }
+
         return response()->json(
             $delivery,
             201
@@ -152,26 +178,26 @@ ActivityLogger::log(
         ]);
     }
 
-public function getAllDeliveries(Request $request)
-{
-    $user = $request->user();
+    public function getAllDeliveries(Request $request)
+    {
+        $user = $request->user();
 
-    return ProjectDelivery::whereHas('project', function ($query) use ($user) {
+        return ProjectDelivery::whereHas('project', function ($query) use ($user) {
 
-        $query->where('owner_id', $user->id)
+            $query->where('owner_id', $user->id)
 
-              ->orWhereHas('collaborators', function ($q) use ($user) {
+                  ->orWhereHas('collaborators', function ($q) use ($user) {
 
-                  $q->where('users.id', $user->id);
+                      $q->where('users.id', $user->id);
 
-              });
+                  });
 
-    })
+        })
 
-    ->with('project')
+        ->with('project')
 
-    ->orderBy('fecha_limite')
+        ->orderBy('fecha_limite')
 
-    ->get();
-}
+        ->get();
+    }
 }

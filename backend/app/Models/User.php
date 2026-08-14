@@ -18,6 +18,8 @@ use Laravel\Sanctum\HasApiTokens;
     'name',
     'email',
     'password',
+    'telegram_chat_id',
+    'telegram_connect_token',
     'role_id',
     'programa',
     'bio',
@@ -138,5 +140,14 @@ class User extends Authenticatable
     public function deliverySubmissions()
     {
         return $this->hasMany(DeliverySubmission::class, 'student_id');
+    }
+    public function alertPreferences(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(UserAlertPreference::class);
+    }
+
+    public function notifications(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Notification::class);
     }
 }

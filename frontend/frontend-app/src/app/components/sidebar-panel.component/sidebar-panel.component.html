@@ -1,0 +1,121 @@
+<aside class="sidebar-panel">
+    <!-- Pestañas -->
+    <div class="sidebar-header">
+        <div class="tabs">
+            <button class="tab-btn" [class.active]="activeTab === 'tasks'" (click)="activeTab = 'tasks'">
+                <span>✅ Pendientes</span>
+                @if (pendingTasksCount > 0) {
+                <span class="badge">{{ pendingTasksCount }}</span>
+                }
+            </button>
+
+            <button class="tab-btn" [class.active]="activeTab === 'notes'" (click)="activeTab = 'notes'">
+                <span>📌 Notas</span>
+                @if (notes.length > 0) {
+                <span class="badge">{{ notes.length }}</span>
+                }
+            </button>
+        </div>
+    </div>
+
+    <!-- Pestaña de Pendientes del Día -->
+    @if (activeTab === 'tasks') {
+    <div class="sidebar-body">
+        <div class="tasks-layout">
+            <!-- Columna Izquierda: Métricas y creación -->
+            <div class="tasks-sidebar-left">
+                <div class="progress-card">
+                    <div class="progress-info">
+                        <span>Progreso de hoy</span>
+                        <strong>{{ completionPercentage }}%</strong>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" [style.width.%]="completionPercentage"></div>
+                    </div>
+                </div>
+
+                <div class="quick-add-box">
+                    <input #taskInput type="text" placeholder="+ Agrega una tarea para hoy..."
+                        (keyup.enter)="quickAddTask(taskInput)" />
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Rejilla de tareas para hoy -->
+            <div class="tasks-main-right">
+                <div class="tasks-list">
+                    @for (task of todayTasks; track task.id) {
+                    <div class="task-item" [class.completed]="task.completado">
+                        <input type="checkbox" [checked]="task.completado" (change)="toggleTask(task)" />
+
+                        <div class="task-info">
+                            <span class="task-title">{{ task.titulo }}</span>
+                            <span class="task-time">{{ task.fecha_inicio | date:'HH:mm' }}</span>
+                        </div>
+
+                        <span class="type-badge" [style.background-color]="task.color">
+                            {{ task.tipo }}
+                        </span>
+                    </div>
+                    } @empty {
+                    <div class="empty-state">
+                        🎉 ¡No tienes tareas pendientes para hoy!
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- Pestaña de Notas Adhesivas -->
+    @if (activeTab === 'notes') {
+    <div class="sidebar-body">
+        <div class="quick-notes-widget">
+            <!-- Columna Izquierda: Creador de notas -->
+            <div class="note-creator-card" [style.background-color]="selectedColor">
+                <textarea [(ngModel)]="newNoteContent"
+                    placeholder="Escribe una nota rápida aquí... (Presiona Ctrl+Enter para guardar)" rows="3"
+                    (keyup.enter)="$any($event).ctrlKey && createNote()"></textarea>
+
+                <div class="creator-actions">
+                    <div class="color-picker">
+                        @for (color of availableColors; track color) {
+                        <button type="button" class="color-dot" [style.background-color]="color"
+                            [class.active]="selectedColor === color" (click)="selectedColor = color">
+                        </button>
+                        }
+                    </div>
+
+                    <button class="btn-add-note" (click)="createNote()" [disabled]="!newNoteContent.trim()">
+                        <span>+</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Mural de Notas Adhesivas -->
+            <div class="sticky-notes-grid">
+                @for (note of notes; track note.id; let i = $index) {
+                <div class="sticky-note-card" [style.background-color]="note.color || '#fef08a'"
+                    [style.transform]="'rotate(' + (i % 2 === 0 ? '-1.5deg' : '1.5deg') + ')'">
+                    <div class="pin-icon">📍</div>
+                    <p class="note-text">{{ note.contenido }}</p>
+
+                    <div class="note-footer">
+                        <span class="note-date">
+                            {{ (note.updated_at || note.created_at) | date:'HH:mm' }}
+                        </span>
+                        <button class="btn-delete-note" (click)="deleteNote(note.id)" title="Eliminar nota">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+                } @empty {
+                <div class="empty-notes-state">
+                    📌 No tienes notas adhesivas activas.
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    }
+</aside>

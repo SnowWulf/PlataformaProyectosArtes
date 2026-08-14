@@ -1,616 +1,638 @@
 <?php
 
+
+
 namespace App\Http\Controllers;
+
+
+
 use Illuminate\Http\Request;
 
 use App\Models\User;
+
 use App\Models\Project;
+
 use App\Models\CollaborationRequest;
+
 use App\Models\ProjectCollaborator;
+
 use App\Helpers\ActivityLogger;
 
+use App\Services\NotificationEngineService; // 1. Importamos el servicio
+
+
+
 class CommunityController extends Controller
+
 {
+
 public function users(Request $request)
+
 {
-    return User::with('role:id,nombre')
 
-        ->select(
-            'id',
-            'name',
-            'programa',
-            'role_id',
-            'foto',
-        )
+return User::with('role:id,nombre')
 
-        ->where(
-            'id',
-            '!=',
-            $request->user()->id
-        )
+->select('id', 'name', 'programa', 'role_id', 'foto')
 
-        ->orderBy('name')
+->where('id', '!=', $request->user()->id)
 
-        ->get();
+->orderBy('name')
+
+->get();
+
 }
+
+
 
 public function user($id)
+
 {
-    $user = User::with('role')
-        ->findOrFail($id);
 
-    $viewer = auth()->user();
+$user = User::with('role')->findOrFail($id);
 
-    $isOwner =
-        $viewer &&
-        $viewer->id === $user->id;
+$viewer = auth()->user();
 
-    $isCoordinator =
-        $viewer &&
-        $viewer->role &&
-        $viewer->role->nombre === 'Coordinador';
 
-    if (
-        !$isOwner &&
-        !$isCoordinator &&
-        !$user->mostrar_correo
-    ) {
 
-        $user->email = null;
+$isOwner = $viewer && $viewer->id === $user->id;
 
-    }
+$isCoordinator = $viewer && $viewer->role && $viewer->role->nombre === 'Coordinador';
 
-    return response()->json(
-        $user
-    );
+
+
+if (!$isOwner && !$isCoordinator && !$user->mostrar_correo) {
+
+$user->email = null;
+
 }
+
+
+
+return response()->json($user);
+
+}
+
+
 
 public function projects($id)
+
 {
-    $profileUser =
-        User::findOrFail($id);
 
-    $viewer =
-        auth()->user();
+$profileUser = User::findOrFail($id);
 
-    $isOwner =
-        $viewer &&
-        $viewer->id === $profileUser->id;
+$viewer = auth()->user();
 
-    $isCoordinator =
-        $viewer &&
-        $viewer->role &&
-        $viewer->role->nombre === 'Coordinador';
 
-    if (
-        !$isOwner &&
-        !$isCoordinator &&
-        !$profileUser->mostrar_proyectos
-    ) {
 
-        return response()->json([]);
+$isOwner = $viewer && $viewer->id === $profileUser->id;
 
-    }
+$isCoordinator = $viewer && $viewer->role && $viewer->role->nombre === 'Coordinador';
 
-    return $profileUser
-        ->projects()
-        ->select(
 
-            'id',
 
-            'titulo',
+if (!$isOwner && !$isCoordinator && !$profileUser->mostrar_proyectos) {
 
-            'tipo_proyecto',
+return response()->json([]);
 
-            'estado'
-
-        )
-        ->orderBy('titulo')
-        ->get();
 }
 
-public function requestCollaboration(
-    Request $request
-)
+
+
+return $profileUser->projects()
+
+->select('id', 'titulo', 'tipo_proyecto', 'estado')
+
+->orderBy('titulo')
+
+->get();
+
+}
+
+
+
+public function requestCollaboration(Request $request, NotificationEngineService $notifier)
+
 {
 
-$project = Project::findOrFail(
-    $request->project_id
+$project = Project::findOrFail($request->project_id);
+
+
+
+if ($project->owner_id === $request->requester_id) {
+
+return response()->json([
+
+'message' => 'No puedes solicitar colaboración en tu propio proyecto.'
+
+], 422);
+
+}
+
+
+
+$request->validate([
+
+'project_id' => 'required|exists:projects,id',
+
+'requester_id' => 'required|exists:users,id'
+
+]);
+
+
+
+$alreadyCollaborator = ProjectCollaborator::where('project_id', $request->project_id)
+
+->where('user_id', $request->requester_id)
+
+->exists();
+
+
+
+if ($alreadyCollaborator) {
+
+return response()->json([
+
+'message' => 'Ya perteneces a este proyecto.'
+
+], 400);
+
+}
+
+
+
+$pendingRequest = CollaborationRequest::where('project_id', $request->project_id)
+
+->where('requester_id', $request->requester_id)
+
+->where('estado', 'Pendiente')
+
+->first();
+
+
+
+if ($pendingRequest) {
+
+return response()->json([
+
+'message' => 'Ya tienes una solicitud pendiente para este proyecto.'
+
+], 400);
+
+}
+
+
+
+$userRequester = User::find($request->requester_id);
+
+
+
+$rejectedRequest = CollaborationRequest::where('project_id', $request->project_id)
+
+->where('requester_id', $request->requester_id)
+
+->where('estado', 'Rechazada')
+
+->first();
+
+
+
+if ($rejectedRequest) {
+
+$rejectedRequest->estado = 'Pendiente';
+
+$rejectedRequest->save();
+
+
+
+// Notificar al DUEÑO del proyecto sobre la resolicitud
+
+$notifier->notify(
+
+user: $project->owner_id,
+
+tipoClave: 'invitacion_proyecto',
+
+titulo: '📩 Solicitud de Colaboración Reenviada',
+
+mensaje: "El usuario {$userRequester->name} ha reenviado su solicitud para colaborar en '{$project->titulo}'.",
+
+link: '/dashboard/projects/' . $project->id
+
 );
 
-if (
-    $project->owner_id ===
-    $request->requester_id
-) {
 
-    return response()->json([
 
-        'message' =>
-            'No puedes solicitar colaboración en tu propio proyecto.'
+return response()->json([
 
-    ], 422);
+'message' => 'Solicitud reenviada correctamente.',
+
+'request' => $rejectedRequest
+
+]);
 
 }
-    $request->validate([
 
-        'project_id' =>
-            'required|exists:projects,id',
 
-        'requester_id' =>
-            'required|exists:users,id'
 
-    ]);
+$newRequest = CollaborationRequest::create([
 
-    /*
-     * ¿Ya pertenece al proyecto?
-     */
+'project_id' => $request->project_id,
 
-    $alreadyCollaborator =
-        ProjectCollaborator::where(
-            'project_id',
-            $request->project_id
-        )
-        ->where(
-            'user_id',
-            $request->requester_id
-        )
-        ->exists();
+'requester_id' => $request->requester_id,
 
-    if ($alreadyCollaborator) {
+'estado' => 'Pendiente',
 
-        return response()->json([
+'tipo' => 'request'
 
-            'message' =>
-                'Ya perteneces a este proyecto.'
+]);
 
-        ], 400);
 
-    }
 
-    /*
-     * ¿Existe una solicitud pendiente?
-     */
+// 2. Notificar al DUEÑO del proyecto que recibió una solicitud
 
-    $pendingRequest =
-        CollaborationRequest::where(
-            'project_id',
-            $request->project_id
-        )
-        ->where(
-            'requester_id',
-            $request->requester_id
-        )
-        ->where(
-            'estado',
-            'Pendiente'
-        )
-        ->first();
+$notifier->notify(
 
-    if ($pendingRequest) {
+user: $project->owner_id,
 
-        return response()->json([
+tipoClave: 'invitacion_proyecto',
 
-            'message' =>
-                'Ya tienes una solicitud pendiente para este proyecto.'
+titulo: '📩 Nueva Solicitud de Colaboración',
 
-        ], 400);
+mensaje: "El usuario {$userRequester->name} desea colaborar en tu proyecto '{$project->titulo}'.",
 
-    }
+link: '/dashboard/projects/' . $project->id
 
-    /*
-     * ¿Existe una solicitud rechazada?
-     */
+);
 
-    $rejectedRequest =
-        CollaborationRequest::where(
-            'project_id',
-            $request->project_id
-        )
-        ->where(
-            'requester_id',
-            $request->requester_id
-        )
-        ->where(
-            'estado',
-            'Rechazada'
-        )
-        ->first();
 
-    if ($rejectedRequest) {
 
-        $rejectedRequest->estado =
-            'Pendiente';
+return response()->json([
 
-        $rejectedRequest->save();
+'message' => 'Solicitud enviada correctamente.',
 
-        return response()->json([
+'request' => $newRequest
 
-            'message' =>
-                'Solicitud reenviada correctamente.',
+]);
 
-            'request' =>
-                $rejectedRequest
-
-        ]);
-
-    }
-
-    /*
-     * Crear nueva solicitud
-     */
-
-$newRequest =
-    CollaborationRequest::create([
-
-        'project_id' =>
-            $request->project_id,
-
-        'requester_id' =>
-            $request->requester_id,
-
-        'estado' =>
-            'Pendiente',
-
-        'tipo' =>
-            'request'
-
-    ]);
-
-    return response()->json([
-
-        'message' =>
-            'Solicitud enviada correctamente.',
-
-        'request' =>
-            $newRequest
-
-    ]);
 }
+
+
+
 public function receivedRequests($userId)
+
 {
-    return CollaborationRequest::with([
 
-        'project',
+return CollaborationRequest::with(['project', 'requester', 'receiver'])
 
-        'requester',
+->where(function ($query) use ($userId) {
 
-        'receiver'
+$query->where(function ($q) use ($userId) {
 
-    ])
+$q->where('tipo', 'request')
 
-    ->where(function ($query) use ($userId) {
+->whereHas('project', function ($p) use ($userId) {
 
-        $query
+$p->where('owner_id', $userId);
 
-        ->where(function ($q) use ($userId) {
+});
 
-            $q->where(
+})->orWhere(function ($q) use ($userId) {
 
-                'tipo',
-                'request'
+$q->where('tipo', 'invite')
 
-            )
+->where('receiver_id', $userId);
 
-            ->whereHas(
+});
 
-                'project',
+})
 
-                function ($p) use ($userId) {
+->get();
 
-                    $p->where(
-                        'owner_id',
-                        $userId
-                    );
-
-                }
-
-            );
-
-        })
-
-        ->orWhere(function ($q) use ($userId) {
-
-            $q->where(
-
-                'tipo',
-                'invite'
-
-            )
-
-            ->where(
-
-                'receiver_id',
-                $userId
-
-            );
-
-        });
-
-    })
-
-    ->get();
 }
+
+
+
 public function sentRequests($userId)
+
 {
-    return CollaborationRequest::with([
 
-        'project',
+return CollaborationRequest::with(['project', 'requester', 'receiver'])
 
-        'requester',
+->where('requester_id', $userId)
 
-        'receiver'
+->get();
 
-    ])
-
-    ->where(
-
-        'requester_id',
-
-        $userId
-
-    )
-
-    ->get();
 }
-public function acceptRequest($id)
+
+
+
+public function acceptRequest($id, NotificationEngineService $notifier)
+
 {
-    $collaborationRequest =
-        CollaborationRequest::findOrFail($id);
 
-    $collaborationRequest->estado =
-        'Aceptada';
+$collaborationRequest = CollaborationRequest::with(['project', 'requester', 'receiver'])->findOrFail($id);
 
-    $collaborationRequest->save();
 
-    $userToAdd =
 
-        $collaborationRequest->tipo === 'invite'
+$collaborationRequest->estado = 'Aceptada';
 
-            ? $collaborationRequest->receiver_id
+$collaborationRequest->save();
 
-            : $collaborationRequest->requester_id;
 
-    $exists = ProjectCollaborator::where(
 
-        'project_id',
-        $collaborationRequest->project_id
+$userToAdd = $collaborationRequest->tipo === 'invite'
 
-    )
+? $collaborationRequest->receiver_id
 
-    ->where(
+: $collaborationRequest->requester_id;
 
-        'user_id',
-        $userToAdd
 
-    )
 
-    ->exists();
+$exists = ProjectCollaborator::where('project_id', $collaborationRequest->project_id)
 
-    if (! $exists) {
+->where('user_id', $userToAdd)
 
-        ProjectCollaborator::create([
+->exists();
 
-            'project_id' =>
-                $collaborationRequest->project_id,
 
-            'user_id' =>
-                $userToAdd
 
-        ]);
+if (!$exists) {
 
-    }
+ProjectCollaborator::create([
 
-    $usuario =
+'project_id' => $collaborationRequest->project_id,
 
-        $collaborationRequest->tipo === 'invite'
+'user_id' => $userToAdd
 
-            ? $collaborationRequest->receiver
+]);
 
-            : $collaborationRequest->requester;
-
-    ActivityLogger::log(
-
-        $collaborationRequest->project_id,
-
-        auth()->id(),
-
-        'collaborator_added',
-
-        $usuario->name .
-        ' fue agregado como colaborador',
-
-        [
-
-            'user_id' =>
-                $usuario->id
-
-        ]
-
-    );
-
-    return response()->json([
-
-        'message' =>
-            'Solicitud aceptada.'
-
-    ]);
 }
 
-public function rejectRequest($id)
+
+
+$usuario = $collaborationRequest->tipo === 'invite'
+
+? $collaborationRequest->receiver
+
+: $collaborationRequest->requester;
+
+
+
+ActivityLogger::log(
+
+$collaborationRequest->project_id,
+
+auth()->id(),
+
+'collaborator_added',
+
+$usuario->name . ' fue agregado como colaborador',
+
+['user_id' => $usuario->id]
+
+);
+
+
+
+// 3. Determinar destinatario y enviar notificación de ACEPTACIÓN
+
+// Si fue una invitación que aceptó el invitado -> notificar al dueño
+
+// Si fue una solicitud que aceptó el dueño -> notificar al solicitante
+
+$destinatarioId = $collaborationRequest->tipo === 'invite'
+
+? $collaborationRequest->project->owner_id
+
+: $collaborationRequest->requester_id;
+
+
+
+$userQueAcepto = auth()->user();
+
+
+
+$notifier->notify(
+
+user: $destinatarioId,
+
+tipoClave: 'invitacion_proyecto',
+
+titulo: '✅ Solicitud de Colaboración Aceptada',
+
+mensaje: "{$userQueAcepto->name} aceptó la colaboración para el proyecto '{$collaborationRequest->project->titulo}'.",
+
+link: '/dashboard/projects/' . $collaborationRequest->project_id
+
+);
+
+
+
+return response()->json([
+
+'message' => 'Solicitud aceptada.'
+
+]);
+
+}
+
+
+
+public function rejectRequest($id, NotificationEngineService $notifier)
+
 {
-    $request =
-        CollaborationRequest::findOrFail($id);
 
-    $request->estado =
-        'Rechazada';
+$request = CollaborationRequest::with(['project', 'requester', 'receiver'])->findOrFail($id);
 
-    $request->save();
 
-    return response()->json([
-        'message' =>
-            'Solicitud rechazada.'
-    ]);
+
+$request->estado = 'Rechazada';
+
+$request->save();
+
+
+
+// 4. Determinar destinatario y enviar notificación de RECHAZO
+
+$destinatarioId = $request->tipo === 'invite'
+
+? $request->project->owner_id
+
+: $request->requester_id;
+
+
+
+$userQueRechazo = auth()->user();
+
+
+
+$notifier->notify(
+
+user: $destinatarioId,
+
+tipoClave: 'invitacion_proyecto',
+
+titulo: '❌ Solicitud de Colaboración Rechazada',
+
+mensaje: "{$userQueRechazo->name} ha declinado la colaboración en el proyecto '{$request->project->titulo}'.",
+
+link: '/dashboard/projects/' . $request->project_id
+
+);
+
+
+
+return response()->json([
+
+'message' => 'Solicitud rechazada.'
+
+]);
+
 }
 
 
-public function inviteToProject(Request $request)
+
+public function inviteToProject(Request $request, NotificationEngineService $notifier)
+
 {
-    $validated = $request->validate([
 
-        'project_id' => 'required|exists:projects,id',
+$validated = $request->validate([
 
-        'receiver_id' => 'required|exists:users,id'
+'project_id' => 'required|exists:projects,id',
 
-    ]);
+'receiver_id' => 'required|exists:users,id'
 
-    $project = Project::findOrFail(
-        $validated['project_id']
-    );
+]);
 
-    // Sólo el dueño puede invitar
 
-    if ($project->owner_id !== auth()->id()) {
 
-        return response()->json([
+$project = Project::findOrFail($validated['project_id']);
 
-            'message' => 'No autorizado.'
 
-        ], 403);
 
-    }
+if ($project->owner_id !== auth()->id()) {
 
-    // No invitarse a sí mismo
+return response()->json([
 
-    if (
+'message' => 'No autorizado.'
 
-        $validated['receiver_id'] ==
+], 403);
 
-        auth()->id()
-
-    ) {
-
-        return response()->json([
-
-            'message' =>
-                'No puedes invitarte a ti mismo.'
-
-        ], 422);
-
-    }
-
-    // No invitar si ya pertenece al proyecto
-
-    if (
-
-        $project->collaborators()
-
-            ->where(
-                'users.id',
-                $validated['receiver_id']
-            )
-
-            ->exists()
-
-    ) {
-
-        return response()->json([
-
-            'message' =>
-                'El usuario ya pertenece al proyecto.'
-
-        ], 422);
-
-    }
-
-    // No duplicar invitaciones pendientes
-
-    $pendiente = CollaborationRequest::where(
-
-        'project_id',
-        $project->id
-
-    )
-
-    ->where(
-
-        'receiver_id',
-        $validated['receiver_id']
-
-    )
-
-    ->where(
-
-        'estado',
-        'Pendiente'
-
-    )
-
-    ->where(
-
-        'tipo',
-        'invite'
-
-    )
-
-    ->exists();
-
-    if ($pendiente) {
-
-        return response()->json([
-
-            'message' =>
-                'Ya existe una invitación pendiente.'
-
-        ], 422);
-
-    }
-
-    $invitacion = CollaborationRequest::create([
-
-        'project_id' =>
-            $project->id,
-
-        'requester_id' =>
-            auth()->id(),
-
-        'receiver_id' =>
-            $validated['receiver_id'],
-
-        'estado' =>
-            'Pendiente',
-
-        'tipo' =>
-            'invite'
-
-    ]);
-
-    ActivityLogger::log(
-
-        $project->id,
-
-        auth()->id(),
-
-        'invite_sent',
-
-        'Invitación enviada a colaborar.',
-
-        [
-
-            'receiver_id' =>
-                $validated['receiver_id']
-
-        ]
-
-    );
-
-    return response()->json([
-
-        'message' =>
-            'Invitación enviada correctamente.',
-
-        'invitation' =>
-            $invitacion
-
-    ]);
 }
+
+
+
+if ($validated['receiver_id'] == auth()->id()) {
+
+return response()->json([
+
+'message' => 'No puedes invitarte a ti mismo.'
+
+], 422);
+
 }
+
+
+
+if ($project->collaborators()->where('users.id', $validated['receiver_id'])->exists()) {
+
+return response()->json([
+
+'message' => 'El usuario ya pertenece al proyecto.'
+
+], 422);
+
+}
+
+
+
+$pendiente = CollaborationRequest::where('project_id', $project->id)
+
+->where('receiver_id', $validated['receiver_id'])
+
+->where('estado', 'Pendiente')
+
+->where('tipo', 'invite')
+
+->exists();
+
+
+
+if ($pendiente) {
+
+return response()->json([
+
+'message' => 'Ya existe una invitación pendiente.'
+
+], 422);
+
+}
+
+
+
+$invitacion = CollaborationRequest::create([
+
+'project_id' => $project->id,
+
+'requester_id' => auth()->id(),
+
+'receiver_id' => $validated['receiver_id'],
+
+'estado' => 'Pendiente',
+
+'tipo' => 'invite'
+
+]);
+
+
+
+ActivityLogger::log(
+
+$project->id,
+
+auth()->id(),
+
+'invite_sent',
+
+'Invitación enviada a colaborar.',
+
+['receiver_id' => $validated['receiver_id']]
+
+);
+
+
+
+// 5. Notificar al USUARIO INVITADO
+
+$sender = auth()->user();
+
+
+
+$notifier->notify(
+
+user: $validated['receiver_id'],
+
+tipoClave: 'invitacion_proyecto',
+
+titulo: '👥 Invitación a Colaborar',
+
+mensaje: "El usuario {$sender->name} te ha invitado a colaborar en su proyecto '{$project->titulo}'.",
+
+link: '/dashboard/projects/' . $project->id
+
+);
+
+
+
+return response()->json([
+
+'message' => 'Invitación enviada correctamente.',
+
+'invitation' => $invitacion
+
+]);
+
+}
+
+} 
+

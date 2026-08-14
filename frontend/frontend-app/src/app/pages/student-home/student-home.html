@@ -1,480 +1,217 @@
-<h1>
-
-  Bienvenido
-
-</h1>
-
-<div class="tabs">
-
-  <button [class.active]="tabActiva === 'inicio'" (click)="tabActiva = 'inicio'">
-
-    🏠 Inicio
-
-  </button>
-
-  <button [class.active]="tabActiva === 'resumen'" (click)="tabActiva = 'resumen'">
-
-    📄 Resumen
-
-  </button>
-
-  <button [class.active]="tabActiva === 'revisiones'" (click)="tabActiva = 'revisiones'">
-
-    📝 Revisiones
-
-  </button>
-
-  <button [class.active]="tabActiva === 'actividad'" (click)="tabActiva = 'actividad'">
-
-    📅 Actividad
-
-  </button>
-
-</div>
-
-<hr>
-
-@if (tabActiva === 'inicio') {
-
-<div class="dashboard-card project-card" (click)="abrirProyecto(proyectoActual.id)">
-
-  <h2>
-
-    Proyecto actual
-
-  </h2>
-
-  @if (proyectoActual) {
-
-  <h3>
-
-    {{ proyectoActual.titulo }}
-
-  </h3>
-
-
-  <h4>
-
-    Progreso del proyecto
-
-  </h4>
-
-  <div class="progress-container">
-
-    <div class="progress-bar" [style.width.%]="progresoProyecto">
-
+<div class="dashboard-container">
+  <!-- Encabezado Principal -->
+  <header class="dashboard-header">
+    <div class="header-title">
+      <h1>Bienvenido de nuevo 👋</h1>
+      <p class="subtitle">Panel de control y seguimiento de tu proyecto académico</p>
     </div>
+  </header>
 
-  </div>
+  <!-- Navegación por Pestañas -->
+  <nav class="tabs-nav">
+    <button 
+      class="tab-btn" 
+      [class.active]="tabActiva === 'inicio'" 
+      (click)="tabActiva = 'inicio'">
+      <span>🏠</span> Inicio
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="tabActiva === 'resumen'" 
+      (click)="tabActiva = 'resumen'">
+      <span>📄</span> Resumen
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="tabActiva === 'revisiones'" 
+      (click)="tabActiva = 'revisiones'">
+      <span>📝</span> Revisiones
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="tabActiva === 'actividad'" 
+      (click)="tabActiva = 'actividad'">
+      <span>📅</span> Actividad
+    </button>
+  </nav>
 
-  <p>
+  <!-- CONTENIDO: INICIO -->
+  @if (tabActiva === 'inicio') {
+    <div class="tab-content">
+      @if (proyectoActual) {
+        <div class="dashboard-card project-card" (click)="abrirProyecto(proyectoActual.id)">
+          <div class="card-header">
+            <span class="badge badge-primary">Proyecto Actual</span>
+            <span class="badge badge-status">{{ proyectoActual.estado }}</span>
+          </div>
 
-    {{ progresoProyecto }}%
+          <h2 class="project-title">{{ proyectoActual.titulo }}</h2>
+          <p class="project-description">{{ proyectoActual.descripcion }}</p>
 
-  </p>
-  <p>
+          <div class="progress-section">
+            <div class="progress-info">
+              <span class="progress-label">Progreso del proyecto</span>
+              <span class="progress-percentage">{{ progresoProyecto }}%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" [style.width.%]="progresoProyecto"></div>
+            </div>
+          </div>
 
-    {{ proyectoActual.descripcion }}
+          <div class="project-meta">
+            <div class="meta-item">
+              <span class="meta-label">Tutor asignado:</span>
+              <span class="meta-value">{{ proyectoActual.tutor?.name ?? 'Sin tutor' }}</span>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="dashboard-card empty-card">
+          <p>No tienes proyectos registrados actualmente.</p>
+        </div>
+      }
 
-  </p>
-
-  <p>
-
-    <strong>
-      Estado:
-    </strong>
-
-    {{ proyectoActual.estado }}
-
-  </p>
-
-  <p>
-
-    <strong>
-      Tutor:
-    </strong>
-
-    {{ proyectoActual.tutor?.name ?? 'Sin tutor' }}
-
-  </p>
-
-  } @else {
-
-  <p>
-
-    No tienes proyectos registrados.
-
-  </p>
-
+      <!-- Alertas -->
+      @if (alertasProyectos && alertasProyectos.length > 0) {
+        <div class="alerts-section">
+          <h3>Alertas y Pendientes</h3>
+          <div class="alerts-grid">
+            @for (alerta of alertasProyectos; track alerta.proyectoId) {
+              <div class="alert-card" (click)="abrirProyecto(alerta.proyectoId)">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-info">
+                  <h4>{{ alerta.titulo }}</h4>
+                  @if (alerta.enRevision > 0) {
+                    <p class="text-warning">📄 {{ alerta.enRevision }} documento(s) en revisión</p>
+                  }
+                  @if (alerta.correcciones > 0) {
+                    <p class="text-danger">🔴 {{ alerta.correcciones }} documento(s) requieren correcciones</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
   }
 
-</div>
-
-@for (
-alerta of alertasProyectos;
-track alerta.proyectoId
-) {
-
-<div class="alert-card" (click)="abrirProyecto(
-      alerta.proyectoId
-    )">
-
-  <h4>
-
-    {{ alerta.titulo }}
-
-  </h4>
-
-  @if (
-  alerta.enRevision > 0
-  ) {
-
-  <p>
-
-    ⚠
-    {{ alerta.enRevision }}
-    documento(s) en revisión
-
-  </p>
-
-  }
-
-  @if (
-  alerta.correcciones > 0
-  ) {
-
-  <p>
-
-    🔴
-    {{ alerta.correcciones }}
-    documento(s) requieren correcciones
-
-  </p>
-
-  }
-
-</div>
-
-}
-
-}
-
-
-@if (tabActiva === 'resumen') {
-
-<div class="dashboard-card">
-
-  <h2>
-    Resumen
-  </h2>
-
-  <div class="stats-grid">
-
-
-    <div class="stat-card" (click)="filtrarDocumentos('Todos')">
-
-      <div class="stat-number">
-
-        {{ totalDocumentos }}
-
-      </div>
-
-      <div class="stat-label">
-
-        Total documentos
-
-      </div>
-
-    </div>
-
-    <div class="stat-card" (click)="filtrarDocumentos('Aprobado')">
-
-      <div class="stat-number">
-
-        {{ aprobados }}
-
-      </div>
-
-      <div class="stat-label">
-
-        Aprobados
-
-      </div>
-
-    </div>
-
-    <div class="stat-card" (click)="filtrarDocumentos('En revisión')">
-
-      <div class="stat-number">
-
-        {{ enRevision }}
-
-      </div>
-
-      <div class="stat-label">
-
-        En revisión
-
-      </div>
-
-    </div>
-
-    <div class="stat-card" (click)="filtrarDocumentos('Requiere correcciones')">
-
-      <div class="stat-number">
-
-        {{ requierenCorrecciones }}
-
-      </div>
-
-      <div class="stat-label">
-
-        Correcciones
-
-      </div>
-
-    </div>
-
-    <div class="stat-card" (click)="filtrarDocumentos('Rechazado')">
-
-      <div class="stat-number">
-
-        {{ rechazados }}
-
-      </div>
-
-      <div class="stat-label">
-
-        Rechazados
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-
-<div class="documents-list">
-
-  <h3>
-
-    Mostrando:
-
-    {{ filtroEstado }}
-
-  </h3>
-  <br>
-
-
-  @if (
-  documentosFiltrados.length > 0
-  ) {
-
-  @for (
-  document of documentosFiltrados;
-  track document.id
-  ) {
-
-  <div class="document-card" (click)="abrirDocumento(document)">
-
-    <h4>
-
-      {{ document.nombre }}
-
-    </h4>
-
-    <p>
-
-      {{ document.descripcion }}
-
-    </p>
-
-    <span class="estado-badge">
-
-      {{ document.estado }}
-
-    </span>
-
-  </div>
-
-  }
-
-  } @else {
-
-  <p>
-
-    No existen documentos para este filtro.
-
-  </p>
-
-  }
-
-</div>
-}
-
-@if (tabActiva === 'revisiones') {
-
-<div class="dashboard-card">
-
-  <h2>
-
-    Historial de revisiones
-
-  </h2>
-
-  @if (
-  historialRevisiones.length > 0
-  ) {
-
-  @for (
-  revision of historialRevisiones;
-  track $index
-  ) {
-  <hr>
-  <div class="review-card">
-
-    <div class="review-row">
-      <br>
-      <strong>
-        Proyecto:
-      </strong>
-
-      {{ revision.proyecto }}
-
-    </div>
-
-    <div class="review-row">
-
-      <strong>
-        Documento:
-      </strong>
-
-      {{ revision.documento }}
-
-    </div>
-
-    <div class="review-row">
-
-      <strong>
-        Estado:
-      </strong>
-
-      <span class="estado-badge">
-
-        {{ revision.estado }}
-
-      </span>
-
-    </div>
-
-    <div class="review-row">
-
-      <strong>
-        Tutor:
-      </strong>
-
-      {{ revision.tutor }}
-
-    </div>
-
-    @if (
-    revision.comentario
-    ) {
-
-    <div class="review-row">
-
-      <strong>
-        Comentario:
-      </strong>
-
-      {{ revision.comentario }}
-
-    </div>
-
-    }
-
-    <div class="review-row">
-
-      <strong>
-        Fecha:
-      </strong>
-
-      {{ revision.fecha | date:'dd/MM/yyyy HH:mm' }}
-
-    </div>
-
-  </div>
-
-  }
-
-  } @else {
-
-  <p>
-
-    No existen revisiones todavía.
-
-  </p>
-
-  }
-
-</div>
-
-}
-
-@if (tabActiva === 'actividad') {
-
-<div class="dashboard-card">
-
-  <h2>
-
-    Actividad reciente
-
-  </h2>
-
-  @if (
-  actividadProyecto.length > 0
-  ) {
-
-  @for (
-  actividad of actividadProyecto.slice(0, 10);
-  track actividad.id
-  ) {
-
-  <div class="activity-item">
-
-    <div class="activity-date">
-
-      {{
-      actividad.created_at
-      | date:'dd/MM/yyyy HH:mm'
-      }}
-
-    </div>
-
-    <div class="activity-title">
-
-      {{ actividad.descripcion }}
-
-    </div>
     
+  <!-- CONTENIDO: RESUMEN -->
+  @if (tabActiva === 'resumen') {
+    <div class="tab-content">
+      <div class="dashboard-card">
+        <h2 class="card-title">Resumen de Documentos</h2>
+        
+        <div class="stats-grid">
+          <div class="stat-card" (click)="filtrarDocumentos('Todos')">
+            <span class="stat-number">{{ totalDocumentos }}</span>
+            <span class="stat-label">Total Documentos</span>
+          </div>
+          <div class="stat-card success" (click)="filtrarDocumentos('Aprobado')">
+            <span class="stat-number">{{ aprobados }}</span>
+            <span class="stat-label">Aprobados</span>
+          </div>
+          <div class="stat-card warning" (click)="filtrarDocumentos('En revisión')">
+            <span class="stat-number">{{ enRevision }}</span>
+            <span class="stat-label">En revisión</span>
+          </div>
+          <div class="stat-card danger" (click)="filtrarDocumentos('Requiere correcciones')">
+            <span class="stat-number">{{ requierenCorrecciones }}</span>
+            <span class="stat-label">Correcciones</span>
+          </div>
+          <div class="stat-card dark" (click)="filtrarDocumentos('Rechazado')">
+            <span class="stat-number">{{ rechazados }}</span>
+            <span class="stat-label">Rechazados</span>
+          </div>
+        </div>
+      </div>
 
-  </div>
+      <div class="documents-section">
+        <h3>Mostrando: <span>{{ filtroEstado }}</span></h3>
 
+        @if (documentosFiltrados.length > 0) {
+          <div class="documents-grid">
+            @for (document of documentosFiltrados; track document.id) {
+              <div class="document-card" (click)="abrirDocumento(document)">
+                <div class="document-header">
+                  <h4>{{ document.nombre }}</h4>
+                  <span class="status-badge" [attr.data-status]="document.estado">{{ document.estado }}</span>
+                </div>
+                <p class="document-desc">{{ document.descripcion }}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-message">No existen documentos para este filtro.</p>
+        }
+      </div>
+    </div>
   }
 
-  } @else {
+  <!-- CONTENIDO: REVISIONES -->
+  @if (tabActiva === 'revisiones') {
+    <div class="tab-content">
+      <div class="dashboard-card">
+        <h2 class="card-title">Historial de Revisiones</h2>
 
-  <p>
+        @if (historialRevisiones.length > 0) {
+          <div class="reviews-list">
+            @for (revision of historialRevisiones; track $index) {
+              <div class="review-card">
+                <div class="review-header">
+                  <div>
+                    <span class="review-project">{{ revision.proyecto }}</span>
+                    <h4 class="review-doc">{{ revision.documento }}</h4>
+                  </div>
+                  <span class="status-badge" [attr.data-status]="revision.estado">{{ revision.estado }}</span>
+                </div>
 
-    No hay actividad reciente.
+                <div class="review-body">
+                  @if (revision.comentario) {
+                    <div class="review-comment">
+                      <strong>Comentario del tutor:</strong>
+                      <p>"{{ revision.comentario }}"</p>
+                    </div>
+                  }
+                </div>
 
-  </p>
-
+                <div class="review-footer">
+                  <span>👤 {{ revision.tutor }}</span>
+                  <span>📅 {{ revision.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-message">No existen revisiones registradas todavía.</p>
+        }
+      </div>
+    </div>
   }
 
+  <!-- CONTENIDO: ACTIVIDAD -->
+  @if (tabActiva === 'actividad') {
+    <div class="tab-content">
+      <div class="dashboard-card">
+        <h2 class="card-title">Actividad Reciente</h2>
+
+        @if (actividadProyecto.length > 0) {
+          <div class="timeline">
+            @for (actividad of actividadProyecto.slice(0, 10); track actividad.id) {
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                  <p class="activity-desc">{{ actividad.descripcion }}</p>
+                  <span class="activity-date">{{ actividad.created_at | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-message">No hay actividad reciente.</p>
+        }
+      </div>
+    </div>
+  }
 </div>
-
-}

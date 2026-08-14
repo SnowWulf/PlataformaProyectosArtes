@@ -1,107 +1,88 @@
-<div class="sidebar">
+<aside class="sidebar">
 
-    <div class="sidebar-header">
-
-        <h2>🎓 Plataforma Artes</h2>
-
+  <!-- Header / Brand -->
+  <div class="sidebar-header">
+    <div class="brand-logo">
+      <span class="logo-icon">🎓</span>
+      <h2>GestARTE</h2>
     </div>
-
-    <nav class="sidebar-menu">
-
-        <a [routerLink]="obtenerRutaDashboard()" routerLinkActive="active">
-
-            🏠 Dashboard
-
-        </a>
-
-        <a routerLink="/dashboard/projects" routerLinkActive="active">
-
-            📁 Proyectos
-
-        </a>
-
-        <a routerLink="/dashboard/requests" routerLinkActive="active">
-
-            🤝 Solicitudes
-
-        </a>
-
-        @if(auth.esTutor()){
-
-        <a routerLink="/dashboard/tutor-requests" routerLinkActive="active">
-
-            👨‍🏫 Solicitudes de Tutor
-
-        </a>
-
-        }
-
-        @if(auth.esCoordinador()){
-
-        <a routerLink="/dashboard/users" routerLinkActive="active">
-
-            👥 Usuarios
-
-        </a>
-
-        }
-
-        <a routerLink="/dashboard/community" routerLinkActive="active">
-
-            🌐 Comunidad
-
-        </a>
-
-
-<a
-  routerLink="/dashboard/tools"
-  routerLinkActive="active">
-
-  🛠 Herramientas
-
-</a>
-
-    </nav>
-
-    <div class="sidebar-user">
-
-  <button
-    class="user-menu-btn"
-    (click)="mostrarMenuUsuario = !mostrarMenuUsuario">
-
-    <span>⚙️ Opciones</span>
-
-
-  </button>
-
-  <div
-    class="user-dropdown"
-    *ngIf="mostrarMenuUsuario">
-
-   <button
-  type="button"
-  (click)="irAMiPerfil()">
-
-  👤 Mi perfil
-
-</button>
-
-    <button
-      routerLink="/dashboard/profile">
-
-      Configuración
-
-    </button>
-
-    <button
-      (click)="logout()">
-
-      Cerrar sesión
-
-    </button>
-
   </div>
 
-</div>
+  <!-- Menú de Navegación -->
+  <nav class="sidebar-menu">
+    <a [routerLink]="obtenerRutaDashboard()" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <span class="icon">🏠</span>
+      <span>Dashboard</span>
+    </a>
 
-</div>
+    <a routerLink="/dashboard/projects" routerLinkActive="active">
+      <span class="icon">📁</span>
+      <span>Proyectos</span>
+    </a>
+
+    <a routerLink="/dashboard/requests" routerLinkActive="active">
+      <span class="icon">🤝</span>
+      <span>Solicitudes</span>
+    </a>
+
+    @if (auth.esTutor()) {
+      <a routerLink="/dashboard/tutor-requests" routerLinkActive="active">
+        <span class="icon">👨‍🏫</span>
+        <span>Solicitudes Tutor</span>
+      </a>
+    }
+
+    @if (auth.esCoordinador()) {
+      <a routerLink="/dashboard/users" routerLinkActive="active">
+        <span class="icon">👥</span>
+        <span>Usuarios</span>
+      </a>
+    }
+
+    <a routerLink="/dashboard/community" routerLinkActive="active">
+      <span class="icon">🌐</span>
+      <span>Comunidad</span>
+    </a>
+
+    <a routerLink="/dashboard/tools" routerLinkActive="active">
+      <span class="icon">🛠️</span>
+      <span>Herramientas</span>
+    </a>
+  </nav>
+
+  <!-- Área de Usuario / Configuración -->
+  <div class="sidebar-user">
+    @if (mostrarMenuUsuario) {
+      <div class="dropdown-backdrop" (click)="mostrarMenuUsuario = false"></div>
+    }
+
+    <button 
+      type="button"
+      class="user-menu-btn" 
+      [class.active]="mostrarMenuUsuario"
+      (click)="mostrarMenuUsuario = !mostrarMenuUsuario">
+      <div class="user-avatar">⚙️</div>
+      <span class="user-label">Opciones</span>
+      <span class="chevron" [class.open]="mostrarMenuUsuario">▾</span>
+    </button>
+
+    @if (mostrarMenuUsuario) {
+      <div class="user-dropdown">
+        <button type="button" (click)="irAMiPerfil(); mostrarMenuUsuario = false">
+          <span class="icon">👤</span> Mi perfil
+        </button>
+
+        <button type="button" routerLink="/dashboard/profile" (click)="mostrarMenuUsuario = false">
+          <span class="icon">⚙️</span> Configuración
+        </button>
+
+        <div class="dropdown-divider"></div>
+
+        <button type="button" class="logout-btn" (click)="logout(); mostrarMenuUsuario = false">
+          <span class="icon">🚪</span> Cerrar sesión
+        </button>
+      </div>
+    }
+  </div>
+
+</aside>

@@ -1,0 +1,30 @@
+<div *ngIf="projects.length > 0" class="modal-backdrop">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="alert-badge">🚨 ATENCIÓN URGENTE</div>
+      <h2>Fecha Límite Inminente</h2>
+    </div>
+
+    <div class="modal-body">
+      <p class="intro-text">Tienes entregas críticas que requieren tu atención inmediata:</p>
+      
+      <div class="critical-list">
+        <div *ngFor="let p of projects" class="critical-item">
+          <div class="item-info">
+            <span class="project-title">{{ p.titulo }}</span>
+            <span class="deadline-tag" [class.today]="p.dias_restantes === 0">
+              {{ p.dias_restantes === 0 ? '¡VENCE HOY!' : 'VENCE MAÑANA' }}
+            </span>
+          </div>
+          <button (click)="goToProject(p.id)" class="btn-action">
+            Revisar Proyecto
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button (click)="closeModal()" class="btn-dismiss">Entendido, cerrar</button>
+    </div>
+  </div>
+</div>

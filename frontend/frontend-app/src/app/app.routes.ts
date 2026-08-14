@@ -111,12 +111,11 @@ export const routes: Routes = [
         path: 'profile',
         component: Profile
       },
-      {
-        path: 'tools',
-          loadComponent: () =>
-          import('./pages/tools/tools')
-          .then(m => m.Tools)
-      },
+      // ✅ CORRECTO
+{
+  path: 'tools',
+  loadComponent: () => import('./pages/tools/tools').then(m => m.ToolsComponent)
+},
       {
         path: 'tools/calendar',
           loadComponent: () =>
@@ -124,7 +123,7 @@ export const routes: Routes = [
           .then(
           m => m.Calendar
         )
-      }
+      },
     ]
 
   },

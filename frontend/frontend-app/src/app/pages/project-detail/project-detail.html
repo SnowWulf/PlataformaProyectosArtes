@@ -13,7 +13,7 @@
         {{ project.estado }}
       </span>
       
-      @if (auth.esTutor()) {
+      @if (auth.esTutor() || auth.esCoordinador()) {
         <button class="btn-secondary" (click)="abrirModalEstado(project)">
           🔄 Cambiar estado
         </button>
@@ -46,7 +46,7 @@
       <div class="info-grid">
         <div class="info-item">
           <strong>Autor Principal</strong>
-          <p>{{ project.owner?.name }}</p>
+          <p>{{ project.owner?.name || 'Sin asignar' }}</p>
         </div>
         <div class="info-item">
           <strong>Tutor Asignado</strong>
@@ -89,7 +89,7 @@
                 <span class="role">Colaborador</span>
               </div>
               @if (esPropietarioProyecto()) {
-                <button class="btn-danger-sm" (click)="eliminarColaborador(colaborador.id)">
+                <button class="btn-danger-sm" (click)="eliminarColaborador(colaborador.id)" title="Eliminar colaborador">
                   ❌
                 </button>
               }
@@ -114,52 +114,57 @@
     </div>
 
     <div class="deliveries-grid">
-     
-     @for (entrega of deliveries; track entrega.id) {
-<div class="delivery-card">
-    
-    <!-- Encabezado con título y distintivo Obligatorio / Opcional -->
-    <div class="delivery-header">
-      <div class="title-container">
-        <!-- Distintivo Obligatorio / Opcional -->
-        <span class="type-badge" [ngClass]="entrega.obligatorio ? 'badge-obligatorio' : 'badge-opcional'">
-          {{ entrega.obligatorio ? 'Obligatoria' : 'Opcional' }}
-        </span>
+      @for (entrega of deliveries; track entrega.id || $index) {
+        <div class="delivery-card">
+          
+          <!-- Encabezado con título y distintivo Obligatorio / Opcional -->
+          <div class="delivery-header">
+            <div class="title-container">
+              <span class="type-badge" [ngClass]="entrega.obligatorio ? 'badge-obligatorio' : 'badge-opcional'">
+                {{ entrega.obligatorio ? 'Obligatoria' : 'Opcional' }}
+              </span>
+              <h4>{{ entrega.titulo }}</h4>
+            </div>
 
-        <h4>{{ entrega.titulo }}</h4>
-      </div>
-    </div>
-
-    <p class="delivery-description">{{ entrega.descripcion }}</p>
-
-    <div class="delivery-footer">
-      <span class="date">📅 Límite: {{ entrega.fecha_limite | date:'dd/MM/yyyy HH:mm' }}</span>
-
-      <!-- Bloque del Estudiante -->
-      @if (auth.esEstudiante()) {
-        @if (entrega.respuesta) {
-          <div class="submission-status">
-            <span class="status-submitted">
-              @if (entrega.respuesta.updated_at && entrega.respuesta.updated_at !== entrega.respuesta.created_at) {
-                ✏️ Editado el {{ entrega.respuesta.updated_at | date:'dd/MM/yyyy' }} a las {{ entrega.respuesta.updated_at | date:'HH:mm' }} hs
-              } @else {
-                ✅ Enviado el {{ entrega.respuesta.created_at | date:'dd/MM/yyyy' }} a las {{ entrega.respuesta.created_at | date:'HH:mm' }} hs
-              }
-            </span>
-            <button class="btn-secondary-sm" (click)="abrirRespuesta(entrega)">
-              ✏️ Editar entrega
-            </button>
+            <!-- Opciones para Edit/Delete si es Tutor o Coordinador -->
+            @if (auth.esTutor() || auth.esCoordinador()) {
+              <div class="delivery-admin-actions">
+                <button class="btn-icon" (click)="editarEntrega(entrega)" title="Editar entrega">✏️</button>
+                <button class="btn-icon danger" (click)="eliminarEntrega(entrega.id)" title="Eliminar entrega">🗑️</button>
+              </div>
+            }
           </div>
-        } @else {
-          <button class="btn-primary-sm" (click)="abrirRespuesta(entrega)">
-            📤 Responder
-          </button>
-        }
-      }
-    </div>
 
-  </div>
-} @empty {
+          <p class="delivery-description">{{ entrega.descripcion }}</p>
+
+          <div class="delivery-footer">
+            <span class="date">📅 Límite: {{ entrega.fecha_limite | date:'dd/MM/yyyy HH:mm' }}</span>
+
+            <!-- Bloque del Estudiante -->
+            @if (auth.esEstudiante()) {
+              @if (entrega.respuesta) {
+                <div class="submission-status">
+                  <span class="status-submitted">
+                    @if (entrega.respuesta.updated_at && entrega.respuesta.updated_at !== entrega.respuesta.created_at) {
+                      ✏️ Editado el {{ entrega.respuesta.updated_at | date:'dd/MM/yyyy' }} a las {{ entrega.respuesta.updated_at | date:'HH:mm' }} hs
+                    } @else {
+                      ✅ Enviado el {{ entrega.respuesta.created_at | date:'dd/MM/yyyy' }} a las {{ entrega.respuesta.created_at | date:'HH:mm' }} hs
+                    }
+                  </span>
+                  <button class="btn-secondary-sm" (click)="abrirRespuesta(entrega)">
+                    ✏️ Editar entrega
+                  </button>
+                </div>
+              } @else {
+                <button class="btn-primary-sm" (click)="abrirRespuesta(entrega)">
+                  📤 Responder
+                </button>
+              }
+            }
+          </div>
+
+        </div>
+      } @empty {
         <div class="empty-state">
           <p>No hay entregas registradas en este proyecto.</p>
         </div>
@@ -191,12 +196,12 @@
 
     <div class="documents-list">
       @if (documents.length > 0) {
-        @for (document of documents; track document.id) {
+        @for (document of documents; track document.id || $index) {
           <div class="document-card">
             <div class="document-header">
               <div class="doc-title-group">
                 <h3>{{ document.nombre }}</h3>
-                <span class="author">👤 {{ document.user?.name }}</span>
+                <span class="author">👤 {{ document.user?.name || 'Autor desconocido' }}</span>
               </div>
               <span class="status-badge" [ngClass]="obtenerClaseEstado(document.estado)">
                 {{ document.estado }}
@@ -234,10 +239,10 @@
 
                 @if (revisionesAbiertas[document.id]) {
                   <div class="reviews-list">
-                    @for (review of document.reviews; track review.id) {
+                    @for (review of document.reviews; track review.id || $index) {
                       <div class="review-card">
                         <div class="review-meta">
-                          <span><strong>Tutor:</strong> {{ review.tutor?.name }}</span>
+                          <span><strong>Tutor:</strong> {{ review.tutor?.name || 'Tutor' }}</span>
                           <span class="status">{{ review.estado }}</span>
                         </div>
                         <p class="comment"><strong>Comentario:</strong> {{ review.comentario }}</p>
@@ -356,35 +361,63 @@
 </div>
 }
 
-<!-- CHAT FLOTANTE -->
+<!-- CHAT FLOTANTE HUMANO -->
 <button class="chat-float-btn" (click)="toggleChat()">
   💬 Chat
 </button>
 
+<!-- CHAT HUMANO / EQUIPO -->
 @if (chatAbierto) {
-<div class="chat-window">
-  <div class="chat-header">
-    <span>💬 Chat del proyecto</span>
-    <button type="button" class="close-chat" (click)="toggleChat()">✕</button>
-  </div>
+  <div class="chat-window" [class.shifted]="iaChatOpen">
+    <div class="chat-header">
+      <span>💬 Chat del proyecto</span>
+      <button type="button" class="close-chat" (click)="toggleChat()">✕</button>
+    </div>
 
-  <div class="chat-messages" #chatMessages>
-    @for (mensaje of mensajes; track mensaje.id) {
-      <div class="message" [class.mine]="esMiMensaje(mensaje)">
-        @if (!esMismoAutor($index)) {
-          <div class="message-author">{{ mensaje.user.name }}</div>
-        }
-        <div class="message-bubble">{{ mensaje.mensaje }}</div>
-        @if (mostrarHora($index)) {
-          <div class="message-time">{{ mensaje.created_at | date:'HH:mm' }}</div>
-        }
-      </div>
-    }
-  </div>
+    <div class="chat-messages" #chatMessages>
+      @for (mensaje of mensajes; track mensaje.id || $index) {
+        <div class="message" [class.mine]="esMiMensaje(mensaje)">
+          @if (!esMismoAutor($index)) {
+            <div class="message-author">{{ mensaje.user?.name || 'Usuario' }}</div>
+          }
+          <div class="message-bubble">
+            {{ mensaje.mensaje }}
+            @if (mensaje.enviando) {
+              <span class="sending-icon" title="Enviando..."> 🕒</span>
+            }
+          </div>
+          @if (mostrarHora($index)) {
+            <div class="message-time">
+              {{ mensaje.created_at | date:'HH:mm' }}
+            </div>
+          }
+        </div>
+      }
+    </div>
 
-  <div class="chat-footer">
-    <textarea [(ngModel)]="nuevoMensaje" placeholder="Escribe un mensaje..."></textarea>
-    <button type="button" (click)="enviarMensaje()">Enviar</button>
-  </div>
+    <div class="chat-footer">
+  <textarea 
+    [(ngModel)]="nuevoMensaje" 
+    (keydown.enter)="$event.preventDefault(); enviarMensaje()" 
+    placeholder="Escribe un mensaje..."
+    rows="1">
+  </textarea>
+  <button 
+    type="button" 
+    (click)="enviarMensaje()"
+    [disabled]="!nuevoMensaje || !nuevoMensaje.trim()">
+    Enviar
+  </button>
 </div>
+
+
+  </div>
+}
+
+<!-- CHAT FLOTANTE DE IA (ASISTENTE VIRTUAL GEMINI) -->
+@if (project && project.id) {
+  <app-project-ai-chatbot 
+    [projectId]="project.id"
+    (toggleState)="iaChatOpen = !!$event">
+  </app-project-ai-chatbot>
 }

@@ -1,775 +1,414 @@
-<h1>
-
-    Dashboard Tutor
-
-</h1>
-
-<div class="tabs">
-
-    <button [class.active]="tabActiva === 'inicio'" (click)="tabActiva = 'inicio'">
-
-        🏠 Inicio
-
-    </button>
-
-    <button [class.active]="tabActiva === 'estudiantes'" (click)="tabActiva = 'estudiantes'">
-
-        👨‍🎓 Estudiantes
-
-    </button>
-
-    <button [class.active]="tabActiva === 'proyectos'" (click)="tabActiva = 'proyectos'">
-
-        📁 Proyectos
-
-    </button>
-
-    <button [class.active]="tabActiva === 'revisiones'" (click)="tabActiva = 'revisiones'">
-
-        📝 Revisiones
-
-    </button>
-
-    <button [class.active]="tabActiva === 'actividad'" (click)="tabActiva = 'actividad'">
-
-        📅 Actividad
-
-    </button>
-
-</div>
-
-
-
-<br>
-
-@if (tabActiva === 'actividad') {
-
-
-<div class="dashboard-card">
-
-  <h2>
-
-    Actividad reciente
-
-  </h2>
-
-</div>
-
-<h3>¿Qué ha ocurrido recientemente en los proyectos que reviso?</h3>
-<br>
-
-@if (
-  actividadReciente.length > 0
-) {
-
-  @for (
-    actividad of actividadReciente;
-    track $index
-  ) {
-
-    <div
-      class="activity-card"
-      (click)="
-        abrirProyecto(
-          actividad.proyectoId
-        )
-      ">
-
-      <div class="activity-header">
-
-        @if (
-          actividad.estado ===
-          'Pendiente revisión'
-        ) {
-
-          <span>
-
-            📤 Documento enviado
-
-          </span>
-
-        }
-
-        @else if (
-          actividad.estado ===
-          'En revisión'
-        ) {
-
-          <span>
-
-            🟡 Revisando
-
-          </span>
-
-        }
-
-        @else if (
-          actividad.estado ===
-          'Aprobado'
-        ) {
-
-          <span>
-
-            ✅ Documento aprobado
-
-          </span>
-
-        }
-
-        @else if (
-          actividad.estado ===
-          'Requiere correcciones'
-        ) {
-
-          <span>
-
-            ⚠ Correcciones solicitadas
-
-          </span>
-
-        }
-
-        @else if (
-          actividad.estado ===
-          'Rechazado'
-        ) {
-
-          <span>
-
-            ❌ Documento rechazado
-
-          </span>
-
-        }
-
-        @else if (
-          actividad.estado ===
-          'submitted'
-        ) {
-
-          <span>
-
-            ⏳ Documento subido para revisión
-
-          </span>
-
-        }
-
-        
-
+<div class="art-dashboard">
+  <!-- Hero / Header Principal -->
+  <header class="art-hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Facultad de Artes • Panel del Tutor
+      </div>
+      <h1 class="hero-title">Espacio de Tutoría & Evaluación</h1>
+      <p class="hero-subtitle">
+        Gestión académica, revisión de portafolios y seguimiento de proyectos creativos.
+      </p>
+    </div>
+  </header>
+
+  <!-- Navegación Moderna (Pills Floating Nav) -->
+  <nav class="nav-pills-container">
+    <div class="nav-pills">
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'inicio'" 
+        (click)="tabActiva = 'inicio'">
+        <span class="pill-icon">⚡</span>
+        <span class="pill-text">Resumen</span>
+      </button>
+
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'estudiantes'" 
+        (click)="tabActiva = 'estudiantes'">
+        <span class="pill-icon">🎓</span>
+        <span class="pill-text">Estudiantes</span>
+        <span class="pill-count" *ngIf="estudiantesTutor?.length">{{ estudiantesTutor.length }}</span>
+      </button>
+
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'proyectos'" 
+        (click)="tabActiva = 'proyectos'">
+        <span class="pill-icon">🎨</span>
+        <span class="pill-text">Proyectos</span>
+        <span class="pill-count" *ngIf="proyectosAsignados?.length">{{ proyectosAsignados.length }}</span>
+      </button>
+
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'revisiones'" 
+        (click)="tabActiva = 'revisiones'">
+        <span class="pill-icon">📑</span>
+        <span class="pill-text">Revisiones</span>
+      </button>
+
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'actividad'" 
+        (click)="tabActiva = 'actividad'">
+        <span class="pill-icon">📡</span>
+        <span class="pill-text">Bitácora</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- TAB: INICIO (RESUMEN EJECUTIVO) -->
+  @if (tabActiva === 'inicio') {
+    <section class="tab-pane">
+      <!-- Grid de Métricas Principales -->
+      <div class="metrics-grid">
+        <div 
+          class="metric-card" 
+          [class.active]="filtroDocumentos === 'proyectos'" 
+          (click)="filtroDocumentos = 'proyectos'">
+          <div class="metric-header">
+            <span class="metric-label">Proyectos Asignados</span>
+            <div class="metric-icon icon-emerald">🎨</div>
+          </div>
+          <div class="metric-value">{{ totalProyectos }}</div>
+          <span class="metric-footer">Proyectos activos a cargo</span>
+        </div>
+
+        <div 
+          class="metric-card" 
+          [class.active]="filtroDocumentos === 'pendientes'" 
+          (click)="filtroDocumentos = 'pendientes'">
+          <div class="metric-header">
+            <span class="metric-label">Pendientes por Revisar</span>
+            <div class="metric-icon icon-rose">⏳</div>
+          </div>
+          <div class="metric-value text-rose">{{ pendientesRevision }}</div>
+          <span class="metric-footer text-rose">Requieren tu atención</span>
+        </div>
+
+        <div 
+          class="metric-card" 
+          [class.active]="filtroDocumentos === 'revisando'" 
+          (click)="filtroDocumentos = 'revisando'">
+          <div class="metric-header">
+            <span class="metric-label">En Revisión</span>
+            <div class="metric-icon icon-amber">🔍</div>
+          </div>
+          <div class="metric-value text-amber">{{ documentosEnRevision }}</div>
+          <span class="metric-footer">En proceso de evaluación</span>
+        </div>
+
+        <div 
+          class="metric-card" 
+          [class.active]="filtroDocumentos === 'realizadas'" 
+          (click)="filtroDocumentos = 'realizadas'">
+          <div class="metric-header">
+            <span class="metric-label">Evaluaciones Listas</span>
+            <div class="metric-icon icon-emerald">✅</div>
+          </div>
+          <div class="metric-value">{{ revisionesRealizadas }}</div>
+          <span class="metric-footer">Revisiones completadas</span>
+        </div>
       </div>
 
-      <h4>
+      <!-- Sección de Documentos / Proyectos Filtrados -->
+      <div class="content-section">
+        <div class="section-header">
+          <h2>
+            @if (filtroDocumentos === 'proyectos') {
+              Galería de Proyectos Asignados
+            } @else {
+              Explorador de Documentos
+            }
+          </h2>
+        </div>
 
-        {{ actividad.documento }}
-
-      </h4>
-
-      <p>
-
-        <strong>
-          Proyecto:
-        </strong>
-
-        {{ actividad.proyecto }}
-
-      </p>
-
-      <p>
-
-        <strong>
-          Estudiante:
-        </strong>
-
-        {{ actividad.estudiante }}
-
-      </p>
-
-      <p>
-
-        {{ actividad.fecha | date:'dd/MM/yyyy HH:mm' }}
-
-      </p>
-
-    </div>
-
+        @if (obtenerDocumentosFiltrados().length > 0) {
+          @if (filtroDocumentos === 'proyectos') {
+            <div class="projects-gallery">
+              @for (proyecto of obtenerDocumentosFiltrados(); track proyecto.id) {
+                <div class="gallery-card" (click)="abrirProyecto(proyecto.id)">
+                  <div class="gallery-card-banner">
+                    <span class="status-tag">{{ proyecto.estado }}</span>
+                  </div>
+                  <div class="gallery-card-body">
+                    <h3 class="card-title">{{ proyecto.titulo }}</h3>
+                    <p class="card-description">{{ proyecto.descripcion }}</p>
+                  </div>
+                  <div class="gallery-card-footer">
+                    <span class="btn-link">Ver Proyecto ➔</span>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="document-list">
+              @for (document of obtenerDocumentosFiltrados(); track document.id) {
+                <div class="document-row-card" (click)="abrirProyecto(document.proyectoId)">
+                  <div class="doc-icon">📄</div>
+                  <div class="doc-details">
+                    <h4 class="doc-title">{{ document.nombre }}</h4>
+                    <span class="doc-subtitle">Proyecto: <strong>{{ document.proyectoTitulo }}</strong></span>
+                  </div>
+                  <div class="doc-status">
+                    <span class="status-pill" [ngClass]="{
+                      'status-pending': document.estado === 'Pendiente revisión',
+                      'status-reviewing': document.estado === 'En revisión',
+                      'status-approved': document.estado === 'Aprobado',
+                      'status-correction': document.estado === 'Requiere correcciones'
+                    }">
+                      <span class="status-dot"></span>
+                      {{ document.estado }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        } @else {
+          <div class="empty-state">
+            <div class="empty-icon">📂</div>
+            <p>No se encontraron registros para la categoría seleccionada.</p>
+          </div>
+        }
+      </div>
+    </section>
   }
 
-} @else {
+  <!-- TAB: ESTUDIANTES -->
+  @if (tabActiva === 'estudiantes') {
+    <section class="tab-pane">
+      <div class="content-section">
+        <div class="section-header">
+          <h2>Directorio de Estudiantes a Cargo</h2>
+        </div>
 
-  <p>
+        <div class="students-grid">
+          @for (estudiante of estudiantesTutor; track estudiante.id) {
+            <div class="student-card" [class.expanded]="estudianteExpandido === estudiante.id">
+              <div class="student-card-header" (click)="toggleEstudiante(estudiante.id)">
+                <div class="student-profile">
+                  <div class="avatar-circle">
+                    {{ estudiante.nombre.charAt(0) }}
+                  </div>
+                  <div class="student-info">
+                    <h3>{{ estudiante.nombre }}</h3>
+                    <span class="project-badge">{{ estudiante.proyectos }} Proyecto(s)</span>
+                  </div>
+                </div>
+                <button class="expand-btn">
+                  <span>{{ estudianteExpandido === estudiante.id ? '−' : '+' }}</span>
+                </button>
+              </div>
 
-    No hay actividad registrada.
-
-  </p>
-
-}
-
-}
-
-@if (tabActiva === 'revisiones') {
-
-<div class="dashboard-card">
-
-  <h2>
-
-    Historial de revisiones
-
-  </h2>
-
-</div>
-<h3>¿Qué evaluaciones he realizado?</h3>
-<br>
-
-@if (
-  historialRevisiones.length > 0
-) {
-
-  @for (
-    revision of historialRevisiones;
-    track $index
-  ) {
-
-    <div
-      class="review-card"
-      (click)="
-        abrirProyecto(
-          revision.proyectoId
-        )
-      ">
-
-      <h3>
-
-        {{ revision.proyecto }}
-
-      </h3>
-
-      <p>
-
-        <strong>
-          Documento:
-        </strong>
-
-        {{ revision.documento }}
-
-      </p>
-
-      <p>
-
-        <strong>
-          Estudiante:
-        </strong>
-
-        {{ revision.estudiante }}
-
-      </p>
-
-      <p>
-
-        <strong>
-          Estado:
-        </strong>
-
-        {{ revision.estado }}
-
-      </p>
-
-      <p>
-
-        <strong>
-          Fecha:
-        </strong>
-
-        {{ revision.fecha | date:'dd/MM/yyyy HH:mm' }}
-
-      </p>
-
-    </div>
-
+              @if (estudianteExpandido === estudiante.id) {
+                <div class="student-projects-accordion">
+                  <div class="accordion-title">Proyectos Asignados:</div>
+                  <div class="accordion-list">
+                    @for (proyecto of proyectosAsignados; track proyecto.id) {
+                      @if (proyecto.owner?.id === estudiante.id) {
+                        <div class="accordion-item" (click)="abrirProyecto(proyecto.id)">
+                          <div class="item-info">
+                            <h4>{{ proyecto.titulo }}</h4>
+                            <span class="item-status">{{ proyecto.estado }}</span>
+                          </div>
+                          <span class="arrow-icon">➔</span>
+                        </div>
+                      }
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </section>
   }
 
-} @else {
-
-  <p>
-
-    No existen revisiones registradas.
-
-  </p>
-
-}
-
-}
-
-@if (tabActiva === 'proyectos') {
-
-<div class="dashboard-card">
-
-    <h2>
-
-        Gestión de proyectos
-
-    </h2>
-
-</div>
-
-<br>
-
-@for (
-proyecto of proyectosAsignados;
-track proyecto.id
-) {
-
-<div class="project-card" (click)="
-      abrirProyecto(
-        proyecto.id
-      )
-    ">
-
-    <h3>
-
-        {{ proyecto.titulo }}
-
-    </h3>
-
-    <p>
-
-        <strong>
-            Estudiante:
-        </strong>
-
-        {{ proyecto.owner?.name }}
-
-    </p>
-
-    <p>
-
-        <strong>
-            Estado:
-        </strong>
-
-        {{ proyecto.estado }}
-
-    </p>
-
-    <div class="project-alerts">
-
-        @if (
-        estadisticasProyecto[
-        proyecto.id
-        ]?.pendientes > 0
-        ) {
-
-        <span class="alert pending">
-
-            🔴
-            {{
-            estadisticasProyecto[
-            proyecto.id
-            ].pendientes
-            }}
-            pendiente(s)
-
-        </span>
-
-        }
-
-        @if (
-        estadisticasProyecto[
-        proyecto.id
-        ]?.revision > 0
-        ) {
-
-        <span class="alert reviewing">
-
-            🟡
-            {{
-            estadisticasProyecto[
-            proyecto.id
-            ].revision
-            }}
-            revisando
-
-        </span>
-
-        }
-
-        @if (
-        estadisticasProyecto[
-        proyecto.id
-        ]?.correcciones > 0
-        ) {
-
-        <span class="alert correction">
-
-            ⚠
-            {{
-            estadisticasProyecto[
-            proyecto.id
-            ].correcciones
-            }}
-            corrección(es)
-
-        </span>
-
-        }
-
-        @if (
-
-        estadisticasProyecto[
-        proyecto.id
-        ]?.pendientes === 0 
-
-        &&
-
-        estadisticasProyecto[
-        proyecto.id
-        ]?.revision === 0
-
-        &&
-
-        estadisticasProyecto[
-        proyecto.id
-        ]?.correcciones === 0
-
-        ) {
-
-        <span class="alert success">
-
-            ✅ Todo al día
-
-        </span>
-
-        }
-
-    </div>
-
-</div>
-
-}
-
-}
-
-@if (tabActiva === 'estudiantes') {
-
-<div class="dashboard-card">
-
-    <h2>
-
-        Estudiantes asignados
-
-    </h2>
-
-    <div class="students-grid">
-
-        @for (
-        estudiante of estudiantesTutor;
-        track estudiante.id
-        ) {
-
-        <div class="student-button" [class.active-student]="
-    estudianteExpandido ===
-    estudiante.id
-  " (click)="
-    toggleEstudiante(
-      estudiante.id
-    )
-  ">
-
-            <div class="student-name">
-
-                {{ estudiante.nombre }}
-
-            </div>
-
-            <div class="student-projects">
-
-                {{ estudiante.proyectos }}
-                proyecto(s)
-
-            </div>
-
-            <div class="student-arrow">
-
-                {{
-                estudianteExpandido === estudiante.id
-                ? '▲'
-                : '▼'
-                }}
-
-            </div>
-
+  <!-- TAB: PROYECTOS -->
+  @if (tabActiva === 'proyectos') {
+    <section class="tab-pane">
+      <div class="content-section">
+        <div class="section-header">
+          <h2>Tablero de Proyectos y Entregables</h2>
         </div>
 
-        @if (
-        estudianteExpandido ===
-        estudiante.id
-        ) {
+        <div class="projects-master-grid">
+          @for (proyecto of proyectosAsignados; track proyecto.id) {
+            <div class="master-project-card" (click)="abrirProyecto(proyecto.id)">
+              <div class="master-card-header">
+                <span class="status-badge-outline">{{ proyecto.estado }}</span>
+                <h3>{{ proyecto.titulo }}</h3>
+                <div class="student-tag">
+                  <span>👤 {{ proyecto.owner?.name }}</span>
+                </div>
+              </div>
 
-        <div class="student-projects-list">
+              <div class="master-card-body">
+                <div class="alerts-container">
+                  @if (estadisticasProyecto[proyecto.id]?.pendientes > 0) {
+                    <div class="alert-tag tag-rose">
+                      🔴 <strong>{{ estadisticasProyecto[proyecto.id].pendientes }}</strong> pendiente(s)
+                    </div>
+                  }
+                  @if (estadisticasProyecto[proyecto.id]?.revision > 0) {
+                    <div class="alert-tag tag-amber">
+                      🟡 <strong>{{ estadisticasProyecto[proyecto.id].revision }}</strong> en revisión
+                    </div>
+                  }
+                  @if (estadisticasProyecto[proyecto.id]?.correcciones > 0) {
+                    <div class="alert-tag tag-orange">
+                      ⚠️ <strong>{{ estadisticasProyecto[proyecto.id].correcciones }}</strong> requiere corrección
+                    </div>
+                  }
+                  @if (
+                    estadisticasProyecto[proyecto.id]?.pendientes === 0 &&
+                    estadisticasProyecto[proyecto.id]?.revision === 0 &&
+                    estadisticasProyecto[proyecto.id]?.correcciones === 0
+                  ) {
+                    <div class="alert-tag tag-emerald">
+                      ✅ Entregas al día
+                    </div>
+                  }
+                </div>
+              </div>
 
-            @for (
-            proyecto of proyectosAsignados;
-            track proyecto.id
-            ) {
-
-            @if (
-            proyecto.owner?.id ===
-            estudiante.id
-            ) {
-
-            <div class="project-item" (click)="
-            abrirProyecto(
-              proyecto.id
-            )
-          ">
-
-                <h4>
-
-                    {{ proyecto.titulo }}
-
-                </h4>
-
-                <p>
-
-                    {{ proyecto.estado }}
-
-                </p>
-
+              <div class="master-card-footer">
+                <span>Ir al taller del proyecto</span>
+                <span class="icon">➔</span>
+              </div>
             </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
 
+  <!-- TAB: REVISIONES -->
+  @if (tabActiva === 'revisiones') {
+    <section class="tab-pane">
+      <div class="content-section">
+        <div class="section-header">
+          <h2>Historial de Evaluaciones y Revisiones</h2>
+        </div>
+
+        @if (historialRevisiones.length > 0) {
+          <div class="reviews-timeline">
+            @for (revision of historialRevisiones; track $index) {
+              <div class="timeline-review-card" (click)="abrirProyecto(revision.proyectoId)">
+                <div class="review-status-indicator"></div>
+                <div class="review-main">
+                  <div class="review-header">
+                    <span class="project-name-chip">{{ revision.proyecto }}</span>
+                    <span class="review-date">{{ revision.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+                  </div>
+                  <h3 class="review-doc-title">{{ revision.documento }}</h3>
+                  <div class="review-meta">
+                    <span>Estudiante: <strong>{{ revision.estudiante }}</strong></span>
+                    <span class="meta-status">{{ revision.estado }}</span>
+                  </div>
+                </div>
+              </div>
             }
-
-            }
-
-        </div>
-
+          </div>
+        } @else {
+          <div class="empty-state">
+            <p>No existen revisiones registradas en el historial.</p>
+          </div>
         }
+      </div>
+    </section>
+  }
 
-        }
+  <!-- TAB: ACTIVIDAD -->
+  <!-- TAB: ACTIVIDAD / BITÁCORA -->
+@if (tabActiva === 'actividad') {
+  <section class="tab-pane">
+    <div class="content-section">
+      <!-- Encabezado de la Bitácora -->
+      <div class="section-header bitacora-header">
+        <div>
+          <h2>Bitácora de Seguimiento Académico</h2>
+          <p class="section-subtitle">Línea de tiempo cronológica de entregas, cambios de estado y revisiones</p>
+        </div>
+      </div>
 
+      @if (actividadReciente && actividadReciente.length > 0) {
+        <div class="bitacora-timeline">
+          @for (actividad of actividadReciente; track $index) {
+            <div class="timeline-entry" (click)="abrirProyecto(actividad.proyectoId)">
+              
+              <!-- Nodo visual de la línea de tiempo -->
+              <div class="timeline-node">
+                <div class="node-icon" [ngClass]="{
+                  'node-rose': actividad.estado === 'Pendiente revisión' || actividad.estado === 'submitted' || actividad.estado === 'Rechazado',
+                  'node-amber': actividad.estado === 'En revisión',
+                  'node-orange': actividad.estado === 'Requiere correcciones',
+                  'node-emerald': actividad.estado === 'Aprobado'
+                }">
+                  @if (actividad.estado === 'Aprobado') { ✓ }
+                  @else if (actividad.estado === 'Requiere correcciones') { ⚠️ }
+                  @else if (actividad.estado === 'Rechazado') { ✕ }
+                  @else { 📄 }
+                </div>
+                <div class="node-line"></div>
+              </div>
+
+              <!-- Tarjeta de contenido de la entrada -->
+              <div class="timeline-card">
+                <div class="card-top-row">
+                  <div class="card-badge-container">
+                    <span class="status-pill" [ngClass]="{
+                      'status-pending': actividad.estado === 'Pendiente revisión' || actividad.estado === 'submitted',
+                      'status-reviewing': actividad.estado === 'En revisión',
+                      'status-approved': actividad.estado === 'Aprobado',
+                      'status-correction': actividad.estado === 'Requiere correcciones',
+                      'status-rejected': actividad.estado === 'Rechazado'
+                    }">
+                      <span class="status-dot"></span>
+                      @if (actividad.estado === 'submitted' || actividad.estado === 'Pendiente revisión') { Entrega recibida }
+                      @else { {{ actividad.estado }} }
+                    </span>
+                  </div>
+
+                  <time class="activity-time">
+                    <span class="calendar-icon">📅</span>
+                    {{ actividad.fecha | date:'dd MMM yyyy, HH:mm' }}
+                  </time>
+                </div>
+
+                <div class="card-main-info">
+                  <h4 class="document-title">{{ actividad.documento }}</h4>
+                  
+                  <div class="context-pills">
+                    <span class="context-pill project-name">
+                      <span class="pill-label">Proyecto:</span> {{ actividad.proyecto }}
+                    </span>
+                    <span class="context-pill student-name">
+                      <span class="pill-label">Estudiante:</span> {{ actividad.estudiante }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="card-action-footer">
+                  <span class="action-text">Revisar avances en taller ➔</span>
+                </div>
+              </div>
+
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <div class="empty-icon">📜</div>
+          <p>No hay eventos ni actividad registrada en la bitácora todavía.</p>
+        </div>
+      }
     </div>
-
+  </section>
+}
 </div>
-
-}
-
-
-@if (tabActiva === 'inicio') {
-
-<div class="dashboard-card">
-
-    <h2>
-
-        Resumen del tutor
-
-    </h2>
-
-    <div class="stats-grid">
-
-        <div class="stat-card" [class.active-filter]="
-    filtroDocumentos === 'proyectos'
-  " (click)="
-    filtroDocumentos = 'proyectos'
-  ">
-
-            <div class="stat-number">
-
-                {{ totalProyectos }}
-
-            </div>
-
-            <div class="stat-label">
-
-                Proyectos asignados
-
-            </div>
-
-        </div>
-
-        <div class="stat-card" (click)="filtroDocumentos = 'pendientes'">
-
-            <div class="stat-number">
-
-                {{ pendientesRevision }}
-
-            </div>
-
-            <div class="stat-label">
-
-                Pendientes revisión
-
-            </div>
-
-        </div>
-
-        <div class="stat-card" (click)="filtroDocumentos = 'revisando'">
-
-            <div class="stat-number">
-
-                {{ documentosEnRevision }}
-
-            </div>
-
-            <div class="stat-label">
-
-                Revisando ahora
-
-            </div>
-
-        </div>
-
-        <div class="stat-card" [class.active-filter]="
-    filtroDocumentos === 'realizadas'
-  " (click)="
-    filtroDocumentos = 'realizadas'
-  ">
-
-            <div class="stat-number">
-
-                {{ revisionesRealizadas }}
-
-                
-
-            </div>
-
-            <div class="stat-label">
-
-                Revisiones realizadas
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<br>
-
-<h3>
-
-    @if (filtroDocumentos === 'proyectos') {
-
-    Proyectos asignados
-
-    } @else {
-
-    Documentos
-
-    }
-
-</h3>
-
-<br>
-
-@if (
-obtenerDocumentosFiltrados().length > 0
-) {
-
-@if (
-filtroDocumentos === 'proyectos'
-) {
-
-@for (
-proyecto of obtenerDocumentosFiltrados();
-track proyecto.id
-) {
-
-<div class="document-card" (click)="abrirProyecto(
-          proyecto.id
-        )">
-
-    <h4>
-
-        {{ proyecto.titulo }}
-
-    </h4>
-
-    <p>
-
-        {{ proyecto.descripcion }}
-
-    </p>
-
-    <p>
-
-        <strong>
-            Estado:
-        </strong>
-
-        {{ proyecto.estado }}
-
-    </p>
-
-</div>
-
-}
-
-} @else {
-
-@for (
-document of obtenerDocumentosFiltrados();
-track document.id
-) {
-
-<div class="document-card" (click)="abrirProyecto(
-          document.proyectoId
-        )">
-
-    <h4>
-
-        {{ document.nombre }}
-
-    </h4>
-
-    <p>
-
-        <strong>
-            Proyecto:
-        </strong>
-
-        {{ document.proyectoTitulo }}
-
-    </p>
-
-    <p>
-
-        <strong>
-            Estado:
-        </strong>
-
-        <span class="estado-badge" [ngClass]="{
-              'pendiente':
-                document.estado === 'Pendiente revisión',
-              'revision':
-                document.estado === 'En revisión',
-              'aprobado':
-                document.estado === 'Aprobado',
-              'correccion':
-                document.estado === 'Requiere correcciones'
-            }">
-
-            {{ document.estado }}
-
-        </span>
-
-    </p>
-
-</div>
-
-}
-
-}
-
-} @else {
-
-<p>
-
-    No hay elementos para este filtro.
-
-</p>
-
-}
-
-
-}

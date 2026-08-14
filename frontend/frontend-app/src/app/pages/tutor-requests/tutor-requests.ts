@@ -20,6 +20,7 @@ import { TutorRequestService } from '../../services/tutor-request';
 export class TutorRequests {
 
   solicitudes: any[] = [];
+  procesandoId: number | null = null; // <-- Propiedad declarada para la plantilla HTML
 
   constructor(
     private tutorRequestService: TutorRequestService,
@@ -27,27 +28,26 @@ export class TutorRequests {
   ) {
 
     afterNextRender(() => {
-
       this.cargarSolicitudes();
-
     });
 
   }
 
-  cargarSolicitudes(): void {
+cargarSolicitudes(): void {
 
     this.tutorRequestService
       .getPendingRequests()
       .subscribe({
 
-        next: (data) => {
+        next: (data: any) => { // <-- Agregar : any aquí
 
           console.log(
             'Solicitudes recibidas:',
             data
           );
 
-          this.solicitudes = data;
+          // Ahora TypeScript no lanzará error al evaluar .data
+          this.solicitudes = Array.isArray(data) ? data : (data?.data || []);
 
           this.cdr.detectChanges();
 
@@ -68,6 +68,9 @@ export class TutorRequests {
 
   aceptarSolicitud(id: number): void {
 
+    if (this.procesandoId) return; // Evita clics dobles mientras procesa
+    this.procesandoId = id;
+
     this.tutorRequestService
       .acceptRequest(id)
       .subscribe({
@@ -78,6 +81,7 @@ export class TutorRequests {
             'Solicitud aceptada'
           );
 
+          this.procesandoId = null;
           this.cargarSolicitudes();
 
         },
@@ -89,6 +93,9 @@ export class TutorRequests {
             err
           );
 
+          this.procesandoId = null;
+          this.cdr.detectChanges();
+
         }
 
       });
@@ -96,6 +103,9 @@ export class TutorRequests {
   }
 
   rechazarSolicitud(id: number): void {
+
+    if (this.procesandoId) return; // Evita clics dobles mientras procesa
+    this.procesandoId = id;
 
     this.tutorRequestService
       .rejectRequest(id)
@@ -107,6 +117,7 @@ export class TutorRequests {
             'Solicitud rechazada'
           );
 
+          this.procesandoId = null;
           this.cargarSolicitudes();
 
         },
@@ -117,6 +128,9 @@ export class TutorRequests {
             'Error al rechazar',
             err
           );
+
+          this.procesandoId = null;
+          this.cdr.detectChanges();
 
         }
 

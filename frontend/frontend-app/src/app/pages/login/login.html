@@ -1,52 +1,75 @@
 <div class="login-wrapper">
-  <!-- Tarjeta con efecto Cristal -->
   <div class="login-card">
     
-    <div class="login-header">
-      <div class="logo-icon">
-        🔒
+    <div class="brand-panel">
+      <div class="brand-badge">
+        <span class="brand-dot"></span>
+        GestARTE: Plataforma de Proyectos
       </div>
-      <h2>¡Bienvenido!</h2>
-      <p>Ingresa tus credenciales para continuar</p>
+
+      <h1>Tu espacio creativo, organizado y claro.</h1>
+      <p>
+        Accede a tus proyectos, talleres y seguimientos con una experiencia visual
+        profesional y moderna.
+      </p>
+
+      <div class="brand-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
 
-    <form (ngSubmit)="ingresar()" class="login-form">
-      
-      <!-- Grupo Email -->
-      <div class="input-group">
-        <input 
-          type="email"
-          [(ngModel)]="email"
-          name="email"
-          id="email"
-          placeholder=" " 
-          required
-        >
-        <label for="email">Correo Electrónico</label>
-        <span class="input-highlight"></span>
+    <div class="form-panel">
+      <div class="login-header">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.75a4.25 4.25 0 0 1 4.25 4.25v1.5h.75a2.25 2.25 0 0 1 2.25 2.25v6.25A2.25 2.25 0 0 1 17 19.25H7A2.25 2.25 0 0 1 4.75 17V10.75A2.25 2.25 0 0 1 7 8.5h.75V7A4.25 4.25 0 0 1 12 2.75Zm0 1.5A2.75 2.75 0 0 0 9.25 7v1.5h5.5V7A2.75 2.75 0 0 0 12 4.25Zm-4.25 6h8.5v5.5a.75.75 0 0 1-.75.75H7.75a.75.75 0 0 1-.75-.75v-5.5Z" fill="currentColor"/>
+          </svg>
+        </div>
+        <h2>¡Bienvenido!</h2>
+        <p>Ingresa tus credenciales para continuar</p>
       </div>
 
-      <!-- Grupo Password -->
-      <div class="input-group">
-        <input 
-          type="password"
-          [(ngModel)]="password"
-          name="password"
-          id="password"
-          placeholder=" " 
-          required
-        >
-        <label for="password">Contraseña</label>
-        <span class="input-highlight"></span>
+      <form (ngSubmit)="ingresar()" class="login-form">
+        
+        <div class="input-group">
+          <label for="email">Correo electrónico</label>
+          <input 
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            id="email"
+            placeholder=" "
+            required
+          >
+          <span class="input-highlight"></span>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Contraseña</label>
+          <input 
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            id="password"
+            placeholder=" "
+            required
+          >
+          <span class="input-highlight"></span>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <span>Ingresar</span>
+          <div class="btn-arrow">→</div>
+        </button>
+      </form>
+
+      <div class="login-footer">
+        ¿Olvidaste tu contraseña?
       </div>
+    </div>
 
-      <!-- Botón Submit -->
-      <button type="submit" class="btn-submit">
-        <span>Ingresar</span>
-        <div class="btn-arrow">→</div>
-      </button>
-
-    </form>
-    
   </div>
 </div>
+

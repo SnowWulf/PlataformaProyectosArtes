@@ -20,144 +20,100 @@ import {
 } from '@angular/core';
 
 @Component({
-
-  selector:
-    'app-collaboration-requests',
-
+  selector: 'app-collaboration-requests',
   standalone: true,
-
   imports: [
     CommonModule
   ],
-
-  templateUrl:
-    './collaboration-requests.html'
-
+  templateUrl: './collaboration-requests.html',
+  styleUrl: './collaboration-requests.scss'
 })
-export class CollaborationRequests
-implements OnInit {
+export class CollaborationRequests implements OnInit {
 
   recibidas: any[] = [];
-
   enviadas: any[] = [];
-
   vistaActiva = 'recibidas';
 
   constructor(
+    private communityService: CommunityService,
+    private auth: Auth,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  private communityService: CommunityService,
+  ngOnInit(): void {
+    const usuario = this.auth.obtenerUsuario();
 
-  private auth: Auth,
+    console.log(
+      'Usuario logueado:',
+      usuario
+    );
 
-  private cdr: ChangeDetectorRef
+    if (!usuario) {
+      return;
+    }
 
-) {}
+    this.communityService
+      .getReceivedRequests(usuario.id)
+      .subscribe((data: any) => {
+        this.recibidas = Array.isArray(data) ? data : (data?.data || []);
+        this.cdr.detectChanges();
+      });
 
-ngOnInit(): void {
-
-  const usuario =
-    this.auth.obtenerUsuario();
-
-  console.log(
-    'Usuario logueado:',
-    usuario
-  );
-
-  if (!usuario) {
-    return;
+    this.communityService
+      .getSentRequests(usuario.id)
+      .subscribe((data: any) => {
+        this.enviadas = Array.isArray(data) ? data : (data?.data || []);
+        this.cdr.detectChanges();
+      });
   }
 
-  this.communityService
-  .getReceivedRequests(usuario.id)
-  .subscribe(data => {
+  aceptarSolicitud(id: number): void {
+    this.communityService
+      .acceptRequest(id)
+      .subscribe(() => {
+        this.ngOnInit();
+      });
+  }
 
-    this.recibidas = data;
+  rechazarSolicitud(id: number): void {
+    this.communityService
+      .rejectRequest(id)
+      .subscribe(() => {
+        this.ngOnInit();
+      });
+  }
 
-    this.cdr.detectChanges();
+  // AGREGADO: Soluciona el error TS2551
+  cancelarSolicitud(id: number): void {
+    // Si tu servicio tiene el endpoint para rechazar/cancelar la enviada:
+    if ((this.communityService as any).cancelRequest) {
+      (this.communityService as any).cancelRequest(id).subscribe(() => {
+        this.ngOnInit();
+      });
+    } else {
+      console.log('Cancelar solicitud:', id);
+    }
+  }
 
-  });
+  get recibidasPendientes() {
+    return this.recibidas.filter(
+      solicitud => solicitud.estado === 'Pendiente'
+    );
+  }
 
-this.communityService
-  .getSentRequests(usuario.id)
-  .subscribe(data => {
+  get enviadasPendientes() {
+    return this.enviadas.filter(
+      solicitud => solicitud.estado === 'Pendiente'
+    );
+  }
 
-    this.enviadas = data;
-
-    this.cdr.detectChanges();
-
-  });
-
-}
-
-  aceptarSolicitud(
-  id: number
-): void {
-
-  this.communityService
-    .acceptRequest(id)
-    .subscribe(() => {
-
-      this.ngOnInit();
-
-    });
-
-}
-
-rechazarSolicitud(
-  id: number
-): void {
-
-  this.communityService
-    .rejectRequest(id)
-    .subscribe(() => {
-
-      this.ngOnInit();
-
-    });
-
-}
-
-get recibidasPendientes() {
-
-  return this.recibidas.filter(
-
-    solicitud =>
-
-      solicitud.estado ===
-      'Pendiente'
-
-  );
-
-}
-get enviadasPendientes() {
-
-  return this.enviadas.filter(
-
-    solicitud =>
-
-      solicitud.estado ===
-      'Pendiente'
-
-  );
-
-}
-get historial() {
-
-  return [
-
-    ...this.recibidas,
-
-    ...this.enviadas
-
-  ].filter(
-
-    solicitud =>
-
-      solicitud.estado !==
-      'Pendiente'
-
-  );
-
-}
+  get historial() {
+    return [
+      ...this.recibidas,
+      ...this.enviadas
+    ].filter(
+      solicitud => solicitud.estado !== 'Pendiente'
+    );
+  }
 
 }

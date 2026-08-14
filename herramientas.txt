@@ -7,3 +7,6 @@ Se instaló:
 6. PHP
 7. Composer
 8. Postman
+9. Ngrook 
+10. Gemini API (Google Ai Studio)
+11. Laravel AI SDK

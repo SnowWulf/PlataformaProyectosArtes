@@ -1,145 +1,82 @@
-<h1>
+<div class="requests-container">
 
-  👩‍🏫 Solicitudes de tutor
-
-</h1>
-
-<p class="resumen-solicitudes">
-
-  Tienes
-
-  <strong>
-
-    {{ solicitudes.length }}
-
-  </strong>
-
-  solicitud(es) pendiente(s).
-
-</p>
-
-<div
-  *ngIf="solicitudes.length > 0;
-         else sinSolicitudes">
-
-  <div
-    *ngFor="let solicitud of solicitudes"
-    class="solicitud-card">
-
-    <div class="solicitud-header">
-
-      <h3>
-
-        📚 {{ solicitud.project.titulo }}
-
-      </h3>
-
-      <span class="estado-pendiente">
-
-        Pendiente
-
-      </span>
-
+  <!-- Header / Encabezado -->
+  <header class="page-header">
+    <div class="header-info">
+      <h2>👩‍🏫 Solicitudes de Tutor</h2>
+      <p class="resumen-solicitudes">
+        Tienes <strong>{{ solicitudes.length }}</strong> {{ solicitudes.length === 1 ? 'solicitud pendiente' : 'solicitudes pendientes' }}.
+      </p>
     </div>
+  </header>
 
-    <div class="solicitud-body">
+  <!-- Lista Continua de Solicitudes -->
+  <div class="requests-list">
+    @for (solicitud of solicitudes; track solicitud.id) {
+      <article class="solicitud-item">
+        
+        <!-- Columna Izquierda: Información Principal -->
+        <div class="item-main">
+          <div class="item-header">
+            <h3>📚 {{ solicitud.project?.titulo || 'Proyecto sin título' }}</h3>
+            <span class="badge-pendiente">Pendiente</span>
+          </div>
 
-      <p>
+          <div class="item-details">
+            <span class="detail-tag">
+              👤 <strong>Estudiante:</strong> {{ solicitud.student?.name || 'Estudiante sin nombre' }}
+            </span>
 
-        <strong>
+            @if (solicitud.student?.email) {
+              <span class="detail-tag">
+                ✉️ <strong>Correo:</strong> 
+                <a [href]="'mailto:' + solicitud.student?.email" class="link">
+                  {{ solicitud.student?.email }}
+                </a>
+              </span>
+            }
 
-          👤 Estudiante:
+            @if (solicitud.created_at) {
+              <span class="detail-tag date">
+                🕒 <strong>Fecha:</strong> {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+            }
+          </div>
 
-        </strong>
+          <!-- Mensaje desplegado horizontalmente -->
+          <div class="mensaje-box">
+            <span class="label">💬 Mensaje:</span>
+            <p>{{ solicitud.mensaje || 'Sin mensaje adicional.' }}</p>
+          </div>
+        </div>
 
-        {{ solicitud.student.name }}
+        <!-- Columna Derecha: Botones de Acción -->
+        <div class="item-actions">
+          <button
+            type="button"
+            class="btn-aceptar"
+            [disabled]="procesandoId === solicitud.id"
+            (click)="aceptarSolicitud(solicitud.id)">
+            <span class="icon">✔️</span> Aceptar
+          </button>
 
-      </p>
+          <button
+            type="button"
+            class="btn-rechazar"
+            [disabled]="procesandoId === solicitud.id"
+            (click)="rechazarSolicitud(solicitud.id)">
+            <span class="icon">✕</span> Rechazar
+          </button>
+        </div>
 
-      <p
-        *ngIf="solicitud.student.email">
-
-        <strong>
-
-          ✉️ Correo:
-
-        </strong>
-
-        {{ solicitud.student.email }}
-
-      </p>
-
-      <div class="mensaje-box">
-
-        <strong>
-
-          💬 Mensaje:
-
-        </strong>
-
-        <p>
-
-          {{ solicitud.mensaje || 'Sin mensaje adicional.' }}
-
-        </p>
-
+      </article>
+    } @empty {
+      <div class="empty-state">
+        <div class="empty-icon">🎉</div>
+        <h3>Todo al día</h3>
+        <p>No tienes solicitudes de tutoría pendientes en este momento.</p>
       </div>
-
-      <p
-        *ngIf="solicitud.created_at">
-
-        <strong>
-
-          🕒 Fecha:
-
-        </strong>
-
-        {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
-
-      </p>
-
-    </div>
-
-    <div class="acciones">
-
-      <button
-        class="btn-aceptar"
-        (click)="aceptarSolicitud(solicitud.id)">
-
-        ✔️ Aceptar
-
-      </button>
-
-      <button
-        class="btn-rechazar"
-        (click)="rechazarSolicitud(solicitud.id)">
-
-        ✕ Rechazar
-
-      </button>
-
-    </div>
-
+    }
   </div>
 
 </div>
-
-<ng-template #sinSolicitudes>
-
-  <div class="empty-state">
-
-    <h2>
-
-      🎉 Todo al día
-
-    </h2>
-
-    <p>
-
-      No tienes solicitudes pendientes.
-
-    </p>
-
-  </div>
-
-</ng-template>

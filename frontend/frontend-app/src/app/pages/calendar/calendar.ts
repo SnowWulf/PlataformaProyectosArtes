@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CalendarEvent } from '../../models/calendar-event';
+import { CalendarEvent, QuickNote} from '../../models/calendar-event';
 import { CalendarEventService } from '../../services/calendar-event-service';
 import { CalendarEventModal } from '../../components/calendar-event-modal/calendar-event-modal';
 import { ProjectDeliveryService } from '../../services/project-delivery-service';
@@ -13,6 +13,7 @@ import { ProjectDeliveryService } from '../../services/project-delivery-service'
 export interface ExtendedCalendarEvent extends CalendarEvent {
   esTarea?: boolean;
   delivery_id?: number;
+  
 }
 
 export interface CalendarCell {
@@ -21,6 +22,7 @@ export interface CalendarCell {
   esMesActual: boolean;
   esHoy: boolean;
   eventos: ExtendedCalendarEvent[];
+  
 }
 
 @Component({

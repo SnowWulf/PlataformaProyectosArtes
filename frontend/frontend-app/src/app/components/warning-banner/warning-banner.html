@@ -1,0 +1,15 @@
+<div *ngIf="projects.length > 0" class="deadline-banner">
+  <div class="banner-content">
+    <div class="banner-icon">⚠️</div>
+    <div class="banner-text">
+      <strong>Proyectos próximos a vencer:</strong>
+      <div class="projects-list">
+        <div *ngFor="let p of projects" class="project-item">
+          <span>El proyecto <strong>"{{ p.titulo }}"</strong> vence en {{ p.dias_restantes }} días ({{ p.fecha_fin | date:'dd/MM/yyyy' }}).</span>
+          <button (click)="goToProject(p.id)" class="btn-link">Ver entregables →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button (click)="closeBanner()" class="close-btn" aria-label="Cerrar aviso">&times;</button>
+</div>

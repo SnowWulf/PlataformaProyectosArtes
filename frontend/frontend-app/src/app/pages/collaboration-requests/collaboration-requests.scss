@@ -1,44 +1,436 @@
-.requests-page {
-  max-width: 900px;
+// VARIABLES DE TEMA
+$brand-green: #1b3f33;      /* Verde institucional */
+$accent-green: #10b981;
+$accent-hover: #059669;
+
+$bg-card: #ffffff;
+$bg-subtle: #f8fafc;
+$border-color: #e2e8f0;
+
+$text-main: #0f172a;
+$text-muted: #64748b;
+
+$danger-red: #fee2e2;
+$danger-text: #dc2626;
+$danger-hover: #ef4444;
+
+$warning-bg: #fef3c7;
+$warning-text: #b45309;
+
+.collaboration-container {
+  width: 100%;
+  max-width: 1200px; /* Ancho amplio para evitar sensación de espacio vacío */
   margin: 0 auto;
+  padding: 1.5rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: $text-main;
+  box-sizing: border-box;
 }
 
-.request-card {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-
+// HEADER & METRICAS
+.page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid $border-color;
 
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  @media (max-width: 850px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-text {
+    h2 {
+      font-size: 1.6rem;
+      color: $brand-green;
+      margin: 0 0 0.25rem 0;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: $text-muted;
+      font-size: 0.92rem;
+    }
+  }
+
+  .metrics-grid {
+    display: flex;
+    gap: 1rem;
+
+    @media (max-width: 850px) {
+      width: 100%;
+    }
+
+    .metric-card {
+      background: $bg-card;
+      border: 1px solid $border-color;
+      border-radius: 10px;
+      padding: 0.6rem 1.1rem;
+      text-align: center;
+      min-width: 100px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+      .metric-value {
+        display: block;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: $brand-green;
+      }
+
+      .metric-label {
+        font-size: 0.75rem;
+        color: $text-muted;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+    }
+  }
 }
 
+// NAVEGACIÓN POR TABS
+.tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid $border-color;
+  padding-bottom: 0.5rem;
+
+  .tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: none;
+    padding: 0.65rem 1.2rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: $text-muted;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $bg-subtle;
+      color: $text-main;
+    }
+
+    &.active {
+      background: $brand-green;
+      color: #ffffff;
+
+      .tab-badge {
+        background: #ffffff;
+        color: $brand-green;
+      }
+    }
+
+    .tab-badge {
+      background: $accent-green;
+      color: #ffffff;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+
+      &.secondary {
+        background: #e2e8f0;
+        color: $text-main;
+      }
+    }
+  }
+}
+
+// CONTENEDOR DE LISTAS CONTINUAS
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.request-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid $border-color;
+  transition: background-color 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #f8fafc;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+// AVATAR
+.user-avatar-col {
+  flex-shrink: 0;
+
+  .avatar-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid $border-color;
+  }
+}
+
+// INFORMACIÓN PRINCIPAL
+.request-main-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .info-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    .user-name, .project-title-heading {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: $text-main;
+    }
+
+    .type-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 600;
+
+      &.badge-invite {
+        background: #e0f2fe;
+        color: #0369a1;
+      }
+
+      &.badge-request {
+        background: #f3e8ff;
+        color: #6b21a8;
+      }
+    }
+
+    .date-tag {
+      font-size: 0.8rem;
+      color: $text-muted;
+      margin-left: auto;
+
+      @media (max-width: 768px) {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .project-context {
+    margin: 0;
+    font-size: 0.9rem;
+    color: $text-muted;
+
+    .label {
+      font-weight: 500;
+    }
+
+    .project-title {
+      color: $brand-green;
+      font-weight: 600;
+    }
+
+    .project-category {
+      color: $text-muted;
+      font-size: 0.85rem;
+    }
+  }
+
+  .contact-email {
+    margin: 0;
+    font-size: 0.85rem;
+
+    .email-link {
+      color: $accent-green;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .message-quote {
+    background: $bg-subtle;
+    border-left: 3px solid $brand-green;
+    padding: 0.5rem 0.85rem;
+    border-radius: 0 6px 6px 0;
+    margin-top: 0.25rem;
+
+    .quote-title {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: $brand-green;
+      margin-bottom: 0.15rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: $text-main;
+      line-height: 1.4;
+    }
+  }
+}
+
+// BADGES DE ESTADO (HISTORIAL Y ENVIADAS)
+.status-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+
+  &.status-pending {
+    background: $warning-bg;
+    color: $warning-text;
+  }
+
+  &.status-accepted {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  &.status-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+}
+
+// GRID PARA HISTORIAL
+.metadata-row, .metadata-grid {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.88rem;
+  color: $text-muted;
+  flex-wrap: wrap;
+
+  .meta-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+
+    .label {
+      font-size: 0.75rem;
+      color: $text-muted;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .value {
+      color: $text-main;
+      font-weight: 600;
+    }
+  }
+}
+
+// BOTONES DE ACCIÓN
 .request-actions {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+
+  &.align-center {
+    align-self: center;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.btn-accept {
+      background: $accent-green;
+      color: #ffffff;
+
+      &:hover {
+        background: $accent-hover;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-reject {
+      background: $danger-red;
+      color: $danger-text;
+
+      &:hover {
+        background: $danger-hover;
+        color: #ffffff;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-cancel {
+      background: #f1f5f9;
+      color: $text-muted;
+
+      &:hover {
+        background: #e2e8f0;
+        color: $text-main;
+      }
+    }
+  }
 }
 
-.accept-btn {
-  background: #2e7d32;
-  color: white;
-}
+// ESTADO VACÍO
+.empty-state {
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+  background: $bg-card;
+  border: 1px dashed $border-color;
+  border-radius: 12px;
 
-.reject-btn {
-  background: #c62828;
-  color: white;
-}
+  .empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
 
-.pending {
-  color: #f57c00;
-}
+  h3 {
+    margin: 0 0 0.35rem 0;
+    font-size: 1.2rem;
+    color: $brand-green;
+    font-weight: 700;
+  }
 
-.accepted {
-  color: #2e7d32;
-}
-
-.rejected {
-  color: #c62828;
+  p {
+    margin: 0;
+    color: $text-muted;
+    font-size: 0.9rem;
+  }
 }

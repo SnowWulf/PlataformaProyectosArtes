@@ -1,267 +1,151 @@
 @if (usuario) {
-
 <div class="profile-container">
 
-<div class="profile-header">
-
-<div class="avatar">
-
-    <img
-
+  <!-- HEADER DEL PERFIL -->
+  <header class="profile-header">
+    <div class="avatar-container">
+      <img
         [src]="usuario.foto_url || '/user.webp'"
-
-        alt="Foto de perfil"
-
+        [alt]="'Foto de perfil de ' + usuario.name"
         class="profile-photo"
-
-    >
-
-</div>
-
-    <div>
-
-        <h1>
-
-            {{ usuario.name }}
-
-        </h1>
-
-        <p>
-
-            {{ usuario.role?.nombre }}
-
-        </p>
-
-        @if (usuario.programa) {
-
-        <p>
-
-            {{ usuario.programa }}
-
-        </p>
-
-        }
-
+      />
     </div>
 
-</div>
+    <div class="header-details">
+      <div class="title-row">
+        <h1>{{ usuario.name }}</h1>
+        <span class="role-badge">{{ usuario.role?.nombre }}</span>
+      </div>
 
-@if (usuario.bio) {
+      @if (usuario.programa) {
+        <p class="program-info">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+          {{ usuario.programa }}
+        </p>
+      }
 
-<section class="profile-section">
+      <!-- ACCIONES DE INTERACCIÓN -->
+      <div class="header-actions">
+        @if (misProyectos.length > 0) {
+          <button 
+            class="btn-secondary-sm"
+            (click)="mostrarSelectorProyecto = !mostrarSelectorProyecto">
+            📨 Invitar a un proyecto
+          </button>
+        }
 
-    <h2>
+        @if (esTutor) {
+          <button
+            class="btn-primary-sm"
+            (click)="mostrarModalTutoria = true">
+            🎓 Solicitar tutoría
+          </button>
+        }
+      </div>
 
-        Acerca de
+      <!-- DESPLEGABLE DE INVITACIÓN RÁPIDA -->
+      @if (mostrarSelectorProyecto) {
+        <div class="inline-invite-box">
+          <select [(ngModel)]="proyectoSeleccionado">
+            <option [ngValue]="null">Selecciona uno de tus proyectos...</option>
+            @for (proyecto of misProyectos; track proyecto.id) {
+              <option [ngValue]="proyecto.id">{{ proyecto.titulo }}</option>
+            }
+          </select>
+          <button
+            class="btn-primary-sm"
+            [disabled]="!proyectoSeleccionado"
+            (click)="invitarAProyecto()">
+            Enviar
+          </button>
+        </div>
+      }
+    </div>
+  </header>
 
-    </h2>
+  <!-- ACERCA DE -->
+  @if (usuario.bio) {
+    <section class="profile-section">
+      <h2>Acerca de</h2>
+      <p class="bio-text">{{ usuario.bio }}</p>
+    </section>
+  }
 
-    <p>
+  <!-- CONTACTO -->
+  @if (usuario.mostrar_correo && usuario.email) {
+    <section class="profile-section">
+      <h2>Contacto</h2>
+      <div class="contact-card">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <a [href]="'mailto:' + usuario.email">{{ usuario.email }}</a>
+      </div>
+    </section>
+  }
 
-        {{ usuario.bio }}
-
-    </p>
-
-</section>
-
-}
-
-@if (usuario.mostrar_correo && usuario.email) {
-
-<section class="profile-section">
-
-    <h2>
-
-        Contacto
-
-    </h2>
-
-    <p>
-
-        {{ usuario.email }}
-
-    </p>
-
-</section>
-
-}
-
-<section class="profile-section">
-
-    <h2>
-
-        Proyectos
-
-    </h2>
+  <!-- PROYECTOS -->
+  <section class="profile-section">
+    <h2>Proyectos Públicos</h2>
 
     @if (proyectos.length > 0) {
+      <div class="projects-grid">
+        @for (proyecto of proyectos; track proyecto.id) {
+          <div class="project-card">
+            <div class="project-header">
+              <h3>{{ proyecto.titulo }}</h3>
+              <span class="status-tag" [ngClass]="proyecto.estado | lowercase">
+                {{ proyecto.estado }}
+              </span>
+            </div>
 
-    @for (
-        proyecto of proyectos;
-        track proyecto.id
-    ) {
+            <p class="project-type">{{ proyecto.tipo_proyecto }}</p>
 
-    <div class="project-card">
-
-        <h3>
-
-            {{ proyecto.titulo }}
-
-        </h3>
-
-        <p>
-
-            {{ proyecto.tipo_proyecto }}
-
-        </p>
-
-        <span>
-
-            {{ proyecto.estado }}
-
-        </span>
-
-        <button
-            (click)="
-                solicitarColaboracion(
-                    proyecto.id
-                )
-            ">
-
-            Solicitar colaboración
-
-        </button>
-
-    </div>
-
-    }
-
-    } @else {
-
-    <p>
-
-        Este usuario ha decidido mantener sus proyectos privados o no posee proyectos públicos.
-
-    </p>
-
-    }
-
-</section>
-
-<button
-
-    *ngIf="misProyectos.length > 0"
-
-    (click)="
-        mostrarSelectorProyecto =
-        !mostrarSelectorProyecto
-    ">
-
-    📨 Invitar a proyecto
-
-</button>
-
-<div *ngIf="mostrarSelectorProyecto">
-
-    <select
-        [(ngModel)]="proyectoSeleccionado">
-
-        <option [ngValue]="null">
-
-            Selecciona un proyecto
-
-        </option>
-
-        <option
-
-            *ngFor="
-                let proyecto of misProyectos
-            "
-
-            [ngValue]="proyecto.id">
-
-            {{ proyecto.titulo }}
-
-        </option>
-
-    </select>
-
-    <button
-
-        [disabled]="!proyectoSeleccionado"
-
-        (click)="invitarAProyecto()">
-
-        Enviar invitación
-
-    </button>
-
-</div>
-
-@if (esTutor) {
-
-<button
-
-    class="invite-btn"
-
-    (click)="
-        mostrarModalTutoria =
-        true
-    ">
-
-    🎓 Solicitar tutoría
-
-</button>
-
-@if (mostrarModalTutoria) {
-
-<div class="modal-overlay">
-
-    <div class="modal">
-
-        <h3>
-
-            Selecciona un proyecto
-
-        </h3>
-
-        @for (
-            proyecto of misProyectos;
-            track proyecto.id
-        ) {
-
-        <button
-
-            (click)="
-                solicitarTutoria(
-                    proyecto.id
-                )
-            ">
-
-            {{ proyecto.titulo }}
-
-        </button>
-
+            <button
+              class="btn-primary-sm"
+              (click)="solicitarColaboracion(proyecto.id)">
+              Solicitar colaboración
+            </button>
+          </div>
         }
+      </div>
+    } @else {
+      <p class="empty-state">
+        Este usuario no posee proyectos públicos o ha decidido mantenerlos privados.
+      </p>
+    }
+  </section>
 
-        <button
+  <!-- MODAL DE TUTORÍA -->
+  @if (mostrarModalTutoria) {
+    <div class="modal-backdrop" (click)="mostrarModalTutoria = false">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Solicitar Tutoría</h3>
+        <p class="modal-subtitle">Selecciona en cuál de tus proyectos deseas recibir tutoría:</p>
 
-            (click)="
-                mostrarModalTutoria =
-                false
-            ">
+        <div class="modal-project-list">
+          @for (proyecto of misProyectos; track proyecto.id) {
+            <button
+              class="modal-item-btn"
+              (click)="solicitarTutoria(proyecto.id)">
+              <span>{{ proyecto.titulo }}</span>
+              <span class="arrow">→</span>
+            </button>
+          }
+        </div>
 
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="mostrarModalTutoria = false">
             Cancelar
-
-        </button>
-
+          </button>
+        </div>
+      </div>
     </div>
-
-</div>
-
-}
-
-}
+  }
 
 </div>
 }

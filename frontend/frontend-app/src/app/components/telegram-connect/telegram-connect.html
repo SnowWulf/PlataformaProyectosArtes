@@ -1,0 +1,113 @@
+<div class="tg-wrapper">
+
+    <!-- ESTADO: CARGANDO -->
+    @if (loading) {
+    <div class="tg-state tg-loading">
+        <div class="spinner"></div>
+        <p>Cargando estado de vinculación...</p>
+    </div>
+    }
+
+    <!-- ESTADO: ERROR -->
+    @else if (errorMessage) {
+    <div class="tg-state tg-error">
+        <div class="error-icon">⚠️</div>
+        <div class="error-content">
+            <p>{{ errorMessage }}</p>
+            <button (click)="cargarEstado()" class="btn-retry">
+                Reintentar conexión
+            </button>
+        </div>
+    </div>
+    }
+
+    <!-- ESTADO: CONTENIDO PRINCIPAL -->
+    @else {
+    @if (isConnected) {
+
+    <!-- BANNER FLOTANTE DE ÉXITO -->
+    @if (justConnected) {
+    <div class="tg-toast-success">
+        <div class="toast-message">
+            <span class="icon">🎉</span>
+            <div>
+                <strong>¡Vinculación Exitosa!</strong>
+                <p>Tu cuenta ya está sincronizada con el bot.</p>
+            </div>
+        </div>
+        <button (click)="justConnected = false" class="btn-close-toast" aria-label="Cerrar">✕</button>
+    </div>
+    }
+
+    <!-- TARJETA DE ESTADO VINCULADO -->
+    <div class="tg-card-connected">
+        <div class="badge-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+
+        <div class="connected-details">
+            <h4>Dispositivo Vinculado</h4>
+            <p>Recibirás notificaciones y alertas en tiempo real.</p>
+            @if (telegramChatId) {
+            <span class="chat-id-tag">ID: {{ telegramChatId }}</span>
+            }
+        </div>
+
+        <button (click)="desvincular()" [disabled]="actionLoading" class="btn-disconnect">
+            @if (actionLoading) {
+            <span class="mini-spinner"></span>
+            <span>Desvinculando...</span>
+            } @else {
+            <span>Desvincular</span>
+            }
+        </button>
+    </div>
+    }
+
+    <!-- VISTA PARA ESCANEAR QR Y ABRIR BOT -->
+    @else {
+    <div class="tg-card-unconnected">
+        <div class="tg-header">
+            <h3>Vincular cuenta de Telegram</h3>
+            <p>Escanea el código QR con la cámara de tu celular o ingresa directamente desde el botón.</p>
+        </div>
+
+        <!-- MARCO Y CANVAS DEL CÓDIGO QR -->
+        <div class="qr-container">
+            <div class="qr-box">
+                <canvas #qrCanvas></canvas>
+            </div>
+            <span class="bot-tag">@gestArte_bot</span>
+        </div>
+
+        <!-- INDICADOR PULSANTE EN TIEMPO REAL -->
+        <div class="status-pulse">
+            <span class="pulse-ring"></span>
+            <span>Esperando confirmación en tiempo real...</span>
+        </div>
+
+        <!-- ACCIONES Y BOTONES -->
+        <div class="tg-actions">
+            <a [href]="telegramUrl" target="_blank" rel="noopener noreferrer" class="btn-primary-green">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-2.02 9.52c-.15.68-.55.85-1.12.53l-3.08-2.27-1.49 1.43c-.16.16-.3.3-.61.3l.22-3.14 5.72-5.17c.25-.22-.05-.34-.38-.12l-7.07 4.45-3.05-.95c-.66-.21-.67-.66.14-.98l11.92-4.6c.55-.2 1.04.13.84.8z" />
+                </svg>
+                Abrir bot en Telegram
+            </a>
+
+            <!-- BOTÓN PARA REGENERAR CÓDIGO QR -->
+            <button (click)="cargarEstado()" class="btn-secondary-outline">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 4v6h-6M1 20v-6h6"></path>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+                Nuevo QR
+            </button>
+        </div>
+    </div>
+    }
+    }
+</div>

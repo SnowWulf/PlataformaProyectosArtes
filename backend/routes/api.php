@@ -15,266 +15,125 @@ use App\Http\Controllers\ProjectMessageController;
 use App\Http\Controllers\ProjectDeliveryController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\DeliverySubmissionController;
+use App\Http\Controllers\AlertPreferenceController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\TelegramAuthController;
+use App\Http\Controllers\Api\ProjectAiChatController;
 
-Route::post('/login',[AuthController::class,'login']);
+/*
+|--------------------------------------------------------------------------
+| Rutas Públicas (Sin autenticación)
+|--------------------------------------------------------------------------
+*/
+Route::post('/login', [AuthController::class, 'login']);
+
+// Telegram envía notificaciones aquí sin cabecera Bearer/Sanctum
+Route::post('/telegram/webhook', [TelegramAuthController::class, 'handleWebhook']);
 
 
+/*
+|--------------------------------------------------------------------------
+| Rutas Protegidas (Requieren autenticación con Sanctum)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth:sanctum')->group(function () {
 
-// TODO lo que necesite usuario logueado aquí
-Route::middleware('auth:sanctum')->group(function(){
-
-    Route::apiResource('documents', DocumentController::class);
-
-    Route::get('/user', function(Request $request){
-
+    // AUTH & PERFIL
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::get('/user', function (Request $request) {
         return $request->user()->load('role');
-
     });
+    Route::get('/profile', [UserController::class, 'myProfile']);
+    Route::post('/profile', [UserController::class, 'updateProfile']);
 
-    Route::get(
-        '/community/users',
-        [CommunityController::class, 'users']
-    );
-
-
-
-    // AUTH
-
-    Route::post('/logout',[AuthController::class,'logout']);
-
-    Route::get('/me',[AuthController::class,'me']);
-
-
-
-    // PROJECTS
-
-    Route::get('/projects',[ProjectController::class,'index']);
-
-    Route::get('/projects/{id}',[ProjectController::class,'show']);
-
-    Route::post('/projects',[ProjectController::class,'store']);
-
-    Route::put('/projects/{id}',[ProjectController::class,'update']);
-
-    Route::delete('/projects/{id}',[ProjectController::class,'destroy']);
-
-
+    // RECURSOS GENERALES
+    Route::apiResource('documents', DocumentController::class);
+    Route::apiResource('calendar-events', CalendarEventController::class);
 
     // USERS
-
-    Route::get(
-        '/users/tutors',
-        [UserController::class, 'tutors']
-    );
-
-    Route::get('/users',[UserController::class,'index']);
-
-    Route::get('/users/{id}',[UserController::class,'show']);
-
-    Route::post('/users',[UserController::class,'store']);
-
-    Route::put('/users/{id}',[UserController::class,'update']);
-
-    Route::delete('/users/{id}',[UserController::class,'destroy']);
-
-    Route::post(
-    '/users/{id}/delete',
-    [UserController::class, 'deleteWithPassword']
-    );
-
+    Route::get('/users/tutors', [UserController::class, 'tutors']);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::post('/users/{id}/delete', [UserController::class, 'deleteWithPassword']);
 
     // ROLES
+    Route::get('/roles', [RoleController::class, 'index']);
+    Route::get('/roles/{id}', [RoleController::class, 'show']);
+    Route::put('/roles/{id}', [RoleController::class, 'update']);
 
-    Route::get('/roles',[RoleController::class,'index']);
+    // PROJECTS
+    Route::get('/projects', [ProjectController::class, 'index']);
+    Route::get('/projects/deadline-alerts', [ProjectController::class, 'getActiveDeadlineAlerts']);
+    Route::get('/projects/{id}', [ProjectController::class, 'show']);
+    Route::post('/projects', [ProjectController::class, 'store']);
+    Route::put('/projects/{id}', [ProjectController::class, 'update']);
+    Route::delete('/projects/{id}', [ProjectController::class, 'destroy']);
+    Route::get('/projects/{project}/documents', [ProjectController::class, 'documents']);
+    Route::get('/projects/{project}/activity', [ProjectController::class, 'activity']);
+    Route::delete('/projects/{projectId}/collaborators/{userId}', [ProjectController::class, 'removeCollaborator']);
 
-    Route::get('/roles/{id}',[RoleController::class,'show']);
-
-    Route::put('/roles/{id}',[RoleController::class,'update']);
-
-
-    // PETICIONES
-    Route::post(
-        '/tutor-requests',
-        [TutorRequestController::class, 'store']
-    );
-
-    Route::get(
-        '/tutor-requests/pending',
-        [TutorRequestController::class, 'pending']
-    );
-
-    Route::put(
-        '/tutor-requests/{id}/accept',
-        [TutorRequestController::class, 'accept']
-    );
-
-    Route::put(
-        '/tutor-requests/{id}/reject',
-        [TutorRequestController::class, 'reject']
-    );
-
-    Route::get(
-        '/projects/{project}/documents',
-        [ProjectController::class, 'documents']
-    );
-
-    Route::post(
-        '/documents/{document}/reviews',
-        [DocumentReviewController::class, 'store']
-    );
-
-    Route::get(
-        '/documents/{document}/reviews',
-        [DocumentReviewController::class, 'index']
-    );
-
-    Route::get(
-        '/community/users',
-        [CommunityController::class, 'users']
-    );
-
-    Route::get(
-        '/community/users/{id}',
-        [CommunityController::class, 'user']
-    );
-
-    Route::get(
-        '/community/users/{id}/projects',
-        [CommunityController::class, 'projects']
-    );
-    
-    Route::post(
-        '/community/request-collaboration',
-        [CommunityController::class,
-         'requestCollaboration']
-    );
-    Route::get(
-        '/community/requests/received/{id}',
-        [CommunityController::class,
-         'receivedRequests']
-    );
-
-    Route::get(
-        '/community/requests/sent/{id}',
-        [CommunityController::class,
-        'sentRequests']
-    );
-
-    Route::post(
-        '/community/requests/{id}/accept',
-        [CommunityController::class,
-        'acceptRequest']
-    );
-
-    Route::post(
-        '/community/requests/{id}/reject',
-        [CommunityController::class,
-        'rejectRequest']
-    );
-
-    Route::delete(
-        '/projects/{projectId}/collaborators/{userId}',
-        [ProjectController::class,
-        'removeCollaborator']
-    )->middleware('auth:sanctum');
-
-    Route::get(
-        '/projects/{projectId}/messages',
-        [ProjectMessageController::class,
-         'index']
-    );
-
-    Route::post(
-        '/projects/{projectId}/messages',
-        [ProjectMessageController::class,
-        'store']
-    );
-
-    Route::get(
-        '/projects/{project}/activity',
-        [ProjectController::class, 'activity']
-    );
-  
-    Route::get(
-        '/activity',
-        [ProjectController::class, 'studentActivity']
-    );
-
-    Route::post(
-        '/community/invite',
-        [CommunityController::class, 'inviteToProject']
-    );
-
-    Route::post(
-    '/community/invite',
-        [CommunityController::class,
-        'inviteToProject']
-    );
-
-    Route::post(
-        '/profile',
-        [UserController::class, 'updateProfile']
-    );
-
-    Route::get(
-        '/profile',
-        [UserController::class, 'myProfile']
-    );
-
-    Route::post(
-        '/profile',
-        [UserController::class, 'updateProfile']
-    );
-
-    Route::get(
-        '/projects/{project}/deliveries',
-        [ProjectDeliveryController::class, 'index']
-    );
-
-    Route::post(
-        '/projects/{project}/deliveries',
-        [ProjectDeliveryController::class, 'store']
-    );
-
-    Route::put(
-        '/deliveries/{delivery}',
-        [ProjectDeliveryController::class, 'update']
-    );
-
-    Route::delete(
-        '/deliveries/{delivery}',
-        [ProjectDeliveryController::class, 'destroy']
-    );
-    
-    Route::middleware('auth:sanctum')
-    ->group(function () {
-
-        Route::apiResource(
-
-            'calendar-events',
-
-            CalendarEventController::class
-
-        );
-
+    // CHATBOT DE IA POR PROYECTO
+    Route::prefix('projects/{projectId}/ai-chat')->group(function () {
+        Route::get('/history', [ProjectAiChatController::class, 'getHistory']);
+        Route::post('/', [ProjectAiChatController::class, 'chat']);
     });
 
-    Route::post(
-        '/deliveries/{delivery}/submit',
-        [DeliverySubmissionController::class, 'store']
-    );
+    // ACTIVIDAD GENERAL
+    Route::get('/activity', [ProjectController::class, 'studentActivity']);
 
-    Route::get(
-        '/deliveries/{delivery}/submissions',
-        [DeliverySubmissionController::class, 'index']
-    );
-
-    Route::middleware('auth:sanctum')->group(function () {
+    // ENTREGAS Y ENTREGABLES (DELIVERIES)
     Route::get('/deliveries', [ProjectDeliveryController::class, 'getAllDeliveries']);
-});
+    Route::get('/projects/{project}/deliveries', [ProjectDeliveryController::class, 'index']);
+    Route::post('/projects/{project}/deliveries', [ProjectDeliveryController::class, 'store']);
+    Route::put('/deliveries/{delivery}', [ProjectDeliveryController::class, 'update']);
+    Route::delete('/deliveries/{delivery}', [ProjectDeliveryController::class, 'destroy']);
 
-    Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/deliveries', [ProjectDeliveryController::class, 'getAllDeliveries']);
-});
+    // SUBMISSION DE ENTREGAS
+    Route::post('/deliveries/{delivery}/submit', [DeliverySubmissionController::class, 'store']);
+    Route::get('/deliveries/{delivery}/submissions', [DeliverySubmissionController::class, 'index']);
+
+    // DOCUMENT REVIEWS
+    Route::post('/documents/{document}/reviews', [DocumentReviewController::class, 'store']);
+    Route::get('/documents/{document}/reviews', [DocumentReviewController::class, 'index']);
+
+    // MENSAJES DE PROYECTO
+    Route::get('/projects/{projectId}/messages', [ProjectMessageController::class, 'index']);
+    Route::post('/projects/{projectId}/messages', [ProjectMessageController::class, 'store']);
+
+    // PETICIONES DE TUTORÍA
+    Route::post('/tutor-requests', [TutorRequestController::class, 'store']);
+    Route::get('/tutor-requests/pending', [TutorRequestController::class, 'pending']);
+    Route::put('/tutor-requests/{id}/accept', [TutorRequestController::class, 'accept']);
+    Route::put('/tutor-requests/{id}/reject', [TutorRequestController::class, 'reject']);
+
+    // COMUNIDAD Y COLABORACIÓN
+    Route::get('/community/users', [CommunityController::class, 'users']);
+    Route::get('/community/users/{id}', [CommunityController::class, 'user']);
+    Route::get('/community/users/{id}/projects', [CommunityController::class, 'projects']);
+    Route::post('/community/request-collaboration', [CommunityController::class, 'requestCollaboration']);
+    Route::get('/community/requests/received/{id}', [CommunityController::class, 'receivedRequests']);
+    Route::get('/community/requests/sent/{id}', [CommunityController::class, 'sentRequests']);
+    Route::post('/community/requests/{id}/accept', [CommunityController::class, 'acceptRequest']);
+    Route::post('/community/requests/{id}/reject', [CommunityController::class, 'rejectRequest']);
+    Route::post('/community/invite', [CommunityController::class, 'inviteToProject']);
+
+    // PREFERENCIAS DE ALERTAS
+    Route::get('/alerts/preferences', [AlertPreferenceController::class, 'show']);
+    Route::put('/alerts/preferences', [AlertPreferenceController::class, 'update']);
+
+    // NOTIFICACIONES IN-APP
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::get('/notifications/preferences', [NotificationController::class, 'getPreferences']);
+    Route::put('/notifications/preferences', [NotificationController::class, 'updatePreferences']);
+
+    // TELEGRAM (Rutas protegidas para el usuario autenticado en la Web)
+    Route::get('/telegram/connect-link', [TelegramAuthController::class, 'getConnectLink']);
+    Route::post('/telegram/disconnect', [TelegramAuthController::class, 'disconnect']);
 
 });

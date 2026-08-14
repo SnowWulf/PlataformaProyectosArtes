@@ -1,62 +1,254 @@
-.resumen-solicitudes {
-  margin-bottom: 24px;
+// VARIABLES DE PALETA
+$brand-green: #1b3f33;      /* Verde institucional */
+$accent-green: #10b981;     /* Verde de acción (aceptar) */
+$accent-hover: #059669;
+
+$bg-card: #ffffff;
+$bg-subtle: #f8fafc;
+$border-color: #e2e8f0;
+
+$text-main: #0f172a;
+$text-muted: #64748b;
+
+$danger-red: #fee2e2;
+$danger-text: #dc2626;
+$danger-hover: #fca5a5;
+
+$warning-bg: #fef3c7;
+$warning-text: #b45309;
+
+.requests-container {
+  width: 100%;
+  max-width: 1100px; // Se amplia el ancho para aprovechar el espacio horizontal
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: $text-main;
+  box-sizing: border-box;
 }
 
-.solicitud-card {
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+// HEADER
+.page-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid $border-color;
+
+  h2 {
+    font-size: 1.6rem;
+    color: $brand-green;
+    margin: 0 0 0.25rem 0;
+    font-weight: 700;
+  }
+
+  .resumen-solicitudes {
+    margin: 0;
+    color: $text-muted;
+    font-size: 0.95rem;
+
+    strong {
+      color: $brand-green;
+      font-weight: 700;
+    }
+  }
 }
 
-.solicitud-header {
+// LISTA CONTINUA
+.requests-list {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+// FILA / ITEM DE SOLICITUD
+.solicitud-item {
+  display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid $border-color;
+  transition: background-color 0.2s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: #f8fafc;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
-.estado-pendiente {
-  background: #fef3c7;
-  color: #92400e;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: .85rem;
-  font-weight: 600;
-}
-
-.mensaje-box {
-  background: #f8fafc;
-  border-radius: 10px;
-  padding: 12px;
-  margin: 15px 0;
-}
-
-.acciones {
+// INFORMACIÓN PRINCIPAL
+.item-main {
+  flex: 1;
   display: flex;
-  gap: 12px;
-  margin-top: 20px;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  .item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: $text-main;
+    }
+
+    .badge-pendiente {
+      background: $warning-bg;
+      color: $warning-text;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+  }
+
+  // DETALLES EN LÍNEA HORIZONTAL
+  .item-details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 0.88rem;
+
+    .detail-tag {
+      color: $text-muted;
+
+      strong {
+        color: $text-main;
+        font-weight: 600;
+      }
+
+      .link {
+        color: $accent-green;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  // CAJA DE MENSAJE TIPO CHIP
+  .mensaje-box {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    background: $bg-subtle;
+    border-left: 3px solid $brand-green;
+    padding: 0.5rem 0.85rem;
+    border-radius: 0 6px 6px 0;
+    margin-top: 0.2rem;
+
+    .label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: $brand-green;
+      white-space: nowrap;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: $text-main;
+      line-height: 1.35;
+    }
+  }
 }
 
-.btn-aceptar {
-  background: #22c55e;
-  color: white;
+// COLUMNA DE BOTONES
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+    border-top: 1px dashed $border-color;
+  }
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .icon {
+      font-size: 0.8rem;
+    }
+
+    &.btn-aceptar {
+      background: $accent-green;
+      color: #ffffff;
+
+      &:hover:not(:disabled) {
+        background: $accent-hover;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-rechazar {
+      background: $danger-red;
+      color: $danger-text;
+
+      &:hover:not(:disabled) {
+        background: $danger-hover;
+        color: #7f1d1d;
+        transform: translateY(-1px);
+      }
+    }
+  }
 }
 
-.btn-rechazar {
-  background: #ef4444;
-  color: white;
-}
-
-.acciones button {
-  border: none;
-  border-radius: 10px;
-  padding: 10px 16px;
-  cursor: pointer;
-}
-
+// ESTADO VACÍO
 .empty-state {
   text-align: center;
-  padding: 50px 20px;
+  padding: 3.5rem 1.5rem;
+
+  .empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h3 {
+    margin: 0 0 0.35rem 0;
+    font-size: 1.25rem;
+    color: $brand-green;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    color: $text-muted;
+    font-size: 0.92rem;
+  }
 }

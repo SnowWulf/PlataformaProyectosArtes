@@ -1,201 +1,222 @@
-<div class="requests-container">
+<div class="collaboration-container">
 
-  <h1>
+  <!-- Header y Métricas Superiores -->
+  <header class="page-header">
+    <div class="header-text">
+      <h2>🤝 Solicitudes de Colaboración</h2>
+      <p>Gestiona las invitaciones, postulaciones a proyectos y el historial de interacciones.</p>
+    </div>
 
-    🤝 Solicitudes de colaboración
+    <!-- Bloque de Métricas para llenar el layout -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-value">{{ recibidasPendientes.length }}</span>
+        <span class="metric-label">Por responder</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">{{ enviadasPendientes.length }}</span>
+        <span class="metric-label">Enviadas activas</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">{{ historial.length }}</span>
+        <span class="metric-label">Procesadas</span>
+      </div>
+    </div>
+  </header>
 
-  </h1>
-
-  <div class="tabs">
-
+  <!-- Navegación por Pestañas -->
+  <nav class="tabs-nav">
     <button
+      type="button"
+      class="tab-btn"
       [class.active]="vistaActiva === 'recibidas'"
       (click)="vistaActiva = 'recibidas'">
-
       📥 Recibidas
-
+      <span class="tab-badge" *ngIf="recibidasPendientes.length > 0">{{ recibidasPendientes.length }}</span>
     </button>
 
     <button
+      type="button"
+      class="tab-btn"
       [class.active]="vistaActiva === 'enviadas'"
       (click)="vistaActiva = 'enviadas'">
-
       📤 Enviadas
-
+      <span class="tab-badge secondary" *ngIf="enviadasPendientes.length > 0">{{ enviadasPendientes.length }}</span>
     </button>
 
     <button
+      type="button"
+      class="tab-btn"
       [class.active]="vistaActiva === 'historial'"
       (click)="vistaActiva = 'historial'">
-
       🕒 Historial
-
     </button>
+  </nav>
 
-  </div>
+  <!-- TAB: RECIBIDAS -->
+  <section class="tab-content" *ngIf="vistaActiva === 'recibidas'">
+    <div class="requests-list" *ngIf="recibidasPendientes.length > 0">
+      <article class="request-item" *ngFor="let solicitud of recibidasPendientes">
+        
+        <!-- Usuario / Avatar -->
+        <div class="user-avatar-col">
+          <img
+            [src]="solicitud.requester?.foto_url || '/user.webp'"
+            (error)="solicitud.requester.foto_url = '/user.webp'"
+            [alt]="solicitud.requester?.name || 'Usuario'"
+            class="avatar-img"
+          />
+        </div>
 
-  <!-- RECIBIDAS -->
+        <!-- Información Detallada -->
+        <div class="request-main-info">
+          <div class="info-header">
+            <h3 class="user-name">{{ solicitud.requester?.name || 'Usuario desconocido' }}</h3>
+            <span class="type-badge" [ngClass]="solicitud.tipo === 'invite' ? 'badge-invite' : 'badge-request'">
+              {{ solicitud.tipo === 'invite' ? '📩 Te invitó' : '🙋 Solicita unirse' }}
+            </span>
+            <span class="date-tag" *ngIf="solicitud.created_at">
+              🕒 {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
+            </span>
+          </div>
 
-  <div *ngIf="vistaActiva === 'recibidas'">
+          <p class="project-context">
+            <span class="label">Proyecto:</span>
+            <strong class="project-title">📚 {{ solicitud.project?.titulo || 'Proyecto sin título' }}</strong>
+            <span class="project-category" *ngIf="solicitud.project?.categoria">
+              • {{ solicitud.project?.categoria }}
+            </span>
+          </p>
 
-    <div
-      class="request-card"
-      *ngFor="let solicitud of recibidasPendientes">
+          <p class="contact-email" *ngIf="solicitud.requester?.email">
+            ✉️ <a [href]="'mailto:' + solicitud.requester?.email" class="email-link">{{ solicitud.requester?.email }}</a>
+          </p>
 
-      <div class="request-info">
+          <!-- Mensaje / Motivo de colaboración -->
+          <div class="message-quote">
+            <span class="quote-title">💬 Mensaje:</span>
+            <p>{{ solicitud.mensaje || 'No incluyó un mensaje personalizado.' }}</p>
+          </div>
+        </div>
 
-<h3>
-  {{ solicitud.requester?.name }}
-</h3>
+        <!-- Botones de Acción -->
+        <div class="request-actions">
+          <button
+            type="button"
+            class="action-btn btn-accept"
+            (click)="aceptarSolicitud(solicitud.id)">
+            ✅ Aceptar
+          </button>
+          <button
+            type="button"
+            class="action-btn btn-reject"
+            (click)="rechazarSolicitud(solicitud.id)">
+            ❌ Rechazar
+          </button>
+        </div>
 
-<p *ngIf="solicitud.tipo === 'request'">
-
-  Quiere colaborar en:
-
-  <strong>
-
-    {{ solicitud.project?.titulo }}
-
-  </strong>
-
-</p>
-
-<p *ngIf="solicitud.tipo === 'invite'">
-
-  Te invitó a colaborar en:
-
-  <strong>
-
-    {{ solicitud.project?.titulo }}
-
-  </strong>
-
-</p>
-
-      </div>
-
-      <div class="request-actions">
-
-        <button
-          class="accept-btn"
-          (click)="aceptarSolicitud(
-            solicitud.id
-          )">
-
-          ✅ Aceptar
-
-        </button>
-
-        <button
-          class="reject-btn"
-          (click)="rechazarSolicitud(
-            solicitud.id
-          )">
-
-          ❌ Rechazar
-
-        </button>
-
-      </div>
-
+      </article>
     </div>
 
-    <p
-      class="empty-state"
-      *ngIf="recibidasPendientes.length === 0">
+    <div class="empty-state" *ngIf="recibidasPendientes.length === 0">
+      <div class="empty-icon">🎉</div>
+      <h3>Bandeja al día</h3>
+      <p>No tienes solicitudes de colaboración pendientes por responder.</p>
+    </div>
+  </section>
 
-      No tienes solicitudes pendientes.
+  <!-- TAB: ENVIADAS -->
+  <section class="tab-content" *ngIf="vistaActiva === 'enviadas'">
+    <div class="requests-list" *ngIf="enviadasPendientes.length > 0">
+      <article class="request-item" *ngFor="let solicitud of enviadasPendientes">
+        
+        <div class="request-main-info">
+          <div class="info-header">
+            <h3 class="project-title-heading">📚 {{ solicitud.project?.titulo || 'Proyecto sin título' }}</h3>
+            <span class="status-badge status-pending">⏳ Pendiente de respuesta</span>
+          </div>
 
-    </p>
+          <div class="metadata-row">
+            <span class="meta-item" *ngIf="solicitud.recipient?.name">
+              👤 <strong>Destinatario / Líder:</strong> {{ solicitud.recipient?.name }}
+            </span>
+            <span class="meta-item" *ngIf="solicitud.created_at">
+              🕒 <strong>Enviada el:</strong> {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
+            </span>
+            <span class="meta-item" *ngIf="solicitud.tipo">
+              📌 <strong>Tipo:</strong> {{ solicitud.tipo === 'invite' ? 'Invitación' : 'Postulación' }}
+            </span>
+          </div>
 
-  </div>
+          <div class="message-quote" *ngIf="solicitud.mensaje">
+            <span class="quote-title">💬 Tu mensaje adjunto:</span>
+            <p>{{ solicitud.mensaje }}</p>
+          </div>
+        </div>
 
-  <!-- ENVIADAS -->
+        <div class="request-actions align-center">
+          <button
+            type="button"
+            class="action-btn btn-cancel"
+            (click)="cancelarSolicitud(solicitud.id)"
+            *ngIf="cancelarSolicitud">
+            🚫 Cancelar
+          </button>
+        </div>
 
-  <div *ngIf="vistaActiva === 'enviadas'">
-
-    <div
-      class="request-card"
-      *ngFor="let solicitud of enviadasPendientes">
-
-      <div>
-
-        <h3>
-
-          {{ solicitud.project?.titulo }}
-
-        </h3>
-
-      </div>
-
-      <span
-        class="status pending">
-
-        ⏳ Pendiente
-
-      </span>
-
+      </article>
     </div>
 
-    <p
-      class="empty-state"
-      *ngIf="enviadasPendientes.length === 0">
+    <div class="empty-state" *ngIf="enviadasPendientes.length === 0">
+      <div class="empty-icon">📤</div>
+      <h3>Sin solicitudes enviadas</h3>
+      <p>No has realizado postulaciones o invitaciones pendientes a otros proyectos.</p>
+    </div>
+  </section>
 
-      No tienes solicitudes pendientes.
+  <!-- TAB: HISTORIAL -->
+  <section class="tab-content" *ngIf="vistaActiva === 'historial'">
+    <div class="requests-list" *ngIf="historial.length > 0">
+      <article class="request-item history-item" *ngFor="let solicitud of historial">
+        
+        <div class="request-main-info">
+          <div class="info-header">
+            <h3 class="project-title-heading">📚 {{ solicitud.project?.titulo || 'Proyecto sin título' }}</h3>
+            
+            <span
+              class="status-badge"
+              [ngClass]="{
+                'status-accepted': solicitud.estado === 'Aceptada' || solicitud.estado === 'Aceptado',
+                'status-rejected': solicitud.estado === 'Rechazada' || solicitud.estado === 'Rechazado'
+              }">
+              {{ solicitud.estado === 'Aceptada' || solicitud.estado === 'Aceptado' ? '✅ Aceptada' : '❌ Rechazada' }}
+            </span>
+          </div>
 
-    </p>
+          <div class="metadata-grid">
+            <div class="meta-cell">
+              <span class="label">Participante / Colaborador</span>
+              <span class="value">👤 {{ solicitud.requester?.name || 'N/A' }}</span>
+            </div>
+            <div class="meta-cell" *ngIf="solicitud.updated_at || solicitud.created_at">
+              <span class="label">Fecha de Procesamiento</span>
+              <span class="value">🕒 {{ (solicitud.updated_at || solicitud.created_at) | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <div class="meta-cell" *ngIf="solicitud.tipo">
+              <span class="label">Modalidad</span>
+              <span class="value">📌 {{ solicitud.tipo === 'invite' ? 'Invitación enviada' : 'Postulación voluntaria' }}</span>
+            </div>
+          </div>
+        </div>
 
-  </div>
-
-  <!-- HISTORIAL -->
-
-  <div *ngIf="vistaActiva === 'historial'">
-
-    <div
-      class="request-card"
-      *ngFor="let solicitud of historial">
-
-      <div>
-
-        <h3>
-
-          {{ solicitud.project?.titulo }}
-
-        </h3>
-
-        <p>
-
-          {{ solicitud.requester?.name }}
-
-        </p>
-
-      </div>
-
-      <span
-        [ngClass]="{
-
-          'status accepted':
-            solicitud.estado === 'Aceptada',
-
-          'status rejected':
-            solicitud.estado === 'Rechazada'
-
-        }">
-
-        {{ solicitud.estado }}
-
-      </span>
-
+      </article>
     </div>
 
-    <p
-      class="empty-state"
-      *ngIf="historial.length === 0">
-
-      No hay solicitudes procesadas.
-
-    </p>
-
-  </div>
+    <div class="empty-state" *ngIf="historial.length === 0">
+      <div class="empty-icon">📜</div>
+      <h3>Historial vacío</h3>
+      <p>No hay registro de solicitudes procesadas previamente.</p>
+    </div>
+  </section>
 
 </div>

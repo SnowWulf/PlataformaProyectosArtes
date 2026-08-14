@@ -1,17 +1,34 @@
 <header class="topbar">
-
-    <div>
-
-        <strong>{{ usuario.name }}</strong>
-
-        <span> - {{ usuario.role.nombre }}</span>
-
+  <!-- Lado Izquierdo: Información y Avatar del Usuario -->
+  <div class="user-profile">
+    <div class="avatar">
+      <img 
+        [src]="usuario?.foto_url || '/user.webp'" 
+        [alt]="usuario?.name || 'Usuario'" 
+        class="user-avatar"
+      />
     </div>
+    <div class="user-info">
+      <span class="user-name">{{ usuario?.name || 'Usuario' }}</span>
+      <span class="user-role">{{ usuario?.role?.nombre || 'Rol' }}</span>
+    </div>
+  </div>
 
-    <button (click)="logout()">
+  <!-- Lado Derecho: Acciones (Campanita + Logout) -->
+  <div class="topbar-actions">
+    <!-- Componente de Campanita -->
+    <app-notification-bell></app-notification-bell>
 
-        Cerrar sesión
+    <!-- Separador Visual -->
+    <div class="divider"></div>
 
+    <!-- Botón de Cerrar Sesión -->
+    <button (click)="logout()" class="btn-logout" title="Cerrar sesión">
+      <svg class="logout-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+      </svg>
+      <span>Salir</span>
     </button>
-
+  </div>
 </header>

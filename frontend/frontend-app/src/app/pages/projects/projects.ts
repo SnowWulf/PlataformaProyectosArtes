@@ -39,6 +39,51 @@ export class Projects {
 
   nombreConfirmacion = '';
 
+  // Estados de acordeón (inicialmente abiertos)
+seccionMisProyectosAbierta: boolean = true;
+seccionColaborandoAbierta: boolean = true;
+seccionExternosAbierta: boolean = true;
+
+// Filtros de búsqueda individual
+busquedaMisProyectos: string = '';
+busquedaColaborando: string = '';
+busquedaExternos: string = '';
+
+// Getters para filtrado dinamico
+get misProyectosFiltrados() {
+  if (!this.misProyectos) return [];
+  if (!this.busquedaMisProyectos.trim()) return this.misProyectos;
+  const q = this.busquedaMisProyectos.toLowerCase();
+  return this.misProyectos.filter(p =>
+    p.titulo?.toLowerCase().includes(q) ||
+    p.descripcion?.toLowerCase().includes(q) ||
+    p.tutor?.name?.toLowerCase().includes(q)
+  );
+}
+
+get colaborandoFiltrados() {
+  if (!this.proyectosColaborando) return [];
+  if (!this.busquedaColaborando.trim()) return this.proyectosColaborando;
+  const q = this.busquedaColaborando.toLowerCase();
+  return this.proyectosColaborando.filter(p =>
+    p.titulo?.toLowerCase().includes(q) ||
+    p.descripcion?.toLowerCase().includes(q) ||
+    p.owner?.name?.toLowerCase().includes(q)
+  );
+}
+
+get externosFiltrados() {
+  if (!this.proyectosExternos) return [];
+  if (!this.busquedaExternos.trim()) return this.proyectosExternos;
+  const q = this.busquedaExternos.toLowerCase();
+  return this.proyectosExternos.filter(p =>
+    p.titulo?.toLowerCase().includes(q) ||
+    p.descripcion?.toLowerCase().includes(q) ||
+    p.owner?.name?.toLowerCase().includes(q) ||
+    p.tutor?.name?.toLowerCase().includes(q)
+  );
+}
+
 
   constructor(
     private projectService: ProjectService,

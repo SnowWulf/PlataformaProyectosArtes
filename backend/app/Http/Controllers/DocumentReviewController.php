@@ -6,6 +6,7 @@ use App\Models\Document;
 use App\Models\DocumentReview;
 use Illuminate\Http\Request;
 use App\Helpers\ActivityLogger;
+use App\Services\NotificationEngineService; // 1. Importamos el servicio de alertas
 
 class DocumentReviewController extends Controller
 {
@@ -25,7 +26,8 @@ class DocumentReviewController extends Controller
 
     public function store(
         Request $request,
-        Document $document
+        Document $document,
+        NotificationEngineService $notifier // 2. Inyectamos el servicio
     )
     {
         $user = $request->user();
@@ -87,28 +89,37 @@ class DocumentReviewController extends Controller
 
         ActivityLogger::log(
 
-    $document->project_id,
+            $document->project_id,
 
-    auth()->id(),
+            auth()->id(),
 
-    'review_created',
+            'review_created',
 
-    auth()->user()->name .
-    ' revisó el avance "' .
-    $document->nombre .
-    '"',
+            auth()->user()->name .
+            ' revisó el avance "' .
+            $document->nombre .
+            '"',
 
-    [
+            [
 
-        'estado' =>
-            $review->estado,
+                'estado' =>
+                    $review->estado,
 
-        'comentario' =>
-            $review->comentario
+                'comentario' =>
+                    $review->comentario
 
-    ]
+            ]
 
-);
+        );
+
+        // 3. Disparar notificación al creador/estudiante del documento
+        $notifier->notify(
+            user: $document->user_id,
+            tipoClave: 'documento_revisado',
+            titulo: '📄 Documento Revisado',
+            mensaje: $user->name . ' ha cambiado el estado de "' . $document->nombre . '" a: ' . $review->estado . '.',
+            link: '/dashboard/projects/' . $document->project_id
+        );
 
         return response()->json([
             'message' => 'Revisión registrada correctamente',

@@ -1,1141 +1,663 @@
-<h1>
+<div class="art-dashboard">
+  <!-- Hero / Header Principal del Coordinador -->
+  <header class="art-hero hero-coordinador">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Facultad de Artes • Panel de Coordinación
+      </div>
+      <h1 class="hero-title">Gestión & Control Académico</h1>
+      <p class="hero-subtitle">
+        Supervisión de proyectos de grado, asignación de docentes y seguimiento del estado documental.
+      </p>
+    </div>
+  </header>
 
-    Dashboard Coordinador
+  <!-- Navegación por Píldoras Flotantes -->
+  <nav class="nav-pills-container">
+    <div class="nav-pills">
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'inicio'" 
+        (click)="tabActiva = 'inicio'">
+        <span class="pill-icon">⚡</span>
+        <span class="pill-text">Inicio</span>
+      </button>
 
-</h1>
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'proyectos'" 
+        (click)="tabActiva = 'proyectos'">
+        <span class="pill-icon">📁</span>
+        <span class="pill-text">Proyectos</span>
+        <span class="pill-count" *ngIf="totalProyectos">{{ totalProyectos }}</span>
+      </button>
 
-<div class="tabs">
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'estudiantes'" 
+        (click)="tabActiva = 'estudiantes'">
+        <span class="pill-icon">🎓</span>
+        <span class="pill-text">Estudiantes</span>
+        <span class="pill-count" *ngIf="totalEstudiantes">{{ totalEstudiantes }}</span>
+      </button>
 
-    <button [class.active]="tabActiva === 'inicio'" (click)="tabActiva = 'inicio'">
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'tutores'" 
+        (click)="tabActiva = 'tutores'">
+        <span class="pill-icon">👩‍🏫</span>
+        <span class="pill-text">Tutores</span>
+        <span class="pill-count" *ngIf="totalTutores">{{ totalTutores }}</span>
+      </button>
 
-        🏠 Inicio
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'documentos'" 
+        (click)="tabActiva = 'documentos'">
+        <span class="pill-icon">📄</span>
+        <span class="pill-text">Documentos</span>
+        <span class="pill-count" *ngIf="totalDocumentos">{{ totalDocumentos }}</span>
+      </button>
 
-    </button>
+      <button 
+        class="pill-btn" 
+        [class.active]="tabActiva === 'reportes'" 
+        (click)="tabActiva = 'reportes'">
+        <span class="pill-icon">📊</span>
+        <span class="pill-text">Reportes</span>
+      </button>
+    </div>
+  </nav>
 
-    <button [class.active]="tabActiva === 'proyectos'" (click)="tabActiva = 'proyectos'">
-
-        📁 Proyectos
-
-    </button>
-
-    <button [class.active]="tabActiva === 'estudiantes'" (click)="tabActiva = 'estudiantes'">
-
-        👨‍🎓 Estudiantes
-
-    </button>
-
-    <button [class.active]="tabActiva === 'tutores'" (click)="tabActiva = 'tutores'">
-
-        👩‍🏫 Tutores
-
-    </button>
-
-    <button [class.active]="tabActiva === 'documentos'" (click)="tabActiva = 'documentos'">
-
-        📄 Documentos
-
-    </button>
-
-    <button [class.active]="tabActiva === 'reportes'" (click)="tabActiva = 'reportes'">
-
-        📊 Reportes
-
-    </button>
-
-</div>
-
-<hr>
-
-@if (tabActiva === 'inicio') {
-<div class="dashboard-card">
-
-    <h2>
-
-        Resumen general
-
-    </h2>
-
-    <div class="stats-grid">
-
-        <div class="stat-card" [class.active-filter]="filtroCoordinador === 'estudiantes'"
-            (click)="filtroCoordinador = 'estudiantes'">
-
-            <div class="stat-number">
-                {{ totalEstudiantes }}
-            </div>
-
-            <div class="stat-label">
-                Estudiantes
-            </div>
-
+  <!-- TAB 1: INICIO -->
+  @if (tabActiva === 'inicio') {
+    <section class="tab-pane">
+      <!-- Métricas Principales -->
+      <div class="metrics-grid">
+        <div 
+          class="metric-card" 
+          [class.active]="filtroCoordinador === 'estudiantes'"
+          (click)="filtroCoordinador = 'estudiantes'">
+          <div class="metric-header">
+            <span class="metric-label">Estudiantes</span>
+            <div class="metric-icon icon-emerald">🎓</div>
+          </div>
+          <div class="metric-value">{{ totalEstudiantes }}</div>
+          <span class="metric-footer">Estudiantes activos</span>
         </div>
 
-        <div class="stat-card" (click)="filtroCoordinador = 'tutores'">
-
-            <div class="stat-number">
-
-                {{ totalTutores }}
-
-            </div>
-
-            <div class="stat-label">
-
-                Tutores
-
-            </div>
-
+        <div 
+          class="metric-card" 
+          [class.active]="filtroCoordinador === 'tutores'"
+          (click)="filtroCoordinador = 'tutores'">
+          <div class="metric-header">
+            <span class="metric-label">Tutores</span>
+            <div class="metric-icon icon-blue">👩‍🏫</div>
+          </div>
+          <div class="metric-value">{{ totalTutores }}</div>
+          <span class="metric-footer">Planta docente</span>
         </div>
 
-        <div class="stat-card" (click)="filtroCoordinador = 'proyectos'">
-
-            <div class="stat-number">
-
-                {{ totalProyectos }}
-
-            </div>
-
-            <div class="stat-label">
-
-                Proyectos
-
-            </div>
-
+        <div 
+          class="metric-card" 
+          [class.active]="filtroCoordinador === 'proyectos'"
+          (click)="filtroCoordinador = 'proyectos'">
+          <div class="metric-header">
+            <span class="metric-label">Proyectos</span>
+            <div class="metric-icon icon-purple">📁</div>
+          </div>
+          <div class="metric-value">{{ totalProyectos }}</div>
+          <span class="metric-footer">Proyectos de grado</span>
         </div>
 
-        <div class="stat-card" (click)="filtroCoordinador = 'documentos'">
-
-            <div class="stat-number">
-
-                {{ totalDocumentos }}
-
-            </div>
-
-            <div class="stat-label">
-
-                Documentos
-
-            </div>
-
+        <div 
+          class="metric-card" 
+          [class.active]="filtroCoordinador === 'documentos'"
+          (click)="filtroCoordinador = 'documentos'">
+          <div class="metric-header">
+            <span class="metric-label">Documentos</span>
+            <div class="metric-icon icon-amber">📄</div>
+          </div>
+          <div class="metric-value">{{ totalDocumentos }}</div>
+          <span class="metric-footer">Subidos al sistema</span>
         </div>
 
-        <div class="stat-card" (click)="filtroCoordinador = 'pendientes'">
-
-            <div class="stat-number">
-
-                {{ pendientesRevision }}
-
-            </div>
-
-            <div class="stat-label">
-
-                Documentos Pendientes
-
-            </div>
-
+        <div 
+          class="metric-card" 
+          [class.active]="filtroCoordinador === 'pendientes'"
+          (click)="filtroCoordinador = 'pendientes'">
+          <div class="metric-header">
+            <span class="metric-label">Pendientes</span>
+            <div class="metric-icon icon-rose">⏳</div>
+          </div>
+          <div class="metric-value text-rose">{{ pendientesRevision }}</div>
+          <span class="metric-footer text-rose">Requieren evaluación</span>
         </div>
 
-        <div class="stat-card" (click)="filtroCoordinador = 'sintutor'">
+        <div 
+          class="metric-card" 
+          [class.active]="filtroCoordinador === 'sintutor'"
+          (click)="filtroCoordinador = 'sintutor'">
+          <div class="metric-header">
+            <span class="metric-label">Sin Tutor</span>
+            <div class="metric-icon icon-orange">⚠️</div>
+          </div>
+          <div class="metric-value text-orange">{{ proyectosSinTutor }}</div>
+          <span class="metric-footer text-orange">Sin docente asignado</span>
+        </div>
+      </div>
 
-            <div class="stat-number">
+      <!-- Tabla de Resultados Filtrados con Toolbar -->
+      <div class="content-section">
+        <div class="section-toolbar">
+          <div>
+            <h2>Listado Filtrado: {{ filtroCoordinador | titlecase }}</h2>
+            <p class="section-subtitle">Registros consolidados según la categoría seleccionada</p>
+          </div>
 
-                {{ proyectosSinTutor }}
-
+          <!-- Buscador y Ordenación Global -->
+          <div class="toolbar-actions">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input 
+                type="text" 
+                placeholder="Buscar por nombre, correo o título..." 
+                [(ngModel)]="busquedaGeneral"
+                (input)="filtrarTablaGlobal()" />
             </div>
 
-            <div class="stat-label">
-
-                Sin tutor
-
-            </div>
-
+            <select class="select-sort" [(ngModel)]="criterioOrden" (change)="ordenarTablaGlobal()">
+              <option value="reciente">Más reciente</option>
+              <option value="antiguo">Más antiguo</option>
+              <option value="nombre">Nombre (A-Z)</option>
+            </select>
+          </div>
         </div>
 
+        @if (obtenerElementosFiltrados().length > 0) {
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  @if (filtroCoordinador === 'estudiantes') {
+                    <th>Estudiante</th>
+                    <th>Registro</th>
+                    <th>Proyectos</th>
+                    <th>Tutores Asignados</th>
+                  } @else if (filtroCoordinador === 'documentos') {
+                    <th>Documento</th>
+                    <th>Proyecto</th>
+                    <th>Estudiante</th>
+                    <th>Tutor</th>
+                    <th>Estado</th>
+                  } @else if (filtroCoordinador === 'tutores') {
+                    <th>Docente</th>
+                    <th>Proyectos</th>
+                    <th>Estudiantes</th>
+                    <th>Pendientes</th>
+                  } @else if (filtroCoordinador === 'proyectos') {
+                    <th>Proyecto</th>
+                    <th>Estudiante</th>
+                    <th>Tutor</th>
+                    <th>Estado</th>
+                  } @else if (filtroCoordinador === 'pendientes') {
+                    <th>Documento</th>
+                    <th>Proyecto</th>
+                    <th>Tutor Asignado</th>
+                    <th>En Espera</th>
+                    <th>Estado</th>
+                  } @else if (filtroCoordinador === 'sintutor') {
+                    <th>Proyecto Huérfano</th>
+                    <th>Estudiante</th>
+                    <th>Creación</th>
+                    <th>Días en Espera</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of obtenerElementosFiltrados(); track item.id) {
+                  <tr>
+                    @if (filtroCoordinador === 'estudiantes') {
+                      <td>
+                        <div class="user-cell">
+                          <div class="avatar-circle font-emerald">{{ item.name.charAt(0) }}</div>
+                          <div>
+                            <strong>{{ item.name }}</strong>
+                            <span class="subtext">{{ item.email }}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
+                      <td><span class="count-pill">{{ contarProyectosEstudiante(item.id) }}</span></td>
+                      <td>{{ obtenerTutoresEstudiante(item.id) }}</td>
+                    } 
+                    
+                    @else if (filtroCoordinador === 'documentos') {
+                      <td>
+                        <strong>{{ item.nombre }}</strong>
+                        <span class="type-tag">{{ item.tipo ?? 'Documento' }}</span>
+                      </td>
+                      <td>{{ item.proyectoTitulo }}</td>
+                      <td>{{ obtenerEstudianteDocumento(item.proyectoId) }}</td>
+                      <td>{{ obtenerTutorDocumento(item.proyectoId) }}</td>
+                      <td>
+                        <span class="status-pill" [ngClass]="{
+                          'status-pending': item.estado === 'Pendiente revisión' || item.estado === 'submitted',
+                          'status-reviewing': item.estado === 'En revisión',
+                          'status-approved': item.estado === 'Aprobado',
+                          'status-correction': item.estado === 'Requiere correcciones',
+                          'status-rejected': item.estado === 'Rechazado'
+                        }">
+                          <span class="status-dot"></span> {{ item.estado }}
+                        </span>
+                      </td>
+                    }
 
-    </div>
-    <br>
+                    @else if (filtroCoordinador === 'tutores') {
+                      <td>
+                        <div class="user-cell">
+                          <div class="avatar-circle font-blue">{{ item.name.charAt(0) }}</div>
+                          <div>
+                            <strong>{{ item.name }}</strong>
+                            <span class="subtext">{{ item.email }}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td><span class="count-pill">{{ contarProyectosTutor(item.id) }}</span></td>
+                      <td>{{ contarEstudiantesTutor(item.id) }}</td>
+                      <td><strong class="text-rose">{{ contarPendientesTutor(item.id) }}</strong></td>
+                    }
 
-    <h3>
+                    @else if (filtroCoordinador === 'proyectos') {
+                      <td><strong>{{ item.titulo }}</strong></td>
+                      <td>{{ item.owner?.name }}</td>
+                      <td>{{ item.tutor?.name ?? 'Sin tutor' }}</td>
+                      <td><span class="status-pill status-reviewing"><span class="status-dot"></span> {{ item.estado }}</span></td>
+                    }
 
-        Resultado del filtro
+                    @else if (filtroCoordinador === 'pendientes') {
+                      <td><strong>{{ item.nombre }}</strong></td>
+                      <td>{{ item.proyectoTitulo }}</td>
+                      <td>{{ obtenerTutorDocumento(item.proyectoId) }}</td>
+                      <td>
+                        <span class="time-badge" [class.danger]="diasPendiente(item.created_at) > 7">
+                          {{ diasPendiente(item.created_at) }} día(s)
+                        </span>
+                      </td>
+                      <td><span class="status-pill status-pending"><span class="status-dot"></span> {{ item.estado }}</span></td>
+                    }
 
-    </h3>
-
-    @if (
-    obtenerElementosFiltrados().length > 0
-    ) {
-
-    @for (
-    item of obtenerElementosFiltrados();
-    track item.id
-    ) {
-
-    <div class="project-card">
-
-
-        @if (
-        filtroCoordinador === 'estudiantes'
-        ) {
-
-        <h4>{{ item.name }}</h4>
-
-        <p>
-            📧 {{ item.email }}
-        </p>
-
-        <p>
-            📅 Registro:
-            {{ item.created_at | date:'dd/MM/yyyy' }}
-        </p>
-
-        <p>
-            📁 Proyectos:
-            {{ contarProyectosEstudiante(item.id) }}
-        </p>
-
-        <p>
-            👩‍🏫 Tutores:
-            {{ obtenerTutoresEstudiante(item.id) }}
-        </p>
+                    @else if (filtroCoordinador === 'sintutor') {
+                      <td><strong>{{ item.titulo }}</strong></td>
+                      <td>{{ item.owner?.name }}</td>
+                      <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
+                      <td><span class="alert-chip tag-orange">{{ diasSinTutor(item.created_at) }} días</span></td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="empty-state">
+            <div class="empty-icon">📂</div>
+            <p>No se encontraron resultados coincidentes.</p>
+          </div>
         }
-
-
-        @else if (
-        filtroCoordinador === 'documentos'
-        ) {
-
-        <h4>
-
-            {{ item.nombre }}
-
-        </h4>
-
-        <p>
-
-            📁 Proyecto:
-            {{ item.proyectoTitulo }}
-
-        </p>
-
-        <p>
-
-            👨‍🎓 Estudiante:
-            {{ obtenerEstudianteDocumento(item.proyectoId) }}
-
-        </p>
-
-        <p>
-
-            👩‍🏫 Tutor:
-            {{ obtenerTutorDocumento(item.proyectoId) }}
-
-        </p>
-
-        <p>
-
-            📅 Fecha:
-            {{ item.created_at | date:'dd/MM/yyyy' }}
-
-        </p>
-
-        <p>
-
-            📄 Tipo:
-            {{ item.tipo ?? 'Documento' }}
-
-        </p>
-
-        <p>
-
-            Estado:
-
-            <span class="estado-badge" [ngClass]="{
-      'pendiente': item.estado === 'Pendiente revisión' || item.estado === 'submitted',
-      'revision': item.estado === 'En revisión',
-      'aprobado': item.estado === 'Aprobado',
-      'correccion': item.estado === 'Requiere correcciones',
-      'rechazado': item.estado === 'Rechazado'
-    }">
-
-                {{ item.estado }}
-
-            </span>
-
-        </p>
-        }
-
-
-
-
-
-        @else if (
-        filtroCoordinador === 'tutores'
-        ) {
-
-        <h4>
-
-            {{ item.name }}
-
-        </h4>
-
-        <p>
-
-            📧 {{ item.email }}
-
-        </p>
-
-        <p>
-
-            📅 Registro:
-            {{ item.created_at | date:'dd/MM/yyyy' }}
-
-        </p>
-
-        <p>
-
-            📁 Proyectos asignados:
-            {{ contarProyectosTutor(item.id) }}
-
-        </p>
-
-        <p>
-
-            👨‍🎓 Estudiantes:
-            {{ contarEstudiantesTutor(item.id) }}
-
-        </p>
-
-        <p>
-
-            📄 Documentos:
-            {{ contarDocumentosTutor(item.id) }}
-
-        </p>
-
-        <p>
-
-            ⏳ Pendientes:
-            {{ contarPendientesTutor(item.id) }}
-
-        </p>
-
-        }
-
-        @else if (
-        filtroCoordinador === 'proyectos'
-        ) {
-
-        <h4>
-
-            {{ item.titulo }}
-
-        </h4>
-
-        <p>
-
-            👨‍🎓 Estudiante:
-            {{ item.owner?.name }}
-
-        </p>
-
-        <p>
-
-            👩‍🏫 Tutor:
-            {{ item.tutor?.name ?? 'Sin tutor' }}
-
-        </p>
-
-        <p>
-
-            📅 Creado:
-            {{ item.created_at | date:'dd/MM/yyyy' }}
-
-        </p>
-
-        <p>
-
-            📄 Documentos:
-            {{ contarDocumentosProyecto(item.id) }}
-
-        </p>
-
-        <p>
-
-            ⏳ Pendientes:
-            {{ contarPendientesProyecto(item.id) }}
-
-        </p>
-
-        <p>
-
-            ✅ Aprobados:
-            {{ contarAprobadosProyecto(item.id) }}
-
-        </p>
-
-        <p>
-
-            <strong>
-                Estado:
-            </strong>
-
-            {{ item.estado }}
-
-        </p>
-
-        }
-        @else if (
-        filtroCoordinador === 'pendientes'
-        ) {
-        <h4>
-
-            {{ item.nombre }}
-
-        </h4>
-
-        <p>
-
-            📁 Proyecto:
-            {{ item.proyectoTitulo }}
-
-        </p>
-
-        <p>
-
-            👨‍🎓 Estudiante:
-            {{ obtenerEstudianteDocumento(item.proyectoId) }}
-
-        </p>
-
-        <p>
-
-            👩‍🏫 Tutor:
-            {{ obtenerTutorDocumento(item.proyectoId) }}
-
-        </p>
-
-        <p>
-
-            📅 Subido:
-            {{ item.created_at | date:'dd/MM/yyyy' }}
-
-        </p>
-        <p>
-
-            ⏳ Esperando revisión:
-            {{ diasPendiente(item.created_at) }}
-            día(s)
-
-        </p>
-        <p>
-
-            <strong>
-                Estado:
-            </strong>
-
-            <span class="estado-badge pendiente">
-
-                {{ item.estado }}
-
-            </span>
-
-        </p>
-        @if (
-        diasPendiente(item.created_at) > 7
-        ) {
-
-        <p class="warning">
-
-            🚨 Más de una semana sin revisión
-
-        </p>
-
-        }
-
-        }
-
-        @else if (
-        filtroCoordinador === 'sintutor'
-        ) {
-
-        <h4>
-
-            {{ item.titulo }}
-
-        </h4>
-
-        <p>
-
-            👨‍🎓 Estudiante:
-            {{ item.owner?.name }}
-
-        </p>
-
-        <p>
-
-            📧 Correo:
-            {{ item.owner?.email }}
-
-        </p>
-
-        <p>
-
-            📅 Creado:
-            {{ item.created_at | date:'dd/MM/yyyy' }}
-
-        </p>
-
-        <p>
-
-            📄 Documentos:
-            {{ contarDocumentosProyecto(item.id) }}
-
-        </p>
-
-        <p>
-
-            ⏳ Esperando tutor:
-            {{ diasSinTutor(item.created_at) }}
-            día(s)
-
-        </p>
-
-
-        <p class="warning">
-
-            ⚠ Sin tutor asignado
-
-        </p>
-
-
-
-        }
-
-        @else {
-
-        <h4>
-
-            {{ item.nombre }}
-
-        </h4>
-
-        <p>
-
-            {{ item.proyectoTitulo }}
-
-        </p>
-
-        }
-    </div>
-
-    }
-
-
-    }
+      </div>
+    </section>
+  }
+
+  <!-- TAB 2: PROYECTOS (REDISEÑO DE ALTO NIVEL CON CANVAS CARDS) -->
+  @if (tabActiva === 'proyectos') {
+    <section class="tab-pane">
+      <div class="content-section">
+        <!-- Toolbar Superior de Proyectos -->
+        <div class="section-toolbar border-bottom">
+          <div>
+            <h2>Panel de Proyectos de Investigación</h2>
+            <p class="section-subtitle">Monitoreo de avance, asignación docente y estado de entregables</p>
+          </div>
+
+          <div class="toolbar-actions">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input 
+                type="text" 
+                placeholder="Buscar proyecto o participante..." 
+                [(ngModel)]="busquedaProyecto" />
+            </div>
+
+            <div class="sub-filter-buttons">
+              <button class="sub-filter-btn" [class.active]="filtroProyectos === 'todos'" (click)="filtroProyectos = 'todos'">Todos</button>
+              <button class="sub-filter-btn" [class.active]="filtroProyectos === 'sintutor'" (click)="filtroProyectos = 'sintutor'">Sin Tutor</button>
+              <button class="sub-filter-btn" [class.active]="filtroProyectos === 'endesarrollo'" (click)="filtroProyectos = 'endesarrollo'">En Desarrollo</button>
+              <button class="sub-filter-btn" [class.active]="filtroProyectos === 'finalizados'" (click)="filtroProyectos = 'finalizados'">Finalizados</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas Studio Grid -->
+        <div class="projects-studio-grid">
+          @for (project of obtenerProyectosFiltrados(); track project.id) {
+            <div class="project-canvas-card">
+              <!-- Top Metadata -->
+              <div class="canvas-header">
+                <span class="category-chip">{{ project.tipo_proyecto }}</span>
+                <span class="status-pill" [ngClass]="{
+                  'status-approved': project.estado === 'Finalizado' || project.estado === 'Aprobado',
+                  'status-reviewing': project.estado === 'En desarrollo' || project.estado === 'En revisión',
+                  'status-pending': !project.tutor?.name
+                }">
+                  <span class="status-dot"></span>
+                  {{ project.tutor?.name ? project.estado : 'Requiere Tutor' }}
+                </span>
+              </div>
+
+              <!-- Content Body -->
+              <div class="canvas-body">
+                <h3 class="canvas-title">{{ project.titulo }}</h3>
+                <p class="canvas-description">{{ project.descripcion }}</p>
+              </div>
+
+              <!-- Visual Progress Bar -->
+              <div class="progress-container">
+                <div class="progress-labels">
+                  <span>Progreso de Entregas</span>
+                  <strong>{{ calcularProgresoProyecto(project.id) }}%</strong>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" [style.width.%]="calcularProgresoProyecto(project.id)"></div>
+                </div>
+              </div>
+
+              <!-- Participantes con Avatares -->
+              <div class="canvas-team">
+                <div class="team-member">
+                  <div class="avatar-small font-emerald">{{ project.owner?.name?.charAt(0) }}</div>
+                  <div class="member-info">
+                    <span class="role-lbl">Estudiante</span>
+                    <strong class="member-name">{{ project.owner?.name }}</strong>
+                  </div>
+                </div>
+
+                <div class="team-member">
+                  <div class="avatar-small" [ngClass]="project.tutor?.name ? 'font-blue' : 'font-amber'">
+                    {{ project.tutor?.name ? project.tutor.name.charAt(0) : '?' }}
+                  </div>
+                  <div class="member-info">
+                    <span class="role-lbl">Tutor Asignado</span>
+                    <strong class="member-name" [class.unassigned]="!project.tutor?.name">
+                      {{ project.tutor?.name ?? 'Sin asignar' }}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer Stats -->
+              <div class="canvas-footer">
+                <div class="footer-stat">
+                  <span>📄 Entregas:</span> <strong>{{ contarDocumentosProyecto(project.id) }}</strong>
+                </div>
+                <div class="footer-stat">
+                  <span>⏳ Pendientes:</span> <strong class="text-rose">{{ contarPendientesProyecto(project.id) }}</strong>
+                </div>
+                <button class="btn-quick-view">Detalles →</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- TAB 3: ESTUDIANTES -->
+  @if (tabActiva === 'estudiantes') {
+    <section class="tab-pane">
+      <div class="content-section">
+        <div class="section-toolbar border-bottom">
+          <div>
+            <h2>Directorio de Estudiantes</h2>
+            <p class="section-subtitle">Gestión de datos de los estudiantes registrados</p>
+          </div>
+
+          <div class="toolbar-actions">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" placeholder="Buscar estudiante..." [(ngModel)]="busquedaEstudiante" />
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Estudiante</th>
+                <th>Fecha Registro</th>
+                <th>Proyectos</th>
+                <th>Tutor Asignado</th>
+                <th>Documentos</th>
+                <th>Estado Entregas</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of estudiantes; track item.id) {
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="avatar-circle font-emerald">{{ item.name.charAt(0) }}</div>
+                      <div>
+                        <strong>{{ item.name }}</strong>
+                        <span class="subtext">{{ item.email }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
+                  <td><span class="count-pill">{{ contarProyectosEstudiante(item.id) }}</span></td>
+                  <td>{{ obtenerTutoresEstudiante(item.id) }}</td>
+                  <td>{{ contarDocumentosEstudiante(item.id) }}</td>
+                  <td>
+                    <div class="stats-mini-group">
+                      <span class="mini-stat emerald">✓ {{ contarAprobadosEstudiante(item.id) }}</span>
+                      <span class="mini-stat rose">⏳ {{ contarPendientesEstudiante(item.id) }}</span>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- TAB 4: TUTORES -->
+  @if (tabActiva === 'tutores') {
+    <section class="tab-pane">
+      <div class="content-section">
+        <div class="section-toolbar border-bottom">
+          <div>
+            <h2>Planta Docente y Carga Académica</h2>
+            <p class="section-subtitle">Supervisión de tutores y distribución de carga</p>
+          </div>
+
+          <div class="toolbar-actions">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" placeholder="Buscar tutor..." [(ngModel)]="busquedaTutor" />
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Docente Tutor</th>
+                <th>Registro</th>
+                <th>Proyectos</th>
+                <th>Estudiantes</th>
+                <th>Evaluaciones</th>
+                <th>Pendientes</th>
+                <th>Estado Carga</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of tutores; track item.id) {
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="avatar-circle font-blue">{{ item.name.charAt(0) }}</div>
+                      <div>
+                        <strong>{{ item.name }}</strong>
+                        <span class="subtext">{{ item.email }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
+                  <td><span class="count-pill">{{ contarProyectosTutor(item.id) }}</span></td>
+                  <td>{{ contarEstudiantesTutor(item.id) }}</td>
+                  <td>{{ contarRevisionesTutor(item.id) }}</td>
+                  <td><strong class="text-rose">{{ contarPendientesTutor(item.id) }}</strong></td>
+                  <td>
+                    @if (contarPendientesTutor(item.id) > 5 || contarProyectosTutor(item.id) > 8) {
+                      <span class="alert-chip tag-rose">🚨 Sobrecarga</span>
+                    } @else if (contarProyectosTutor(item.id) === 0) {
+                      <span class="alert-chip tag-orange">⚠️ Disponible</span>
+                    } @else {
+                      <span class="alert-chip tag-emerald">✅ Normal</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- TAB 5: DOCUMENTOS -->
+  @if (tabActiva === 'documentos') {
+    <section class="tab-pane">
+      <div class="content-section">
+        <div class="section-toolbar border-bottom">
+          <div>
+            <h2>Repositorio Documental del Sistema</h2>
+            <p class="section-subtitle">Historial completo de archivos y entregables subidos</p>
+          </div>
+
+          <div class="toolbar-actions">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" placeholder="Buscar por documento..." [(ngModel)]="busquedaDocumento" />
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Proyecto</th>
+                <th>Estudiante</th>
+                <th>Tutor</th>
+                <th>Fecha Subida</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of documentosSistema; track item.id) {
+                <tr>
+                  <td>
+                    <strong>{{ item.nombre }}</strong>
+                    <span class="type-tag">{{ item.tipo ?? 'Documento' }}</span>
+                  </td>
+                  <td>{{ item.proyectoTitulo }}</td>
+                  <td>{{ obtenerEstudianteDocumento(item.proyectoId) }}</td>
+                  <td>{{ obtenerTutorDocumento(item.proyectoId) }}</td>
+                  <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <span class="status-pill" [ngClass]="{
+                      'status-pending': item.estado === 'Pendiente revisión' || item.estado === 'submitted',
+                      'status-reviewing': item.estado === 'En revisión',
+                      'status-approved': item.estado === 'Aprobado',
+                      'status-correction': item.estado === 'Requiere correcciones',
+                      'status-rejected': item.estado === 'Rechazado'
+                    }">
+                      <span class="status-dot"></span> {{ item.estado }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- TAB 6: REPORTES -->
+  @if (tabActiva === 'reportes') {
+    <section class="tab-pane">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-header"><span class="metric-label">Proyectos Activos</span><div class="metric-icon icon-purple">📊</div></div>
+          <div class="metric-value">{{ totalProyectos }}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-header"><span class="metric-label">Pendientes</span><div class="metric-icon icon-rose">⏳</div></div>
+          <div class="metric-value text-rose">{{ pendientesRevision }}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-header"><span class="metric-label">Sin Tutor</span><div class="metric-icon icon-orange">⚠️</div></div>
+          <div class="metric-value text-orange">{{ proyectosSinTutor }}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-header"><span class="metric-label">Tasa Aprobación</span><div class="metric-icon icon-emerald">📈</div></div>
+          <div class="metric-value text-emerald">{{ porcentajeAprobacion() }}%</div>
+        </div>
+      </div>
+
+      <div class="reports-layout">
+        <div class="content-section">
+          <div class="section-header border-bottom">
+            <h2>Balance de Estado Documental</h2>
+          </div>
+          <div class="summary-cards-grid">
+            <div class="summary-box box-emerald">
+              <span class="num">{{ contarEstado('Aprobado') }}</span>
+              <span class="lbl">Aprobados</span>
+            </div>
+            <div class="summary-box box-orange">
+              <span class="num">{{ contarEstado('Requiere correcciones') }}</span>
+              <span class="lbl">Correcciones</span>
+            </div>
+            <div class="summary-box box-rose">
+              <span class="num">{{ contarEstado('Rechazado') }}</span>
+              <span class="lbl">Rechazados</span>
+            </div>
+            <div class="summary-box box-amber">
+              <span class="num">{{ contarPendientesGlobal() }}</span>
+              <span class="lbl">Pendientes</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-section download-card">
+          <div class="section-header">
+            <h2>Informe Oficial</h2>
+            <p class="section-subtitle">Descarga en formato PDF el balance consolidado del periodo</p>
+          </div>
+          <button class="action-btn-primary" (click)="descargarReportePDF()">
+            📄 Descargar Informe en PDF
+          </button>
+          <span class="timestamp">Generado: {{ fechaReporte | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </div>
+    </section>
+  }
 </div>
-
-
-}
-
-@if (tabActiva === 'proyectos') {
-
-<div class="dashboard-card">
-
-    <h2>
-
-        Gestión de proyectos
-
-    </h2>
-
-    <div class="filters">
-
-        <button [class.active-filter]="
-        filtroProyectos === 'todos'
-      " (click)="
-        filtroProyectos = 'todos'
-      ">
-
-            Todos
-
-        </button>
-
-        <button [class.active-filter]="
-        filtroProyectos === 'sintutor'
-      " (click)="
-        filtroProyectos = 'sintutor'
-      ">
-
-            Sin tutor
-
-        </button>
-
-        <button [class.active-filter]="
-        filtroProyectos === 'endesarrollo'
-      " (click)="
-        filtroProyectos = 'endesarrollo'
-      ">
-
-            En desarrollo
-
-        </button>
-
-        <button [class.active-filter]="
-        filtroProyectos === 'finalizados'
-      " (click)="
-        filtroProyectos = 'finalizados'
-      ">
-
-            Finalizados
-
-        </button>
-
-    </div>
-
-</div>
-
-<br>
-
-@for (
-project of obtenerProyectosFiltrados();
-track project.id
-) {
-
-<div class="project-card">
-
-    <h3>
-
-        {{ project.titulo }}
-
-    </h3>
-
-    <p>
-
-        {{ project.descripcion }}
-
-    </p>
-
-    <p>
-
-        <strong>
-            Estado:
-        </strong>
-
-        {{ project.estado }}
-
-    </p>
-
-    <p>
-
-        <strong>
-            Tipo:
-        </strong>
-
-        {{ project.tipo_proyecto }}
-
-    </p>
-
-    <p>
-
-        <strong>
-            Estudiante:
-        </strong>
-
-        {{ project.owner?.name }}
-
-    </p>
-
-    <p>
-
-        <strong>
-            Tutor:
-        </strong>
-
-        {{ project.tutor?.name ?? 'Sin tutor' }}
-
-    </p>
-
-</div>
-
-}
-
-}
-
-@if (tabActiva === 'estudiantes') {
-
-@for (
-item of estudiantes;
-track item.id
-) {
-
-
-<div class="project-card">
-
-    <h4>
-
-        {{ item.name }}
-
-    </h4>
-
-    <p>
-
-        📧 {{ item.email }}
-
-    </p>
-
-    <p>
-
-        📅 Registro:
-        {{ item.created_at | date:'dd/MM/yyyy' }}
-
-    </p>
-
-    <p>
-
-        📁 Proyectos:
-        {{ contarProyectosEstudiante(item.id) }}
-
-    </p>
-
-    <p>
-
-        👩‍🏫 Tutores:
-        {{ obtenerTutoresEstudiante(item.id) }}
-
-    </p>
-
-    <p>
-
-        📄 Documentos:
-        {{ contarDocumentosEstudiante(item.id) }}
-
-    </p>
-
-    <p>
-
-        ⏳ Pendientes:
-        {{ contarPendientesEstudiante(item.id) }}
-
-    </p>
-
-    <p>
-
-        ✅ Aprobados:
-        {{ contarAprobadosEstudiante(item.id) }}
-
-    </p>
-
-    @if (
-    contarProyectosEstudiante(item.id) === 0
-    ) {
-
-    <p class="warning">
-
-        ⚠ Sin proyecto asignado
-
-    </p>
-
-    }
-
-</div>
-
-}
-
-}
-
-
-@if (tabActiva === 'tutores') {
-
-@for (
-item of tutores;
-track item.id
-) {
-
-<div class="project-card">
-
-    <h4>
-
-        {{ item.name }}
-
-    </h4>
-
-    <p>
-
-        📧 {{ item.email }}
-
-    </p>
-
-    <p>
-
-        📅 Registro:
-        {{ item.created_at | date:'dd/MM/yyyy' }}
-
-    </p>
-
-    <p>
-
-        📁 Proyectos asignados:
-        {{ contarProyectosTutor(item.id) }}
-
-    </p>
-
-    <p>
-
-        👨‍🎓 Estudiantes:
-        {{ contarEstudiantesTutor(item.id) }}
-
-    </p>
-
-    <p>
-
-        📄 Documentos:
-        {{ contarDocumentosTutor(item.id) }}
-
-    </p>
-
-    <p>
-
-        ✅ Revisiones realizadas:
-        {{ contarRevisionesTutor(item.id) }}
-
-    </p>
-
-    <p>
-
-        ⏳ Pendientes:
-        {{ contarPendientesTutor(item.id) }}
-
-    </p>
-
-    @if (
-    contarPendientesTutor(item.id) > 5
-    ) {
-
-    <p class="warning">
-
-        ⚠ Alta carga de trabajo
-
-    </p>
-
-    }
-
-</div>
-
-@if (
-contarProyectosTutor(item.id) === 0
-) {
-
-<p class="warning">
-
-    ⚠ Sin proyectos asignados
-
-</p>
-
-}
-
-@if (
-contarProyectosTutor(item.id) > 8
-) {
-
-<p class="warning">
-
-    🚨 Posible sobrecarga
-
-</p>
-
-}
-}
-
-}
-@if (tabActiva === 'documentos') {
-
-@for (
-item of documentosSistema;
-track item.id
-) {
-
-<div class="project-card">
-
-    <h4>
-
-        {{ item.nombre }}
-
-    </h4>
-
-    <p>
-
-        📁 Proyecto:
-        {{ item.proyectoTitulo }}
-
-    </p>
-
-    <p>
-
-        👨‍🎓 Estudiante:
-        {{ obtenerEstudianteDocumento(item.proyectoId) }}
-
-    </p>
-
-    <p>
-
-        👩‍🏫 Tutor:
-        {{ obtenerTutorDocumento(item.proyectoId) }}
-
-    </p>
-
-    <p>
-
-        📅 Fecha:
-        {{ item.created_at | date:'dd/MM/yyyy' }}
-
-    </p>
-
-    <p>
-
-        📄 Tipo:
-        {{ item.tipo ?? 'Documento' }}
-
-    </p>
-
-    <p>
-
-        Estado:
-
-        <span class="estado-badge" [ngClass]="{
-            'pendiente':
-              item.estado === 'Pendiente revisión'
-              || item.estado === 'submitted',
-            'revision':
-              item.estado === 'En revisión',
-            'aprobado':
-              item.estado === 'Aprobado',
-            'correccion':
-              item.estado === 'Requiere correcciones',
-            'rechazado':
-              item.estado === 'Rechazado'
-          }">
-
-            {{ item.estado }}
-
-        </span>
-
-    </p>
-
-    @if (
-    item.estado === 'submitted'
-    ||
-    item.estado === 'Pendiente revisión'
-    ) {
-
-    <p class="warning">
-
-        ⏳ Esperando revisión
-
-    </p>
-
-    }
-
-</div>
-
-}
-
-}
-
-<!-- REPORTES -->
-
-@if (tabActiva === 'reportes') {
-<!-- Resumen ejecutivo -->
-<div class="stats-grid">
-
-  <div class="stat-card">
-    <div class="stat-number">
-      {{ totalProyectos }}
-    </div>
-    <div class="stat-label">
-      Proyectos activos
-    </div>
-  </div>
-
-  <div class="stat-card">
-    <div class="stat-number">
-      {{ pendientesRevision }}
-    </div>
-    <div class="stat-label">
-      Documentos pendientes
-    </div>
-  </div>
-
-  <div class="stat-card">
-    <div class="stat-number">
-      {{ proyectosSinTutor }}
-    </div>
-    <div class="stat-label">
-      Proyectos sin tutor
-    </div>
-  </div>
-
-  <div class="stat-card">
-    <div class="stat-number">
-      {{ porcentajeAprobacion() }}%
-    </div>
-    <div class="stat-label">
-      Tasa de aprobación
-    </div>
-  </div>
-
-</div>
-<br>
-
-<!-- Rendimiento de tutores -->
-<h2>
-
-  Rendimiento de tutores
-
-</h2>
-
-@for (
-  tutor of tutores;
-  track tutor.id
-) {
-
-<div class="project-card">
-
-  <h4>
-
-    {{ tutor.name }}
-
-  </h4>
-
-  <p>
-
-    📁 Proyectos:
-    {{ contarProyectosTutor(tutor.id) }}
-
-  </p>
-
-  <p>
-
-    📄 Documentos:
-    {{ contarDocumentosTutor(tutor.id) }}
-
-  </p>
-
-  <p>
-
-    ✅ Revisiones:
-    {{ contarRevisionesTutor(tutor.id) }}
-
-  </p>
-
-  <p>
-
-    ⏳ Pendientes:
-    {{ contarPendientesTutor(tutor.id) }}
-
-  </p>
-
-</div>
-
-}
-<br>
-<!-- Estado global docs -->
-<h2>
-
-  Estado documental
-
-</h2>
-
-<div class="report-card">
-
-  <p>
-
-    ✅ Aprobados:
-    {{ contarEstado('Aprobado') }}
-
-  </p>
-
-  <p>
-
-    🔴 Correcciones:
-    {{ contarEstado('Requiere correcciones') }}
-
-  </p>
-
-  <p>
-
-    ❌ Rechazados:
-    {{ contarEstado('Rechazado') }}
-
-  </p>
-
-  <p>
-
-    ⏳ Pendientes:
-    {{ contarPendientesGlobal() }}
-
-  </p>
-
-</div>
-
-<br>
-<!-- ALERTAS ADMINISTRATIVAS -->
-<h2>
-
-  Alertas del sistema
-
-</h2>
-
-@if (proyectosSinTutor > 0) {
-<div class="alert-card">
-
-  ⚠ Proyectos sin tutor:
-  {{ proyectosSinTutor }}
-
-</div>
-}
-@if (pendientesRevision > 0) {
-<div class="alert-card">
-
-  ⚠ Documentos pendientes:
-  {{ pendientesRevision }}
-
-</div>
-}
-@if (estudiantesSinProyecto() > 0) {
-
-<div class="alert-card">
-
-  ⚠ Estudiantes sin proyecto:
-  {{ estudiantesSinProyecto() }}
-
-</div>
-
-}
-
-<div class="report-section">
-
-  <h2>
-
-    📥 Exportación
-
-  </h2>
-
-  <button
-  class="report-btn"
-  (click)="descargarReportePDF()">
-
-
-    📄 Descargar PDF
-
-  </button>
-
-
-  <p class="report-date">
-
-  Generado:
-  {{ fechaReporte | date:'dd/MM/yyyy HH:mm' }}
-
-</p>
-
-</div>
-
-
-}

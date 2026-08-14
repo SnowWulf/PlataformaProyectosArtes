@@ -1,482 +1,317 @@
-<div class="projects-header">
+<div class="projects-container">
+  <!-- ENCABEZADO PRINCIPAL -->
+  <header class="projects-header">
+    <div class="header-info">
+      <h1>📚 Gestión de Proyectos</h1>
+      <p>Administra tus iniciativas, revisa colaboraciones y explora los proyectos de la plataforma.</p>
+    </div>
+    <button class="btn-primary btn-nuevo" (click)="nuevoProyecto()">
+      <span class="icon">➕</span> Nuevo proyecto
+    </button>
+  </header>
 
-  <div>
+  <!-- CONTENIDO PRINCIPAL -->
+  <main *ngIf="projects && projects.length > 0; else sinDatos" class="projects-content">
 
-    <h1>
+    <!-- SECCIÓN 1: MIS PROYECTOS (RETRÁCTIL) -->
+    <section class="projects-section accordion-section">
+      <div class="accordion-header" (click)="seccionMisProyectosAbierta = !seccionMisProyectosAbierta">
+        <div class="section-title">
+          <span class="chevron" [class.open]="seccionMisProyectosAbierta">📐</span>
+          <h2>📁 Mis proyectos</h2>
+          <span class="badge-count">{{ misProyectosFiltrados?.length ?? misProyectos?.length ?? 0 }}</span>
+        </div>
+      </div>
 
-      📚 Proyectos
+      <div class="accordion-content" *ngIf="seccionMisProyectosAbierta">
+        <!-- BUSCADOR INDIVIDUAL -->
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            [(ngModel)]="busquedaMisProyectos"
+            placeholder="Buscar en mis proyectos por título, descripción o tutor..."
+            (click)="$event.stopPropagation()"
+          />
+        </div>
 
-    </h1>
+        <!-- GRID DE TARJETAS -->
+        <div class="projects-grid" *ngIf="(misProyectosFiltrados?.length ?? 0) > 0; else sinResultadosMisProyectos">
+          <article class="project-card" *ngFor="let project of misProyectosFiltrados">
+            <div class="card-header">
+              <span class="estado-badge" [ngClass]="{
+                'estado-activo': project.estado === 'En desarrollo',
+                'estado-finalizado': project.estado === 'Finalizado',
+                'estado-suspendido': project.estado === 'Suspendido'
+              }">
+                {{ project.estado }}
+              </span>
+              <span class="tipo-badge">📂 {{ project.tipo_proyecto }}</span>
+            </div>
 
-    <p>
+            <div class="card-body">
+              <h3 class="project-title">{{ project.titulo }}</h3>
+              <p class="project-desc">{{ project.descripcion }}</p>
+            </div>
 
-      Gestiona tus proyectos y consulta los proyectos disponibles.
+            <div class="card-meta">
+              <div class="meta-item">
+                <span class="meta-label">Propietario:</span>
+                <span class="meta-value">👤 {{ project.owner?.name }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Tutor asignado:</span>
+                <span class="meta-value">👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}</span>
+              </div>
+            </div>
 
-    </p>
+            <footer class="card-actions">
+              <button class="btn-action btn-view" (click)="verProyecto(project)">
+                👁️ Ver
+              </button>
+              <button class="btn-action btn-edit" *ngIf="puedeEditarProyecto(project)" (click)="editarProyecto(project)">
+                ✏️ Editar
+              </button>
+              <button class="btn-action btn-tutor" *ngIf="!project.tutor" (click)="solicitarTutor(project)">
+                👩‍🏫 Solicitar tutor
+              </button>
+              <button class="btn-action btn-delete" *ngIf="esPropietarioProyecto(project) || auth.esCoordinador()" (click)="abrirModalEliminar(project)">
+                🗑️ Eliminar
+              </button>
+            </footer>
+          </article>
+        </div>
 
-  </div>
+        <ng-template #sinResultadosMisProyectos>
+          <p class="no-results-text">No se encontraron coincidencia en tus proyectos.</p>
+        </ng-template>
+      </div>
+    </section>
 
-  <button class="btn-nuevo" (click)="nuevoProyecto()">
+    <!-- SECCIÓN 2: PROYECTOS DONDE COLABORO (RETRÁCTIL) -->
+    <section class="projects-section accordion-section">
+      <div class="accordion-header" (click)="seccionColaborandoAbierta = !seccionColaborandoAbierta">
+        <div class="section-title">
+          <span class="chevron" [class.open]="seccionColaborandoAbierta">📐</span>
+          <h2>🤝 Proyectos donde colaboro</h2>
+          <span class="badge-count">{{ colaborandoFiltrados?.length ?? proyectosColaborando?.length ?? 0 }}</span>
+        </div>
+      </div>
 
-    ➕ Nuevo proyecto
+      <div class="accordion-content" *ngIf="seccionColaborandoAbierta">
+        <!-- BUSCADOR INDIVIDUAL -->
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            [(ngModel)]="busquedaColaborando"
+            placeholder="Buscar en colaboradores..."
+            (click)="$event.stopPropagation()"
+          />
+        </div>
 
-  </button>
+        <!-- GRID DE TARJETAS -->
+        <div class="projects-grid" *ngIf="(colaborandoFiltrados?.length ?? 0) > 0; else sinResultadosColaborando">
+          <article class="project-card card-colaborador" *ngFor="let project of colaborandoFiltrados">
+            <div class="card-header">
+              <span class="estado-badge estado-activo">{{ project.estado }}</span>
+              <span class="tipo-badge">📂 {{ project.tipo_proyecto }}</span>
+            </div>
 
-</div>
+            <div class="card-body">
+              <h3 class="project-title">{{ project.titulo }}</h3>
+              <p class="project-desc">{{ project.descripcion }}</p>
+            </div>
+
+            <div class="card-meta">
+              <div class="meta-item">
+                <span class="meta-label">Propietario:</span>
+                <span class="meta-value">👤 {{ project.owner?.name }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Tutor asignado:</span>
+                <span class="meta-value">👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}</span>
+              </div>
+            </div>
+
+            <footer class="card-actions">
+              <button class="btn-action btn-view" (click)="verProyecto(project)">
+                👁️ Ver detalles
+              </button>
+            </footer>
+          </article>
+        </div>
+
+        <ng-template #sinResultadosColaborando>
+          <p class="no-results-text">No hay proyectos de colaboración que coincidan con la búsqueda.</p>
+        </ng-template>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: OTROS PROYECTOS (RETRÁCTIL) -->
+    <section class="projects-section accordion-section">
+      <div class="accordion-header" (click)="seccionExternosAbierta = !seccionExternosAbierta">
+        <div class="section-title">
+          <span class="chevron" [class.open]="seccionExternosAbierta">📐</span>
+          <h2>🌐 Otros proyectos de la plataforma</h2>
+          <span class="badge-count">{{ externosFiltrados?.length ?? proyectosExternos?.length ?? 0 }}</span>
+        </div>
+      </div>
+
+      <div class="accordion-content" *ngIf="seccionExternosAbierta">
+        <!-- BUSCADOR INDIVIDUAL -->
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            [(ngModel)]="busquedaExternos"
+            placeholder="Buscar en otros proyectos por título, autor o área..."
+            (click)="$event.stopPropagation()"
+          />
+        </div>
+
+        <!-- GRID DE TARJETAS -->
+        <div class="projects-grid" *ngIf="(externosFiltrados?.length ?? 0) > 0; else sinResultadosExternos">
+          <article class="project-card" *ngFor="let project of externosFiltrados">
+            <div class="card-header">
+              <span class="estado-badge" [ngClass]="{
+                'estado-activo': project.estado === 'En desarrollo',
+                'estado-finalizado': project.estado === 'Finalizado',
+                'estado-suspendido': project.estado === 'Suspendido'
+              }">
+                {{ project.estado }}
+              </span>
+              <span class="tipo-badge">📂 {{ project.tipo_proyecto }}</span>
+            </div>
+
+            <div class="card-body">
+              <h3 class="project-title">{{ project.titulo }}</h3>
+              <p class="project-desc">{{ project.descripcion }}</p>
+            </div>
+
+            <div class="card-meta">
+              <div class="meta-item">
+                <span class="meta-label">Propietario:</span>
+                <span class="meta-value">👤 {{ project.owner?.name }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Tutor asignado:</span>
+                <span class="meta-value">👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}</span>
+              </div>
+            </div>
+
+            <footer class="card-actions">
+              <button class="btn-action btn-view" (click)="verProyecto(project)">
+                👁️ Ver
+              </button>
+              <button class="btn-action btn-edit" *ngIf="puedeEditarProyecto(project)" (click)="editarProyecto(project)">
+                ✏️ Editar
+              </button>
+              <button class="btn-action btn-tutor" *ngIf="!project.tutor" (click)="solicitarTutor(project)">
+                👩‍🏫 Solicitar tutor
+              </button>
+              <button class="btn-action btn-delete" *ngIf="auth.esCoordinador()" (click)="eliminarProyecto(project)">
+                🗑️ Eliminar
+              </button>
+            </footer>
+          </article>
+        </div>
+
+        <ng-template #sinResultadosExternos>
+          <p class="no-results-text">No se encontraron otros proyectos con los criterios de búsqueda.</p>
+        </ng-template>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ESTADO VACÍO GLOBAL -->
+  <ng-template #sinDatos>
+    <div class="empty-state">
+      <div class="empty-icon">📁</div>
+      <h3>No hay proyectos disponibles</h3>
+      <p>Todavía no has creado ningún proyecto en la plataforma.</p>
+      <button class="btn-primary" (click)="nuevoProyecto()">
+        ➕ Crear mi primer proyecto
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- MODAL: FORMULARIO PROYECTO -->
   @if (mostrarFormulario) {
+    <div class="modal-backdrop">
+      <div class="modal-content project-modal">
+        <header class="modal-header">
+          <h2>{{ proyectoSeleccionado ? '✏️ Editar proyecto' : '📚 Nuevo proyecto' }}</h2>
+          <button class="close-btn" (click)="cerrarFormulario()">✕</button>
+        </header>
 
-<div class="modal-backdrop">
-
-  <div class="modal-content project-modal">
-
-    <div class="modal-header">
-
-      <h2>
-
-        {{ proyectoSeleccionado ? '✏️ Editar proyecto' : '📚 Nuevo proyecto' }}
-
-      </h2>
-
-      <button
-        class="close-btn"
-        (click)="cerrarFormulario()">
-
-        ✕
-
-      </button>
-
+        <div class="modal-body">
+          <app-project-form
+            [proyecto]="proyectoSeleccionado"
+            (guardado)="cerrarFormulario(); cargarProyectos()">
+          </app-project-form>
+        </div>
+      </div>
     </div>
+  }
 
-    <app-project-form
-
-      [proyecto]="proyectoSeleccionado"
-
-      (guardado)="cerrarFormulario(); cargarProyectos()">
-
-    </app-project-form>
-
-  </div>
-
-</div>
-
-}
-
-<div *ngIf="projects && projects.length > 0; else sinDatos">
-
-
-
-  <h2>
-
-    📁 Mis proyectos
-
-  </h2>
-
-  <div class="projects-grid">
-
-    <div class="project-card" *ngFor="let project of misProyectos">
-
-      <h3>
-
-        {{ project.titulo }}
-
-      </h3>
-
-      <p>
-
-        {{ project.descripcion }}
-
-      </p>
-
-      <div class="project-meta">
-
-        <span>
-
-          📂 {{ project.tipo_proyecto }}
-
-        </span>
-
-        <span>
-
-          👤 {{ project.owner?.name }}
-
-        </span>
-
-      </div>
-
-      <div class="project-meta">
-
-        <span>
-
-          👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}
-
-        </span>
-
-      </div>
-
-      <div class="estado-badge" [ngClass]="{
-
-        'estado-activo':
-          project.estado === 'En desarrollo',
-
-        'estado-finalizado':
-          project.estado === 'Finalizado',
-
-        'estado-suspendido':
-          project.estado === 'Suspendido'
-
-      }">
-
-        {{ project.estado }}
-
-      </div>
-
-      <div class="project-actions">
-
-        <button (click)="verProyecto(project)">
-
-          Ver
-
-        </button>
-
-        <button *ngIf="puedeEditarProyecto(project)" (click)="editarProyecto(project)">
-
-          Editar
-
-        </button>
-
-        <button *ngIf="!project.tutor" (click)="solicitarTutor(project)">
-
-          Solicitar tutor
-
-        </button>
-
-<button
-  *ngIf="esPropietarioProyecto(project) || auth.esCoordinador()"
-  (click)="abrirModalEliminar(project)">
-
-  Eliminar
-
-</button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <hr class="section-divider">
-
-  <h2>
-
-  🤝 Proyectos donde colaboro
-
-</h2>
-
-<div class="projects-grid">
-
-  <div
-    class="project-card"
-    *ngFor="
-      let project
-      of proyectosColaborando
-    "
-  >
-
-    <h3>
-
-      {{ project.titulo }}
-
-    </h3>
-
-    <p>
-
-      {{ project.descripcion }}
-
-    </p>
-
-    <div class="project-meta">
-
-      <span>
-
-        📂 {{ project.tipo_proyecto }}
-
-      </span>
-
-      <span>
-
-        👤 {{ project.owner?.name }}
-
-      </span>
-
-    </div>
-
-    <div class="project-meta">
-
-      <span>
-
-        👩‍🏫
-        {{ project.tutor?.name ?? 'Sin tutor' }}
-
-      </span>
-
-    </div>
-
-    <div
-      class="estado-badge"
-    >
-
-      {{ project.estado }}
-
-    </div>
-
-    <div
-      class="project-actions"
-    >
-
-      <button
-        (click)="verProyecto(project)"
-      >
-
-        Ver
-
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-<hr class="section-divider">
-  <h2>
-
-    📚 Otros proyectos
-
-  </h2>
-
-  <div class="projects-grid">
-
-    <div class="project-card" *ngFor="let project of proyectosExternos">
-
-      <h3>
-
-        {{ project.titulo }}
-
-      </h3>
-
-      <p>
-
-        {{ project.descripcion }}
-
-      </p>
-
-      <div class="project-meta">
-
-        <span>
-
-          📂 {{ project.tipo_proyecto }}
-
-        </span>
-
-        <span>
-
-          👤 {{ project.owner?.name }}
-
-        </span>
-
-      </div>
-
-      <div class="project-meta">
-
-        <span>
-
-          👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}
-
-        </span>
-
-      </div>
-
-      <div class="estado-badge" [ngClass]="{
-
-        'estado-activo':
-          project.estado === 'En desarrollo',
-
-        'estado-finalizado':
-          project.estado === 'Finalizado',
-
-        'estado-suspendido':
-          project.estado === 'Suspendido'
-
-      }">
-
-        {{ project.estado }}
-
-      </div>
-
-      <div class="project-actions">
-
-        <button (click)="verProyecto(project)">
-
-          Ver
-
-        </button>
-
-        <button *ngIf="puedeEditarProyecto(project)" (click)="editarProyecto(project)">
-
-          Editar
-
-        </button>
-
-        <button *ngIf="!project.tutor" (click)="solicitarTutor(project)">
-
-          Solicitar tutor
-
-        </button>
-
-        <button *ngIf="auth.esCoordinador()" (click)="eliminarProyecto(project)">
-
-          Eliminar
-
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <app-project-form *ngIf="mostrarFormulario" [proyecto]="proyectoSeleccionado"
-    (guardado)="cerrarFormulario(); cargarProyectos()">
-  </app-project-form>
-
+  <!-- MODAL: SOLICITAR TUTOR -->
   @if (mostrarSolicitudTutor && proyectoSolicitud) {
+    <div class="modal-backdrop">
+      <div class="modal-content">
+        <header class="modal-header">
+          <h2>👩‍🏫 Solicitar tutor</h2>
+          <button class="close-btn" (click)="cerrarSolicitudTutor()">✕</button>
+        </header>
 
-<div class="modal-backdrop">
+        <div class="modal-body">
+          <div class="document-info">
+            <p><strong>Proyecto:</strong> {{ proyectoSolicitud.titulo }}</p>
+          </div>
 
-  <div class="modal-content">
-
-    <div class="modal-header">
-
-      <h2>
-
-        👩‍🏫 Solicitar tutor
-
-      </h2>
-
-      <button
-        class="close-btn"
-        (click)="cerrarSolicitudTutor()">
-
-        ✕
-
-      </button>
-
+          <app-tutor-request-form
+            [proyecto]="proyectoSolicitud"
+            (enviado)="cerrarSolicitudTutor()">
+          </app-tutor-request-form>
+        </div>
+      </div>
     </div>
+  }
 
-    <div class="document-info">
+  <!-- MODAL: ELIMINAR PROYECTO -->
+  @if (mostrarModalEliminar && proyectoEliminar) {
+    <div class="modal-backdrop">
+      <div class="modal-content delete-modal">
+        <header class="modal-header">
+          <h2>🗑️ Eliminar proyecto</h2>
+          <button class="close-btn" (click)="cerrarModalEliminar()">✕</button>
+        </header>
 
-      <p>
+        <div class="modal-body">
+          <p class="warning-text">⚠️ Estás a punto de eliminar el proyecto de forma permanente:</p>
+          <h3 class="delete-project-title">{{ proyectoEliminar.titulo }}</h3>
+          <p class="instruction-text">Escribe exactamente el nombre del proyecto para confirmar la eliminación:</p>
 
-        <strong>Proyecto:</strong>
+          <input
+            type="text"
+            class="input-confirm"
+            [(ngModel)]="nombreConfirmacion"
+            placeholder="Nombre exacto del proyecto">
 
-        {{ proyectoSolicitud.titulo }}
-
-      </p>
-
+          <div class="modal-actions">
+            <button class="btn-cancel" (click)="cerrarModalEliminar()">
+              Cancelar
+            </button>
+            <button
+              class="btn-danger"
+              [disabled]="nombreConfirmacion !== proyectoEliminar.titulo"
+              (click)="confirmarEliminarProyecto()">
+              Eliminar definitivamente
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-
-<app-tutor-request-form
-  [proyecto]="proyectoSolicitud"
-  (enviado)="cerrarSolicitudTutor()">
-</app-tutor-request-form>
-
-  </div>
-
+  }
 </div>
-
-}
-
-</div>
-@if (mostrarModalEliminar && proyectoEliminar) {
-
-<div class="modal-backdrop">
-
-  <div class="modal-content delete-modal">
-
-    <div class="modal-header">
-
-      <h2>
-
-        🗑️ Eliminar proyecto
-
-      </h2>
-
-      <button
-        class="close-btn"
-        (click)="cerrarModalEliminar()">
-
-        ✕
-
-      </button>
-
-    </div>
-
-    <p>
-
-      Estás a punto de eliminar el proyecto:
-
-    </p>
-
-    <h3>
-
-      {{ proyectoEliminar.titulo }}
-
-    </h3>
-
-    <p>
-
-      Escribe exactamente el nombre del proyecto para confirmar.
-
-    </p>
-
-    <input
-      type="text"
-      [(ngModel)]="nombreConfirmacion"
-      placeholder="Nombre del proyecto">
-
-    <div class="modal-actions">
-
-      <button
-        (click)="cerrarModalEliminar()">
-
-        Cancelar
-
-      </button>
-
-      <button
-        class="btn-danger"
-        [disabled]="
-          nombreConfirmacion !==
-          proyectoEliminar.titulo
-        "
-        (click)="confirmarEliminarProyecto()">
-
-        Eliminar definitivamente
-
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-}
-
-<ng-template #sinDatos>
-
-  <p>
-    Todavía no tienes proyectos, crea uno.
-  </p>
-
-</ng-template>

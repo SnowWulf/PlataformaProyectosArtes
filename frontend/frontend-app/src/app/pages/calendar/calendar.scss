@@ -1,213 +1,372 @@
+// VARIABLES Y PALETA DE COLORES (Consistencia con el Tema Claro)
+$bg-card: #ffffff;
+$bg-main: #f8fafc;
+$border-color: #e2e8f0;
+
+$accent-green: #059669;    /* Verde para títulos */
+$primary-green: #10b981;   /* Verde principal */
+$primary-hover: #059669;
+$text-main: #0f172a;       /* Texto oscuro */
+$text-muted: #64748b;      /* Texto secundario */
+
+// CONTENEDOR PRINCIPAL
 .calendar-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
   margin-bottom: 1.5rem;
 
   .view-toggle {
     display: flex;
-    background-color: #1e293b;
-    padding: 4px;
-    border-radius: 8px;
+    gap: 0.35rem;
+    background: #f1f5f9;
+    padding: 0.35rem;
+    border-radius: 12px;
+    border: 1px solid $border-color;
 
     button {
       background: transparent;
       border: none;
-      color: #94a3b8;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
       font-weight: 600;
+      color: $text-muted;
       cursor: pointer;
       transition: all 0.2s ease;
 
+      &:hover {
+        color: $text-main;
+        background: rgba(255, 255, 255, 0.5);
+      }
+
       &.active {
-        background-color: #3b82f6;
-        color: #ffffff;
+        background: $bg-card;
+        color: $accent-green;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       }
     }
   }
 }
 
 .calendar-container {
-  background-color: #0f172a;
-  border-radius: 12px;
-  padding: 1.25rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  font-family: system-ui, -apple-system, sans-serif;
+}
 
-  .calendar-header {
+// NAVEGACIÓN Y CABECERA DEL MES
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  .month-navigation {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.2rem;
 
     h2 {
       margin: 0;
-      color: #f8fafc;
       font-size: 1.3rem;
+      color: $accent-green;
       text-transform: capitalize;
+      font-weight: 700;
     }
 
     .nav-button {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #f8fafc;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
+      background: #f8fafc;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      color: $text-main;
       cursor: pointer;
-      &:hover { background: #334155; }
-    }
-
-    .btn-today {
-      background: #334155;
-      border: none;
-      color: #fff;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      margin-left: auto;
-      cursor: pointer;
-    }
-  }
-
-  .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    font-weight: 700;
-    color: #64748b;
-    padding-bottom: 0.5rem;
-    font-size: 0.85rem;
-  }
-
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
-    background-color: #334155;
-    border: 1px solid #334155;
-    border-radius: 8px;
-    overflow: hidden;
-
-    .calendar-cell {
-      background-color: #1e293b;
-      min-height: 100px;
-      padding: 6px;
-      display: flex;
-      flex-direction: column;
-      transition: background 0.15s;
+      font-size: 0.85rem;
+      transition: all 0.2s;
 
       &:hover {
-        background-color: #273549;
+        background: #e2e8f0;
       }
+    }
+  }
 
-      &.other-month {
-        opacity: 0.35;
-      }
+  .btn-today {
+    background: #f1f5f9;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $text-main;
+    cursor: pointer;
+    transition: all 0.2s;
 
-      &.is-today {
-        background-color: rgba(59, 130, 246, 0.08);
-        .day-number {
-          background-color: #3b82f6;
-          color: white;
-          border-radius: 50%;
-          width: 24px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      }
-
-      .cell-header {
-        display: flex;
-        justify-content: flex-end;
-        margin-bottom: 4px;
-
-        .day-number {
-          font-size: 0.8rem;
-          font-weight: 600;
-          color: #cbd5e1;
-        }
-      }
-
-      .events-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-
-        .calendar-event {
-          font-size: 0.72rem;
-          padding: 3px 6px;
-          background: rgba(255, 255, 255, 0.06);
-          border-left: 3px solid #3b82f6;
-          border-radius: 3px;
-          color: #f1f5f9;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          cursor: pointer;
-
-          &:hover {
-            filter: brightness(1.2);
-          }
-
-          &.is-task {
-            background: rgba(239, 68, 68, 0.12);
-          }
-        }
-
-        .more-events {
-          font-size: 0.68rem;
-          color: #94a3b8;
-          font-weight: 600;
-          cursor: pointer;
-          margin-top: 2px;
-          &:hover { color: #3b82f6; }
-        }
-      }
+    &:hover {
+      background: $primary-green;
+      color: #ffffff;
+      border-color: $primary-green;
     }
   }
 }
 
-.event-card {
-  display: flex;
-  align-items: center;
-  background-color: #1e293b;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 0.75rem;
-  gap: 1rem;
+// DÍAS DE LA SEMANA
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid $border-color;
+  margin-bottom: 0.5rem;
+}
 
-  .color-indicator {
-    width: 6px;
-    height: 48px;
-    border-radius: 4px;
-  }
+// GRILLA DEL CALENDARIO
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
 
-  .event-info {
-    flex: 1;
+  .calendar-cell {
+    background: #ffffff;
+    border: 1px solid $border-color;
+    border-radius: 10px;
+    min-height: 105px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
 
-    .event-type-tag {
-      font-size: 0.7rem;
-      color: #94a3b8;
+    &:hover {
+      border-color: $primary-green;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    &.other-month {
+      background: #f8fafc;
+      opacity: 0.5;
+    }
+
+    &.is-today {
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+
+      .day-number {
+        background: $primary-green;
+        color: #ffffff;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .cell-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.35rem;
+
+      .day-number {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $text-main;
+      }
+    }
+
+    .events-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .calendar-event {
+      background: #f1f5f9;
+      border-left: 3px solid $primary-green;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+
+      &:hover {
+        background: #e2e8f0;
+      }
+
+      .event-time {
+        font-weight: 700;
+        color: $text-muted;
+        font-size: 0.7rem;
+      }
+
+      .event-title {
+        color: $text-main;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-weight: 500;
+      }
+    }
+
+    .more-events {
+      background: transparent;
+      border: none;
+      color: $accent-green;
+      font-size: 0.72rem;
       font-weight: 700;
-      text-transform: uppercase;
-    }
+      text-align: left;
+      padding: 0;
+      margin-top: 0.1rem;
+      cursor: pointer;
 
-    h3 {
-      margin: 2px 0 4px;
-      font-size: 1rem;
-      color: #f8fafc;
-    }
-
-    p {
-      margin: 0 0 6px;
-      font-size: 0.85rem;
-      color: #cbd5e1;
-    }
-
-    .event-dates small {
-      color: #64748b;
-      font-size: 0.8rem;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }
+
+// VISTA 2: LISTA DE EVENTOS
+.list-header {
+  margin-bottom: 1.25rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: $accent-green;
+  }
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .event-card {
+    background: #ffffff;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+    .color-indicator {
+      width: 6px;
+      height: 48px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .event-info {
+      flex: 1;
+
+      .event-type-badge {
+        font-size: 0.72rem;
+        font-weight: 700;
+        background: #f1f5f9;
+        color: $text-muted;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+      }
+
+      h3 {
+        margin: 0.25rem 0;
+        font-size: 1.05rem;
+        color: $text-main;
+        font-weight: 600;
+      }
+
+      .event-desc {
+        margin: 0.2rem 0 0.5rem 0;
+        font-size: 0.85rem;
+        color: $text-muted;
+      }
+
+      .event-dates {
+        font-size: 0.8rem;
+        color: $text-muted;
+        font-weight: 500;
+      }
+    }
+
+    .event-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+  }
+}
+
+// BOTONES GLOBALES
+.btn-primary {
+  background: $primary-green;
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+  transition: background 0.2s;
+
+  &:hover {
+    background: $primary-hover;
+  }
+}
+
+.btn-secondary-sm {
+  background: #f1f5f9;
+  color: $text-main;
+  border: 1px solid $border-color;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: #e2e8f0;
+  }
+}
+
+.btn-danger-sm {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: #fca5a5;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  color: $text-muted;
+  padding: 3rem 1.5rem;
+  background: #f8fafc;
+  border: 1px dashed $border-color;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
