@@ -361,9 +361,14 @@
 </div>
 }
 
-<!-- CHAT FLOTANTE HUMANO -->
+<!-- CHAT FLOTANTE HUMANO CON BADGE -->
 <button class="chat-float-btn" (click)="toggleChat()">
   💬 Chat
+  @if (mensajesNoLeidos > 0 && !chatAbierto) {
+    <span class="chat-badge">
+      {{ mensajesNoLeidos > 99 ? '99+' : mensajesNoLeidos }}
+    </span>
+  }
 </button>
 
 <!-- CHAT HUMANO / EQUIPO -->
@@ -396,21 +401,19 @@
     </div>
 
     <div class="chat-footer">
-  <textarea 
-    [(ngModel)]="nuevoMensaje" 
-    (keydown.enter)="$event.preventDefault(); enviarMensaje()" 
-    placeholder="Escribe un mensaje..."
-    rows="1">
-  </textarea>
-  <button 
-    type="button" 
-    (click)="enviarMensaje()"
-    [disabled]="!nuevoMensaje || !nuevoMensaje.trim()">
-    Enviar
-  </button>
-</div>
-
-
+      <textarea 
+        [(ngModel)]="nuevoMensaje" 
+        (keydown.enter)="$event.preventDefault(); enviarMensaje()" 
+        placeholder="Escribe un mensaje..."
+        rows="1">
+      </textarea>
+      <button 
+        type="button" 
+        (click)="enviarMensaje()"
+        [disabled]="!nuevoMensaje || !nuevoMensaje.trim()">
+        Enviar
+      </button>
+    </div>
   </div>
 }
 

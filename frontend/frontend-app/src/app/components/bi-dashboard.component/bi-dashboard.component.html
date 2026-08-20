@@ -1,0 +1,32 @@
+<div class="bi-container">
+  <div class="header">
+    <h2>📊 Módulo de Analítica y Estadísticas</h2>
+    <p>Visualización del estado general de proyectos para la coordinación.</p>
+  </div>
+
+  <!-- Estado 1: Spinner de carga (se muestra mientras isLoading sea true) -->
+  <div *ngIf="isLoading" class="state-card loading">
+    <div class="spinner"></div>
+    <p>Cargando panel de inteligencia de negocios...</p>
+  </div>
+
+  <!-- Estado 2: Error HTTP -->
+  <div *ngIf="hasError" class="state-card error">
+    <p>⚠️ No se pudo cargar el panel de análisis.</p>
+    <button (click)="cargarDashboard()">Reintentar</button>
+  </div>
+
+  <!-- Estado 3: Contenedor del Iframe -->
+  <!-- Usamos [hidden] en lugar de *ngIf para que el iframe exista en el DOM y se descargue en segundo plano -->
+  <div *ngIf="iframeUrl" [hidden]="isLoading" class="iframe-wrapper">
+    <iframe
+      [src]="iframeUrl"
+      (load)="onIframeLoad()"
+      frameborder="0"
+      width="100%"
+      height="800"
+      style="width: 100%; height: 800px; border: none;"
+      allowtransparency
+    ></iframe>
+  </div>
+</div>

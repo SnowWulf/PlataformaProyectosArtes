@@ -19,6 +19,8 @@ use App\Http\Controllers\AlertPreferenceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TelegramAuthController;
 use App\Http\Controllers\Api\ProjectAiChatController;
+use App\Http\Controllers\BiController;
+use App\Http\Controllers\RegistrationRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,12 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Telegram envía notificaciones aquí sin cabecera Bearer/Sanctum
 Route::post('/telegram/webhook', [TelegramAuthController::class, 'handleWebhook']);
+
+// Rutas para las solicitudes de registro
+Route::get('/registration-requests', [RegistrationRequestController::class, 'index']);
+Route::post('/registration-requests', [RegistrationRequestController::class, 'store']);
+Route::put('/registration-requests/{id}/approve', [RegistrationRequestController::class, 'approve']);
+Route::put('/registration-requests/{id}/reject', [RegistrationRequestController::class, 'reject']);
 
 
 /*
@@ -135,5 +143,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // TELEGRAM (Rutas protegidas para el usuario autenticado en la Web)
     Route::get('/telegram/connect-link', [TelegramAuthController::class, 'getConnectLink']);
     Route::post('/telegram/disconnect', [TelegramAuthController::class, 'disconnect']);
+
+    // METABASE DASHBOARD EMBED
+    Route::get('/bi/dashboard-url', [BiController::class, 'getDashboardUrl']);
+
+    // RUTAS DE PRUEBA / DEBUG
+    Route::post('/registration-requests/{id}/approve', [RegistrationRequestController::class, 'approve']);
+    Route::post('/registration-requests/{id}/reject', [RegistrationRequestController::class, 'reject']);
+
+    // RUTA PARA CAMBIO DE CONTRASEÑA (PRIMER INGRESO)
+    Route::post('/change-password', [AuthController::class, 'changePassword']);
 
 });

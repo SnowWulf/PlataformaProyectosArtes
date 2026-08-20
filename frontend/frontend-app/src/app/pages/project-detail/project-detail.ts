@@ -47,12 +47,15 @@ import { ProjectAiChatbotComponent } from '../../components/project-ai-chatbot/p
   styleUrl: './project-detail.scss'
 })
 export class ProjectDetail {
+  ultimaLecturaChat: Date = new Date(0);
+
   deliveries: ProjectDelivery[] = [];
   mostrarFormularioDocumento = false;
   documents: Document[] = [];
   documentoSeleccionado: Document | null = null;
   
   private route = inject(ActivatedRoute);
+  private intervalId: any;
   projectId: number | null = null;
   project: Project | null = null;
 
@@ -92,6 +95,22 @@ export class ProjectDetail {
 
   @ViewChild('chatMessages') chatMessages!: ElementRef;
 
+  ngOnInit(): void {
+  // Polling para refrescar chat cada 5 segundos si estás en la pantalla
+  this.intervalId = setInterval(() => {
+    if (this.projectId) {
+      this.cargarMensajes();
+    }
+  }, 5000);
+}
+
+ngOnDestroy(): void {
+  // Limpiar el intervalo al salir del componente
+  if (this.intervalId) {
+    clearInterval(this.intervalId);
+  }
+}
+
   constructor(
     private projectService: ProjectService,
     private documentService: DocumentService,
@@ -99,8 +118,11 @@ export class ProjectDetail {
     private cdr: ChangeDetectorRef,
     public auth: Auth,
     private deliveryService: ProjectDeliveryService,
-    private submissionService: DeliverySubmissionService
+    private submissionService: DeliverySubmissionService,
+    
   ) {
+    
+
     this.projectId = Number(this.route.snapshot.paramMap.get('id'));
 
     afterNextRender(() => {
@@ -113,8 +135,16 @@ export class ProjectDetail {
   // CARGA DE PROYECTO Y ACTIVIDAD
   // ==========================================
 
+    obtenerUltimaLectura(): Date {
+  if (!this.projectId) return new Date(0);
+  const guardado = localStorage.getItem(`chat_last_read_project_${this.projectId}`);
+  return guardado ? new Date(guardado) : new Date(0); // Si es la primera vez, evaluará mensajes previos no leídos
+}
+
   cargarProyecto(): void {
     if (!this.projectId) return;
+
+
 
     this.projectService.getProject(this.projectId).subscribe({
       next: (project) => {
@@ -126,6 +156,8 @@ export class ProjectDetail {
       },
       error: (error) => console.error('Error al cargar proyecto:', error)
     });
+
+
   }
 
   cargarActividad(): void {
@@ -316,18 +348,33 @@ export class ProjectDetail {
   // ==========================================
   // CHAT DEL PROYECTO (HUMANO) - OPTIMISTA (0ms)
   // ==========================================
+mensajesNoLeidos = 0;
+cargarMensajes(): void {
+  if (!this.project?.id) return;
 
-  cargarMensajes(): void {
-    if (!this.project?.id) return;
+  this.projectService.getMessages(this.project.id).subscribe({
+    next: (data) => {
+      this.mensajes = data || [];
 
-    this.projectService.getMessages(this.project.id).subscribe({
-      next: (data) => {
-        this.mensajes = data || [];
-        this.scrollAlFinal();
-      },
-      error: (err) => console.error('Error cargando mensajes:', err)
-    });
-  }
+      // Si el chat está CERRADO al cargar la vista
+      if (!this.chatAbierto) {
+        const usuarioActual = this.auth.obtenerUsuario();
+        const fechaUltimaLectura = this.obtenerUltimaLectura();
+
+        // Contamos solo mensajes de OTROS usuarios creados DESPUÉS de la última vez que se abrió el chat
+        this.mensajesNoLeidos = this.mensajes.filter((m) => {
+          const esDeOtro = m.user?.id !== usuarioActual?.id;
+          const fechaMensaje = new Date(m.created_at);
+          return esDeOtro && fechaMensaje > fechaUltimaLectura;
+        }).length;
+      }
+
+      this.scrollAlFinal();
+      this.cdr.detectChanges();
+    },
+    error: (err) => console.error('Error cargando mensajes:', err)
+  });
+}
 
   /**
    * Envía el mensaje con respuesta optimista (aparece al instante en pantalla)
@@ -370,14 +417,46 @@ export class ProjectDetail {
     });
   }
 
-  toggleChat(): void {
-    this.chatAbierto = !this.chatAbierto;
-    
-    if (this.chatAbierto) {
-      this.cdr.detectChanges();
+
+toggleChat(): void {
+  this.chatAbierto = !this.chatAbierto;
+
+  if (this.chatAbierto) {
+    this.mensajesNoLeidos = 0; // Reiniciamos contador
+
+    // Guardamos la fecha/hora actual como la última lectura de este proyecto
+    if (this.projectId) {
+      localStorage.setItem(
+        `chat_last_read_project_${this.projectId}`,
+        new Date().toISOString()
+      );
+    }
+
+    this.scrollAlFinal();
+  }
+
+  this.cdr.detectChanges();
+}
+
+
+// Llama a este método cada vez que llegue un mensaje NUEVO en tiempo real
+recibirNuevoMensaje(mensajeNuevo: any): void {
+  const usuarioActual = this.auth.obtenerUsuario();
+
+  // Verificar que el mensaje sea de OTRO usuario
+  if (mensajeNuevo.user?.id !== usuarioActual?.id) {
+    if (!this.chatAbierto) {
+      // Si el chat está CERRADO, sumamos 1 a los mensajes del chat
+      this.mensajesNoLeidos++;
+    } else {
+      // Si está abierto, simplemente hacemos scroll
       this.scrollAlFinal();
     }
   }
+
+  this.mensajes.push(mensajeNuevo);
+  this.cdr.detectChanges();
+}
 
   esMismoAutor(index: number): boolean {
     if (index === 0 || !this.mensajes[index] || !this.mensajes[index - 1]) return false;
@@ -534,4 +613,6 @@ export class ProjectDetail {
       }
     });
   }
+
+  
 }

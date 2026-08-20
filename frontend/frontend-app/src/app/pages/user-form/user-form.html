@@ -1,228 +1,172 @@
 <h2>
-
     {{ usuario ? 'Editar Usuario' : 'Crear Usuario' }}
-
 </h2>
+
 <form
     [formGroup]="form"
     (ngSubmit)="guardar()">
     
-
     <div>
-
         <label>
-
             Nombre
-
         </label>
-
         <input
             type="text"
             formControlName="name">
 
         @if(form.get('name')?.invalid && form.get('name')?.touched){
-
             <small class="error">
-
                 El nombre es obligatorio.
-
             </small>
-
         }
-
     </div>
 
     <br>
 
     <div>
-
         <label>
-
             Correo electrónico
-
         </label>
-
         <input
             type="email"
             formControlName="email">
 
         @if(form.get('email')?.hasError('required') && form.get('email')?.touched){
-
             <small class="error">
-
                 El correo es obligatorio.
-
             </small>
-
         }
 
         @if(form.get('email')?.hasError('email') && form.get('email')?.touched){
-
             <small class="error">
-
                 Debe ingresar un correo válido.
-
             </small>
-
         }
-
     </div>
 
     <br>
 
     <div>
-
         <label>
-
             Contraseña
-
             @if(usuario){
-
                 <small>(Opcional)</small>
-
             }
-
         </label>
-
         <input
             type="password"
             formControlName="password">
 
         @if(form.get('password')?.hasError('required') && form.get('password')?.touched){
-
             <small class="error">
-
                 La contraseña es obligatoria.
-
             </small>
-
         }
 
         @if(form.get('password')?.hasError('minlength') && form.get('password')?.touched){
-
             <small class="error">
-
                 Debe tener mínimo 6 caracteres.
-
             </small>
-
         }
-
     </div>
 
     <br>
 
-<div>
+    <!-- NUEVO CAMPO: CONFIRMAR CONTRASEÑA -->
+    <div>
+        <label>
+            Confirmar Contraseña
+            @if(usuario){
+                <small>(Opcional)</small>
+            }
+        </label>
+        <input
+            type="password"
+            formControlName="confirm_password">
 
-    <label>
-
-        Rol
-
-    </label>
-
-    <select formControlName="role_id">
-
-        <option value="">
-
-            Seleccione un rol
-
-        </option>
-
-        @for (rol of roles; track rol.id) {
-
-            <option [value]="rol.id">
-
-                {{ rol.nombre }}
-
-            </option>
-
+        @if(form.get('confirm_password')?.hasError('required') && form.get('confirm_password')?.touched){
+            <small class="error">
+                Debe confirmar la contraseña.
+            </small>
         }
 
-    </select>
+        @if(form.get('confirm_password')?.hasError('minlength') && form.get('confirm_password')?.touched){
+            <small class="error">
+                Debe tener mínimo 6 caracteres.
+            </small>
+        }
 
-    @if(form.get('role_id')?.invalid && form.get('role_id')?.touched){
-
-        <small class="error">
-
-            Debe seleccionar un rol.
-
-        </small>
-
-    }
-
-</div>
-
-<br>
-
-@if (esEstudiante()) {
-
-<div>
-
-    <label>
-
-        Programa académico
-
-    </label>
-
-    <select formControlName="programa">
-
-        <option value="">
-
-            Seleccione un programa
-
-        </option>
-
-        <optgroup label="Pregrado">
-
-            @for (programa of programasPregrado; track programa) {
-
-                <option [value]="programa">
-
-                    {{ programa }}
-
-                </option>
-
-            }
-
-        </optgroup>
-
-        <optgroup label="Posgrado">
-
-            @for (programa of programasPosgrado; track programa) {
-
-                <option [value]="programa">
-
-                    {{ programa }}
-
-                </option>
-
-            }
-
-        </optgroup>
-
-    </select>
-
-</div>
-
-<br>
-
-}
+        @if(form.hasError('noCoinciden') && (form.get('confirm_password')?.touched || form.get('password')?.touched)){
+            <small class="error">
+                Las contraseñas no coinciden.
+            </small>
+        }
+    </div>
 
     <br>
 
-    <button
-        type="submit">
+    <div>
+        <label>
+            Rol
+        </label>
+        <select formControlName="role_id">
+            <option value="">
+                Seleccione un rol
+            </option>
+            @for (rol of roles; track rol.id) {
+                <option [value]="rol.id">
+                    {{ rol.nombre }}
+                </option>
+            }
+        </select>
 
+        @if(form.get('role_id')?.invalid && form.get('role_id')?.touched){
+            <small class="error">
+                Debe seleccionar un rol.
+            </small>
+        }
+    </div>
+
+    <br>
+
+    @if (esEstudiante()) {
+        <div>
+            <label>
+                Programa académico
+            </label>
+            <select formControlName="programa">
+                <option value="">
+                    Seleccione un programa
+                </option>
+                <optgroup label="Pregrado">
+                    @for (programa of programasPregrado; track programa) {
+                        <option [value]="programa">
+                            {{ programa }}
+                        </option>
+                    }
+                </optgroup>
+                <optgroup label="Posgrado">
+                    @for (programa of programasPosgrado; track programa) {
+                        <option [value]="programa">
+                            {{ programa }}
+                        </option>
+                    }
+                </optgroup>
+            </select>
+        </div>
+
+        <br>
+    }
+
+    <br>
+
+    <button type="submit">
         {{ usuario ? 'Actualizar' : 'Guardar' }}
-
     </button>
 
     <button
         type="button"
         (click)="cerrar.emit()">
-
         Cancelar
-
     </button>
-
 </form>

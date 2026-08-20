@@ -25,7 +25,8 @@ use Laravel\Sanctum\HasApiTokens;
     'bio',
     'foto',
     'mostrar_proyectos',
-    'mostrar_correo'
+    'mostrar_correo',
+    'require_password_change'
 ])]
 
 #[Hidden(['password', 'remember_token'])]
@@ -41,23 +42,26 @@ class User extends Authenticatable
      * @return array<string, string>
      */
     protected function casts(): array
-{
-    return [
+    {
+        return [
 
-        'email_verified_at' =>
-            'datetime',
+            'email_verified_at' =>
+                'datetime',
 
-        'password' =>
-            'hashed',
+            'password' =>
+                'hashed',
 
-        'mostrar_proyectos' =>
-            'boolean',
+            'mostrar_proyectos' =>
+                'boolean',
 
-        'mostrar_correo' =>
-            'boolean'
+            'mostrar_correo' =>
+                'boolean',
 
-    ];
-}
+            'require_password_change' =>
+                'boolean'
+
+        ];
+    }
 
     protected $appends = [
 
@@ -66,31 +70,31 @@ class User extends Authenticatable
     ];
     
     public function role(): BelongsTo
-	{
-   	 return $this->belongsTo(Role::class);
-	}
+    {
+        return $this->belongsTo(Role::class);
+    }
     public function projects(): HasMany
-	{
-	    return $this->hasMany(Project::class, 'owner_id');
-	}
+    {
+        return $this->hasMany(Project::class, 'owner_id');
+    }
     public function tutoredProjects(): HasMany
-        {
-	    return $this->hasMany(Project::class, 'tutor_id');
-        }
+    {
+        return $this->hasMany(Project::class, 'tutor_id');
+    }
 
     public function tutorRequestsSent()
     {
-    return $this->hasMany(
-        TutorRequest::class,
-        'student_id'
+        return $this->hasMany(
+            TutorRequest::class,
+            'student_id'
         );
     }
 
     public function tutorRequestsReceived()
     {
-    return $this->hasMany(
-        TutorRequest::class,
-        'tutor_id'
+        return $this->hasMany(
+            TutorRequest::class,
+            'tutor_id'
         );
     }
 
@@ -116,11 +120,11 @@ class User extends Authenticatable
 
     public function getFotoUrlAttribute()
     {
-    if (!$this->foto) {
+        if (!$this->foto) {
             return null;
         }
-            return asset(
-        'storage/' . $this->foto
+        return asset(
+            'storage/' . $this->foto
         );
     }
 
@@ -128,7 +132,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(
             ProjectDelivery::class,
-        'tutor_id'
+            'tutor_id'
         );
     }
 
@@ -141,6 +145,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(DeliverySubmission::class, 'student_id');
     }
+
     public function alertPreferences(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UserAlertPreference::class);

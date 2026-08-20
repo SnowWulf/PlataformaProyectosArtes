@@ -1,0 +1,65 @@
+.bi-container {
+  padding: 1.5rem;
+
+  .header {
+    margin-bottom: 1.5rem;
+    h2 {
+      margin: 0;
+      color: #1e293b;
+    }
+    p {
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .state-card {
+    padding: 2rem;
+    text-align: center;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+
+    &.error {
+      border-color: #fca5a5;
+      background-color: #fef2f2;
+      color: #991b1b;
+
+      button {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .iframe-wrapper {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+    iframe {
+      display: block;
+      border: none;
+      min-height: 750px;
+    }
+  }
+}
+
+.iframe-wrapper {
+  width: 100%;
+  min-height: 800px;
+  display: block;
+
+  iframe {
+    width: 100%;
+    height: 800px;
+    border: none;
+    border-radius: 8px;
+  }
+}

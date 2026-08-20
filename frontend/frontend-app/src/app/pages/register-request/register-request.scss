@@ -1,0 +1,234 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f7f5;
+  padding: 20px;
+}
+
+.register-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 480px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 24px;
+
+  .icon-circle {
+    width: 56px;
+    height: 56px;
+    background-color: #e6f4ea;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+
+    svg {
+      width: 28px;
+      height: 28px;
+      stroke: #00933f;
+    }
+  }
+
+  h2 {
+    margin: 0 0 6px;
+    font-size: 1.5rem;
+    color: #1c2e22;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #5f7566;
+  }
+}
+
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334438;
+    margin-bottom: 6px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #c2d1c6;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #1c2e22;
+    background-color: #fafdfb;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #00933f;
+      box-shadow: 0 0 0 3px rgba(0, 147, 63, 0.15);
+      background-color: #ffffff;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background-color: #00933f;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #0a6d2f;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.btn-secondary {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: #5f7566;
+  border: 1px solid #c2d1c6;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: #f0f4f1;
+    color: #1c2e22;
+  }
+}
+
+/* Modal Emergente con Animación */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(28, 46, 34, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  h3 {
+    margin: 16px 0 8px;
+    font-size: 1.3rem;
+    color: #1c2e22;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #5f7566;
+    margin-bottom: 16px;
+  }
+
+  .redirect-notice {
+    font-size: 0.8rem;
+    color: #00933f;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+}
+
+/* Animación de Checkmark */
+.animated-icon {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+
+  .circle {
+    width: 64px;
+    height: 64px;
+    background-color: #e6f4ea;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #00933f;
+    font-weight: bold;
+    animation: popIn 0.4s ease-out forwards;
+  }
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 147, 63, 0.3); }
+  70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(0, 147, 63, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 147, 63, 0); }
+}

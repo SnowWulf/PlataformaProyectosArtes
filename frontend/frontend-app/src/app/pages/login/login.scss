@@ -271,3 +271,44 @@
       padding: 24px 20px;
     }
   }
+  /* Agrega esto al final de login.scss */
+
+.login-footer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #5f7566;
+  font-size: 0.9rem;
+}
+
+.register-prompt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.92rem;
+}
+
+.btn-register-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #00933f;
+  font-weight: 700;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #0a6d2f;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #00933f;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}

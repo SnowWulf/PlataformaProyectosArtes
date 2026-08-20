@@ -16,14 +16,29 @@ import { StudentHome } from './pages/student-home/student-home';
 import { TutorHome } from './pages/tutor-home/tutor-home';
 import { CoordinatorHome } from './pages/coordinator-home/coordinator-home';
 import { Profile } from './pages/profile/profile';
+import { CambiarPassword } from './pages/cambiar-password/cambiar-password';
+
 
 export const routes: Routes = [
-
-
 
   {
     path: 'login',
     component: Login
+  },
+
+  // RUTA PÚBLICA / OBLIGATORIA (Fuera del Dashboard)
+  {
+    path: 'cambiar-password',
+    component: CambiarPassword
+  },
+
+  // RUTA PÚBLICA DE SOLICITUD DE REGISTRO
+  {
+    path: 'register-request',
+    loadComponent: () =>
+      import('./pages/register-request/register-request').then(
+        m => m.RegisterRequestComponent
+      )
   },
 
   {
@@ -86,18 +101,21 @@ export const routes: Routes = [
           role: 'Tutor'
         }
       },
+
       {
         path: 'community',
         loadComponent: () =>
           import('./pages/community/community')
             .then(m => m.Community)
       },
+
       {
         path: 'community/profile/:id',
         loadComponent: () =>
           import('./pages/community-profile/community-profile')
             .then(m => m.CommunityProfile)
       },
+
       {
         path: 'requests',
         loadComponent: () =>
@@ -107,23 +125,25 @@ export const routes: Routes = [
             m => m.CollaborationRequests
           )
       },
+
       {
         path: 'profile',
         component: Profile
       },
-      // ✅ CORRECTO
-{
-  path: 'tools',
-  loadComponent: () => import('./pages/tools/tools').then(m => m.ToolsComponent)
-},
+
+      {
+        path: 'tools',
+        loadComponent: () =>
+          import('./pages/tools/tools').then(m => m.ToolsComponent)
+      },
+
       {
         path: 'tools/calendar',
-          loadComponent: () =>
+        loadComponent: () =>
           import('./pages/calendar/calendar')
-          .then(
-          m => m.Calendar
-        )
-      },
+            .then(m => m.Calendar)
+      }
+
     ]
 
   },

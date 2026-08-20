@@ -1,439 +1,399 @@
+// Variables locales de diseño
+$primary: #2563eb;
+$primary-hover: #1d4ed8;
+$primary-light: #eff6ff;
+$text-main: #0f172a;
+$text-muted: #64748b;
+$border-color: #e2e8f0;
+$radius: 16px;
+$shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+
 .users-container {
-
   padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
 
+  // --- HEADER DE LA VISTA ---
+  .users-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+
+    h1 {
+      margin: 0;
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: $text-main;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 6px 0 0;
+      color: $text-muted;
+      font-size: 0.95rem;
+    }
+  }
+
+  // --- BARRA DE PESTAÑAS (TABS) ---
+  .tabs-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid $border-color;
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 12px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: $text-muted;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: -2px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: $text-main;
+      }
+
+      &.active {
+        color: $primary;
+        border-bottom-color: $primary;
+      }
+
+      .badge-pending {
+        background-color: #ef4444;
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+    }
+  }
+
+  // --- TARJETAS DE ESTADÍSTICAS ---
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+
+    .stat-card {
+      background: #ffffff;
+      border-radius: $radius;
+      padding: 20px;
+      text-align: center;
+      box-shadow: $shadow;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+      }
+
+      &.activa {
+        border-color: $primary;
+        background: $primary-light;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        color: $primary;
+      }
+
+      p {
+        margin: 6px 0 0;
+        color: $text-muted;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  // --- ÁREA DE BÚSQUEDA Y FILTROS ---
+  .search-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+
+    .search-box {
+      margin-bottom: 0;
+
+      input {
+        width: 320px;
+        padding: 10px 16px;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:focus {
+          border-color: $primary;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+      }
+    }
+
+    .program-filter {
+      position: relative;
+
+      .btn-filter {
+        height: 42px;
+        padding: 0 14px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        border-radius: 12px;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+
+        &:hover {
+          background: #f8fafc;
+          border-color: #94a3b8;
+        }
+      }
+
+      .program-list {
+        position: absolute;
+        top: 48px;
+        left: 0;
+        width: 230px;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 8px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border: 1px solid $border-color;
+        z-index: 100;
+
+        .program-item {
+          width: 100%;
+          text-align: left;
+          padding: 10px 12px;
+          border: none;
+          background: transparent;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 0.875rem;
+          color: $text-main;
+          transition: background-color 0.15s ease;
+
+          &:hover {
+            background: #f1f5f9;
+          }
+
+          &.active {
+            background: $primary-light;
+            color: $primary;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+
+  // --- TABLAS Y CONTENEDOR ---
+  .table-container {
+    background: #ffffff;
+    border-radius: $radius;
+    overflow: hidden;
+    box-shadow: $shadow;
+    border: 1px solid $border-color;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        background: #f8fafc;
+
+        th {
+          text-align: left;
+          padding: 14px 20px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: $text-muted;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          border-bottom: 1px solid $border-color;
+        }
+      }
+
+      tbody {
+        tr {
+          transition: background-color 0.15s ease;
+
+          &:hover {
+            background: #f8fafc;
+          }
+
+          td {
+            padding: 16px 20px;
+            border-top: 1px solid $border-color;
+            font-size: 0.925rem;
+            color: $text-main;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
+
+  // --- BADGES Y ETIQUETAS DE ROL ---
+  .role-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    &.role-estudiante {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    &.role-tutor {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    &.role-coordinador {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    &.role-pending {
+      background: #fef3c7;
+      color: #d97706;
+    }
+  }
+
+  // --- ACCIONES Y BOTONES ---
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: $primary;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+
+    &:hover {
+      background: $primary-hover;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .btn-edit {
+    background: #f59e0b;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: #d97706;
+    }
+  }
+
+  .btn-delete {
+    background: #ef4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: #dc2626;
+    }
+  }
+
+  .btn-approve {
+    background-color: #10b981;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #059669;
+    }
+  }
+
+  .btn-reject {
+    background-color: #ef4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #dc2626;
+    }
+  }
 }
 
-.users-header {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  margin-bottom: 24px;
-
-}
-
-.users-header h1 {
-
-  margin: 0;
-
-  font-size: 2rem;
-
-}
-
-.users-header p {
-
-  margin-top: 6px;
-
-  color: #64748b;
-
-}
-
-.btn-primary {
-
-  background: #2563eb;
-
-  color: white;
-
-  border: none;
-
-  border-radius: 12px;
-
-  padding: 12px 20px;
-
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition: .2s;
-
-}
-
-.btn-primary:hover {
-
-  background: #1d4ed8;
-
-}
-
-.stats-grid {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(
-      auto-fit,
-      minmax(180px, 1fr)
-    );
-
-  gap: 16px;
-
-  margin-bottom: 24px;
-
-}
-
-.stat-card {
-
-  background: white;
-
-  border-radius: 16px;
-
-  padding: 20px;
-
-  text-align: center;
-
-  box-shadow:
-    0 2px 10px rgba(0,0,0,.08);
-
-}
-
-.stat-card h3 {
-
-  margin: 0;
-
-  font-size: 2rem;
-
-  color: #2563eb;
-
-}
-
-.stat-card p {
-
-  margin-top: 8px;
-
-  color: #64748b;
-
-}
-
-.search-box {
-
-  margin-bottom: 24px;
-
-}
-
-.search-box input {
-
-    width: 300px;
-
-  padding: 12px 16px;
-
-  border: 1px solid #cbd5e1;
-
-  border-radius: 12px;
-
-  font-size: 14px;
-
-}
-
-.table-container {
-
-  background: white;
-
-  border-radius: 16px;
-
-  overflow: hidden;
-
-  box-shadow:
-    0 2px 10px rgba(0,0,0,.08);
-
-}
-
-table {
-
-  width: 100%;
-
-  border-collapse: collapse;
-
-}
-
-thead {
-
-  background: #f8fafc;
-
-}
-
-th {
-
-  text-align: left;
-
-  padding: 16px;
-
-  font-size: .9rem;
-
-  color: #475569;
-
-}
-
-td {
-
-  padding: 16px;
-
-  border-top: 1px solid #e2e8f0;
-
-}
-
-tr:hover {
-
-  background: #f8fafc;
-
-}
-
-.role-badge {
-
-  display: inline-block;
-
-  padding: 6px 12px;
-
-  border-radius: 999px;
-
-  font-size: .85rem;
-
-  font-weight: 600;
-
-}
-
-.role-estudiante {
-
-  background: #dbeafe;
-
-  color: #1d4ed8;
-
-}
-
-.role-tutor {
-
-  background: #dcfce7;
-
-  color: #166534;
-
-}
-
-.role-coordinador {
-
-  background: #ede9fe;
-
-  color: #6d28d9;
-
-}
-
-.action-buttons {
-
-  display: flex;
-
-  gap: 10px;
-
-}
-
-.btn-edit {
-
-  background: #f59e0b;
-
-  color: white;
-
-  border: none;
-
-  border-radius: 10px;
-
-  padding: 8px 12px;
-
-  cursor: pointer;
-
-}
-
-.btn-edit:hover {
-
-  background: #d97706;
-
-}
-
-.btn-delete {
-
-  background: #ef4444;
-
-  color: white;
-
-  border: none;
-
-  border-radius: 10px;
-
-  padding: 8px 12px;
-
-  cursor: pointer;
-
-}
-
-.btn-delete:hover {
-
-  background: #dc2626;
-
-}
-
+// --- VENTANAS MODALES ---
 .modal-backdrop {
-
   position: fixed;
-
   inset: 0;
-
-  background: rgba(0,0,0,.5);
-
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
-
   justify-content: center;
-
   align-items: center;
-
   z-index: 1000;
-
 }
 
 .modal {
-
-  background: white;
-
-  border-radius: 16px;
-
-  padding: 24px;
-
-  max-width: 700px;
-
+  background: #ffffff;
+  border-radius: $radius;
+  padding: 28px;
+  max-width: 650px;
   width: 90%;
-
   max-height: 90vh;
-
   overflow-y: auto;
-
-}
-
-.stat-card {
-
-  cursor: pointer;
-
-  transition: .2s;
-
-}
-
-.stat-card:hover {
-
-  transform: translateY(-2px);
-
-}
-
-.stat-card.activa {
-
-  border: 2px solid #2563eb;
-
-  background: #eff6ff;
-
-}
-.search-area {
-
-  display: flex;
-
-  align-items: flex-start;
-
-  gap: 10px;
-
-  margin-bottom: 24px;
-
-}
-
-
-.program-filter {
-
-  position: relative;
-
-}
-
-
-.btn-filter {
-
-
-  border: 1px solid #cbd5e1;
-
-  background: white;
-
-  border-radius: 12px;
-
-  font-size: 18px;
-
-  cursor: pointer;
-
-  transition: .2s;
-
-}
-
-
-.btn-filter:hover {
-
-  background: #f8fafc;
-
-}
-
-
-
-.program-list {
-
-  position: absolute;
-
-  top: 48px;
-
-  left: 0;
-
-  width: 220px;
-
-  background: white;
-
-  border-radius: 12px;
-
-  padding: 8px;
-
-  box-shadow:
-    0 2px 10px rgba(0,0,0,.12);
-
-  z-index: 100;
-
-}
-
-
-
-.program-item {
-
-  width: 100%;
-
-  text-align: left;
-
-  padding: 10px 12px;
-
-  border: none;
-
-  background: transparent;
-
-  border-radius: 8px;
-
-  cursor: pointer;
-
-  font-size: 14px;
-
-}
-
-
-
-.program-item:hover {
-
-  background: #f1f5f9;
-
-}
-
-
-
-.program-item.active {
-
-  background: #eff6ff;
-
-  color: #2563eb;
-
-  font-weight: 600;
-
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }

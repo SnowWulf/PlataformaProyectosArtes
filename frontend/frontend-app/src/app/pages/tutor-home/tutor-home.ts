@@ -122,7 +122,7 @@ export class TutorHome implements OnInit {
               project =>
 
                 project.tutor_id ===
-                usuario.id
+                usuario?.id
             );
 
 

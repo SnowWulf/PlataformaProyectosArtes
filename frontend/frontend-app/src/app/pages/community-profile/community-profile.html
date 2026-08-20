@@ -27,41 +27,43 @@
         </p>
       }
 
-      <!-- ACCIONES DE INTERACCIÓN -->
-      <div class="header-actions">
-        @if (misProyectos.length > 0) {
-          <button 
-            class="btn-secondary-sm"
-            (click)="mostrarSelectorProyecto = !mostrarSelectorProyecto">
-            📨 Invitar a un proyecto
-          </button>
-        }
+      <!-- ACCIONES DE INTERACCIÓN (Solo si NO es mi propio perfil) -->
+      @if (!esPropioPerfil) {
+        <div class="header-actions">
+          @if (misProyectos.length > 0) {
+            <button 
+              class="btn-secondary-sm"
+              (click)="mostrarSelectorProyecto = !mostrarSelectorProyecto">
+              📨 Invitar a un proyecto
+            </button>
+          }
 
-        @if (esTutor) {
-          <button
-            class="btn-primary-sm"
-            (click)="mostrarModalTutoria = true">
-            🎓 Solicitar tutoría
-          </button>
-        }
-      </div>
-
-      <!-- DESPLEGABLE DE INVITACIÓN RÁPIDA -->
-      @if (mostrarSelectorProyecto) {
-        <div class="inline-invite-box">
-          <select [(ngModel)]="proyectoSeleccionado">
-            <option [ngValue]="null">Selecciona uno de tus proyectos...</option>
-            @for (proyecto of misProyectos; track proyecto.id) {
-              <option [ngValue]="proyecto.id">{{ proyecto.titulo }}</option>
-            }
-          </select>
-          <button
-            class="btn-primary-sm"
-            [disabled]="!proyectoSeleccionado"
-            (click)="invitarAProyecto()">
-            Enviar
-          </button>
+          @if (esTutor) {
+            <button
+              class="btn-primary-sm"
+              (click)="mostrarModalTutoria = true">
+              🎓 Solicitar tutoría
+            </button>
+          }
         </div>
+
+        <!-- DESPLEGABLE DE INVITACIÓN RÁPIDA -->
+        @if (mostrarSelectorProyecto) {
+          <div class="inline-invite-box">
+            <select [(ngModel)]="proyectoSeleccionado">
+              <option [ngValue]="null">Selecciona uno de tus proyectos...</option>
+              @for (proyecto of misProyectos; track proyecto.id) {
+                <option [ngValue]="proyecto.id">{{ proyecto.titulo }}</option>
+              }
+            </select>
+            <button
+              class="btn-primary-sm"
+              [disabled]="!proyectoSeleccionado"
+              (click)="invitarAProyecto()">
+              Enviar
+            </button>
+          </div>
+        }
       }
     </div>
   </header>
@@ -105,11 +107,14 @@
 
             <p class="project-type">{{ proyecto.tipo_proyecto }}</p>
 
-            <button
-              class="btn-primary-sm"
-              (click)="solicitarColaboracion(proyecto.id)">
-              Solicitar colaboración
-            </button>
+            <!-- Ocultamos el botón de solicitar colaboración si es el propio perfil -->
+            @if (!esPropioPerfil) {
+              <button
+                class="btn-primary-sm"
+                (click)="solicitarColaboracion(proyecto.id)">
+                Solicitar colaboración
+              </button>
+            }
           </div>
         }
       </div>
@@ -121,7 +126,7 @@
   </section>
 
   <!-- MODAL DE TUTORÍA -->
-  @if (mostrarModalTutoria) {
+  @if (mostrarModalTutoria && !esPropioPerfil) {
     <div class="modal-backdrop" (click)="mostrarModalTutoria = false">
       <div class="modal" (click)="$event.stopPropagation()">
         <h3>Solicitar Tutoría</h3>

@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 // Componentes
-import { TelegramConnectComponent } from '../../components/telegram-connect/telegram-connect'; 
+import { TelegramConnectComponent } from '../../components/telegram-connect/telegram-connect';
 import { SidebarPanelComponent } from '../../components/sidebar-panel.component/sidebar-panel.component';
+import { BiDashboardComponent } from '../../components/bi-dashboard.component/bi-dashboard.component';
 
 // Modelos y Servicios
 import { CalendarEvent, QuickNote } from '../../models/calendar-event';
@@ -18,10 +19,11 @@ import { CalendarEventService } from '../../services/calendar-event-service';
   styleUrl: './tools.scss',
   imports: [
     CommonModule,
-    RouterLink, 
+    RouterLink,
     FormsModule,
     TelegramConnectComponent,
-    SidebarPanelComponent
+    SidebarPanelComponent,
+    BiDashboardComponent
   ],
 })
 export class ToolsComponent implements OnInit {
@@ -32,8 +34,14 @@ export class ToolsComponent implements OnInit {
   // Control de visibilidad del modal flotante de Telegram
   mostrarModalTelegram: boolean = false;
 
-  // 📋 Control de visibilidad del panel desplegable de Tareas y Notas
+  // Control de visibilidad del panel desplegable de Tareas y Notas
   mostrarTareasNotas: boolean = false;
+
+  // Control de visibilidad del modal de Analítica BI
+  mostrarModalBi: boolean = false;
+
+  // Rol del usuario actual
+  esCoordinador: boolean = false;
 
   // Estado global de las alertas
   alertasGlobalesActivas: boolean = true;
@@ -50,12 +58,32 @@ export class ToolsComponent implements OnInit {
   eventos: CalendarEvent[] = [];
   notas: QuickNote[] = [];
 
-  constructor(private calendarService: CalendarEventService) {}
+  constructor(private calendarService: CalendarEventService) { }
 
   ngOnInit(): void {
+    this.verificarRolUsuario();
     this.cargarConfiguracionAlertas();
     this.cargarEventos();
     this.cargarNotas();
+  }
+
+  // --- Verificar si el usuario es Coordinador ---
+  verificarRolUsuario(): void {
+    const userJson = localStorage.getItem('user') || localStorage.getItem('usuario');
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson);
+
+        // Accede a user.role.nombre (que es como viene de Laravel) o fallback a otros formatos
+        const nombreRol = user.role?.nombre || user.rol?.nombre || user.role || user.rol || '';
+
+        this.esCoordinador = String(nombreRol).toLowerCase() === 'coordinador';
+        console.log('¿Es coordinador?:', this.esCoordinador);
+      } catch (e) {
+        console.error('Error parseando datos de usuario:', e);
+        this.esCoordinador = false;
+      }
+    }
   }
 
   // Métodos para controlar el Modal Flotante de Telegram
@@ -67,11 +95,21 @@ export class ToolsComponent implements OnInit {
     this.mostrarModalTelegram = false;
   }
 
+  // Métodos para controlar el Modal Flotante de Analítica BI
+  togglePanelBi(): void {
+    this.mostrarModalBi = !this.mostrarModalBi;
+    if (this.mostrarModalBi) {
+      this.mostrarConfiguracionAlertas = false;
+      this.mostrarTareasNotas = false;
+    }
+  }
+
   // Alternar paneles (cierra el otro para evitar amontonar la vista)
   togglePanelAlertas(): void {
     this.mostrarConfiguracionAlertas = !this.mostrarConfiguracionAlertas;
     if (this.mostrarConfiguracionAlertas) {
       this.mostrarTareasNotas = false;
+      this.mostrarModalBi = false;
     }
   }
 
@@ -79,6 +117,7 @@ export class ToolsComponent implements OnInit {
     this.mostrarTareasNotas = !this.mostrarTareasNotas;
     if (this.mostrarTareasNotas) {
       this.mostrarConfiguracionAlertas = false;
+      this.mostrarModalBi = false;
     }
   }
 
@@ -88,7 +127,7 @@ export class ToolsComponent implements OnInit {
       global: this.alertasGlobalesActivas,
       detalles: this.configuracionAlertas
     };
-    
+
     localStorage.setItem('user_alerts_config', JSON.stringify(estadoAlertas));
   }
 
@@ -140,15 +179,13 @@ export class ToolsComponent implements OnInit {
   }
 
   onNewTaskCreated(newTaskData: Partial<CalendarEvent>): void {
-    // 1. Validar y forzar un tipo aceptado por la validación del backend Laravel
     const tiposPermitidos = ['personal', 'academico', 'trabajo', 'otro'];
     let tipoValido = newTaskData.tipo;
 
     if (!tipoValido || !tiposPermitidos.includes(tipoValido)) {
-      tipoValido = 'personal'; // Valor predeterminado seguro
+      tipoValido = 'personal';
     }
 
-    // 2. Formatear fecha para compatibilidad con la base de datos (YYYY-MM-DD HH:mm:ss)
     const fechaHoy = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
     const newEvent: CalendarEvent = {
@@ -170,9 +207,6 @@ export class ToolsComponent implements OnInit {
       },
       error: err => {
         console.error('Error al crear tarea desde herramientas:', err);
-        if (err.error && err.error.errors) {
-          console.error('Detalles del error de validación de Laravel:', err.error.errors);
-        }
       }
     });
   }

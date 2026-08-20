@@ -415,3 +415,43 @@
     transform: scale(1) translateY(0);
   }
 }
+
+
+/* Estilos para la tarjeta de Administración / Coordinador */
+.admin-card {
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: linear-gradient(135deg, rgba(238, 242, 255, 0.6) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+.admin-tag {
+  background-color: #6366f1 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+.btn-admin {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #4338ca;
+    transform: translateY(-1px);
+  }
+}
+
+/* Modal extra ancho para el Dashboard de Metabase */
+.modal-dialog.modal-xlarge {
+  max-width: 1200px;
+  width: 95%;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+
+  .modal-body {
+    flex: 1;
+    overflow-y: auto;
+  }
+}

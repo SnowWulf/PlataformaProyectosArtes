@@ -24,4 +24,6 @@ export interface User {
 
   mostrar_correo?: boolean;
 
+  require_password_change?: boolean; // <- Identifica si la clave es temporal
+
 }

@@ -52,7 +52,7 @@
       </button>
     </div>
 
-    <!-- HERRAMIENTA 4 (FUSIONADA): TAREAS Y NOTAS -->
+    <!-- HERRAMIENTA 4: TAREAS Y NOTAS -->
     <div class="tool-card feature-card">
       <div class="card-top">
         <div class="tool-icon">📝</div>
@@ -65,150 +65,182 @@
       </button>
     </div>
 
-  </div>
-
-  <!-- PANEL DESPLEGABLE: TAREAS Y NOTAS -->
-  <!-- MODAL FLOTANTE: TAREAS Y NOTAS -->
-@if (mostrarTareasNotas) {
-  <div class="modal-backdrop" (click)="togglePanelTareasNotas()">
-    <div class="modal-dialog modal-large" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <div class="modal-title">
-          <h3>📋 Panel de Tareas y Notas</h3>
-          <p>Organiza tus compromisos rápidos y redacta apuntes personales</p>
+    <!-- 📊 HERRAMIENTA 5: ANALÍTICA Y ESTADÍSTICAS (SÓLO PARA COORDINADORES) -->
+    @if (esCoordinador) {
+      <div class="tool-card feature-card admin-card">
+        <div class="card-top">
+          <div class="tool-icon">📊</div>
+          <span class="status-tag admin-tag">Administración</span>
         </div>
-        <button class="btn-close-modal" (click)="togglePanelTareasNotas()">✕</button>
-      </div>
-      <div class="modal-body">
-        <app-sidebar-panel
-          [events]="eventos"
-          [notes]="notas"
-          (taskStatusChanged)="onTaskStatusChanged($event)"
-          (newTaskCreated)="onNewTaskCreated($event)"
-          (newNoteCreated)="onNewNoteCreated($event)"
-          (noteDeleted)="onNoteDeleted($event)">
-        </app-sidebar-panel>
-      </div>
-    </div>
-  </div>
-}
-
-<!-- MODAL FLOTANTE: CONFIGURACIÓN DE ALERTAS -->
-@if (mostrarConfiguracionAlertas) {
-  <div class="modal-backdrop" (click)="togglePanelAlertas()">
-    <div class="modal-dialog" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <div class="modal-title">
-          <h3>🔔 Ajustes de Alertas Automáticas</h3>
-          <p>Personaliza las notificaciones del sistema</p>
-        </div>
-        <button class="btn-close-modal" (click)="togglePanelAlertas()">✕</button>
-      </div>
-      <div class="modal-body alerts-modal-content">
-        <div class="master-switch-card">
-          <div class="switch-info">
-            <span>Sistema de Alertas Global</span>
-            <p>Activa o desactiva todas las notificaciones del sistema</p>
-          </div>
-          <label class="switch-container">
-            <input 
-              type="checkbox" 
-              [(ngModel)]="alertasGlobalesActivas" 
-              (change)="guardarConfiguracionAlertas()"
-            />
-            <span class="slider"></span>
-          </label>
-        </div>
-
-        <div class="alerts-options-grid" [class.disabled-grid]="!alertasGlobalesActivas">
-          <div class="alert-option-item">
-            <div class="option-info">
-              <h4>⏳ Vencimientos próximos</h4>
-              <p>Aviso 3 días antes del límite</p>
-            </div>
-            <label class="switch-container">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="configuracionAlertas.vencimientos" 
-                [disabled]="!alertasGlobalesActivas"
-                (change)="guardarConfiguracionAlertas()"
-              />
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="alert-option-item">
-            <div class="option-info">
-              <h4>📄 Documentos pendientes</h4>
-              <p>Notificar cuando falten entregas</p>
-            </div>
-            <label class="switch-container">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="configuracionAlertas.documentosPendientes" 
-                [disabled]="!alertasGlobalesActivas"
-                (change)="guardarConfiguracionAlertas()"
-              />
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="alert-option-item">
-            <div class="option-info">
-              <h4>👩‍🏫 Solicitudes de Tutoría</h4>
-              <p>Cambios en estado de reunión</p>
-            </div>
-            <label class="switch-container">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="configuracionAlertas.solicitudesTutoria" 
-                [disabled]="!alertasGlobalesActivas"
-                (change)="guardarConfiguracionAlertas()"
-              />
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="alert-option-item">
-            <div class="option-info">
-              <h4>📧 Resumen semanal</h4>
-              <p>Boletín enviado los lunes</p>
-            </div>
-            <label class="switch-container">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="configuracionAlertas.resumenSemanal" 
-                [disabled]="!alertasGlobalesActivas"
-                (change)="guardarConfiguracionAlertas()"
-              />
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-}
-
-</div>
-
-<!-- MODAL FLOTANTE: VINCULACIÓN CON TELEGRAM -->
-@if (mostrarModalTelegram) {
-  <div class="modal-backdrop" (click)="cerrarModalTelegram()">
-    <div class="modal-dialog" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <div class="modal-title">
-          <h3>📱 Vinculación con Telegram</h3>
-          <p>Conecta tu dispositivo para recibir alertas push al instante</p>
-        </div>
-        <button class="btn-close-modal" (click)="cerrarModalTelegram()" title="Cerrar modal">
-          ✕
+        <h2>Analítica e Informes BI</h2>
+        <p>Estadísticas y métricas en tiempo real sobre el estado de proyectos de la facultad.</p>
+        <button class="btn-tool btn-admin" (click)="togglePanelBi()">
+          📈 {{ mostrarModalBi ? 'Cerrar panel' : 'Abrir Dashboard BI' }}
         </button>
       </div>
+    }
 
-      <div class="modal-body">
-        <app-telegram-connect></app-telegram-connect>
+  </div>
+
+  <!-- MODAL FLOTANTE: TAREAS Y NOTAS -->
+  @if (mostrarTareasNotas) {
+    <div class="modal-backdrop" (click)="togglePanelTareasNotas()">
+      <div class="modal-dialog modal-large" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-title">
+            <h3>📋 Panel de Tareas y Notas</h3>
+            <p>Organiza tus compromisos rápidos y redacta apuntes personales</p>
+          </div>
+          <button class="btn-close-modal" (click)="togglePanelTareasNotas()">✕</button>
+        </div>
+        <div class="modal-body">
+          <app-sidebar-panel
+            [events]="eventos"
+            [notes]="notas"
+            (taskStatusChanged)="onTaskStatusChanged($event)"
+            (newTaskCreated)="onNewTaskCreated($event)"
+            (newNoteCreated)="onNewNoteCreated($event)"
+            (noteDeleted)="onNoteDeleted($event)">
+          </app-sidebar-panel>
+        </div>
       </div>
     </div>
-  </div>
-}
+  }
+
+  <!-- MODAL FLOTANTE: CONFIGURACIÓN DE ALERTAS -->
+  @if (mostrarConfiguracionAlertas) {
+    <div class="modal-backdrop" (click)="togglePanelAlertas()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-title">
+            <h3>🔔 Ajustes de Alertas Automáticas</h3>
+            <p>Personaliza las notificaciones del sistema</p>
+          </div>
+          <button class="btn-close-modal" (click)="togglePanelAlertas()">✕</button>
+        </div>
+        <div class="modal-body alerts-modal-content">
+          <div class="master-switch-card">
+            <div class="switch-info">
+              <span>Sistema de Alertas Global</span>
+              <p>Activa o desactiva todas las notificaciones del sistema</p>
+            </div>
+            <label class="switch-container">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="alertasGlobalesActivas" 
+                (change)="guardarConfiguracionAlertas()"
+              />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="alerts-options-grid" [class.disabled-grid]="!alertasGlobalesActivas">
+            <div class="alert-option-item">
+              <div class="option-info">
+                <h4>⏳ Vencimientos próximos</h4>
+                <p>Aviso 3 días antes del límite</p>
+              </div>
+              <label class="switch-container">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="configuracionAlertas.vencimientos" 
+                  [disabled]="!alertasGlobalesActivas"
+                  (change)="guardarConfiguracionAlertas()"
+                />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="alert-option-item">
+              <div class="option-info">
+                <h4>📄 Documentos pendientes</h4>
+                <p>Notificar cuando falten entregas</p>
+              </div>
+              <label class="switch-container">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="configuracionAlertas.documentosPendientes" 
+                  [disabled]="!alertasGlobalesActivas"
+                  (change)="guardarConfiguracionAlertas()"
+                />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="alert-option-item">
+              <div class="option-info">
+                <h4>👩‍🏫 Solicitudes de Tutoría</h4>
+                <p>Cambios en estado de reunión</p>
+              </div>
+              <label class="switch-container">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="configuracionAlertas.solicitudesTutoria" 
+                  [disabled]="!alertasGlobalesActivas"
+                  (change)="guardarConfiguracionAlertas()"
+                />
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="alert-option-item">
+              <div class="option-info">
+                <h4>📧 Resumen semanal</h4>
+                <p>Boletín enviado los lunes</p>
+              </div>
+              <label class="switch-container">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="configuracionAlertas.resumenSemanal" 
+                  [disabled]="!alertasGlobalesActivas"
+                  (change)="guardarConfiguracionAlertas()"
+                />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- MODAL FLOTANTE: VINCULACIÓN CON TELEGRAM -->
+  @if (mostrarModalTelegram) {
+    <div class="modal-backdrop" (click)="cerrarModalTelegram()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-title">
+            <h3>📱 Vinculación con Telegram</h3>
+            <p>Conecta tu dispositivo para recibir alertas push al instante</p>
+          </div>
+          <button class="btn-close-modal" (click)="cerrarModalTelegram()" title="Cerrar modal">
+            ✕
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <app-telegram-connect></app-telegram-connect>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- 📊 MODAL FLOTANTE EXTRA-ANCHO: ANALÍTICA Y BI METABASE -->
+  @if (mostrarModalBi && esCoordinador) {
+    <div class="modal-backdrop" (click)="togglePanelBi()">
+      <div class="modal-dialog modal-xlarge" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-title">
+            <h3>📊 Dashboard de Analítica de Proyectos</h3>
+            <p>Métricas y visualizaciones interactivas de Metabase</p>
+          </div>
+          <button class="btn-close-modal" (click)="togglePanelBi()">✕</button>
+        </div>
+        <div class="modal-body p-0">
+          <app-bi-dashboard></app-bi-dashboard>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
