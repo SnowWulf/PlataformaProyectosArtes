@@ -1,38 +1,44 @@
 <div class="bell-container">
   <!-- Botón de la Campanita -->
-  <button (click)="toggleDropdown()" class="bell-button" type="button" aria-label="Notificaciones">
-    <svg class="bell-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 22px; height: 22px;">
+  <button (click)="toggleDropdown()" class="bell-button" [class.active]="isOpen" type="button" aria-label="Notificaciones">
+    <svg class="bell-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
     </svg>
 
     <!-- Badge Contador -->
     <span *ngIf="unreadCount > 0" class="badge">
-      {{ unreadCount }}
+      {{ unreadCount > 99 ? '99+' : unreadCount }}
     </span>
   </button>
 
   <!-- Desplegable -->
-  <div *ngIf="isOpen" class="dropdown">
+  <div *ngIf="isOpen" class="dropdown animate-fade-in">
     <div class="dropdown-header">
-      <span class="title">Notificaciones</span>
+      <div class="header-title">
+        <span class="title">Notificaciones</span>
+        <span *ngIf="unreadCount > 0" class="unread-count-pill">{{ unreadCount }} nuevas</span>
+      </div>
       <button *ngIf="notifications.length > 0" (click)="markAllAsRead()" class="mark-read-btn">
         Marcar todas leídas
       </button>
     </div>
 
-    <!-- Carga -->
+    <!-- Carga con Spinner -->
     <div *ngIf="loading" class="state-box">
+      <div class="spinner"></div>
       <p>Cargando notificaciones...</p>
     </div>
 
     <!-- Lista Vacía -->
     <div *ngIf="!loading && notifications.length === 0" class="state-box empty">
-      <p>🔔 No tienes notificaciones por el momento</p>
+      <div class="empty-icon">🔔</div>
+      <p class="empty-title">Sin notificaciones</p>
+      <p class="empty-sub">Estás al día con todas tus actividades</p>
     </div>
 
-    <!-- Lista -->
-    <div *ngIf="!loading && notifications.length > 0" class="notifications-list">
+    <!-- Lista de Notificaciones -->
+    <div *ngIf="!loading && notifications.length > 0" class="notifications-list custom-scroll">
       <div 
         *ngFor="let item of notifications" 
         (click)="onNotificationClick(item)"
@@ -40,17 +46,21 @@
         class="notification-item">
         
         <!-- Ícono por tipo de notificación -->
-        <div class="item-icon-wrapper">
-          <span *ngIf="item.tipo_clave === 'respuesta_tutoria' || item.tipo_clave === 'SOLICITUD_TUTORIA'" title="Tutoría">🎓</span>
-          <span *ngIf="item.tipo_clave === 'invitacion_proyecto' || item.tipo_clave === 'INVITACION_COLABORADOR'" title="Colaboración">🤝</span>
-          <span *ngIf="item.tipo_clave === 'alerta_vencimiento'" title="Alerta de Vencimiento">⏰</span>
+        <div class="item-icon-wrapper" [ngClass]="{
+          'tutoria': item.tipo_clave === 'respuesta_tutoria' || item.tipo_clave === 'SOLICITUD_TUTORIA',
+          'colaboracion': item.tipo_clave === 'invitacion_proyecto' || item.tipo_clave === 'INVITACION_COLABORADOR',
+          'alerta': item.tipo_clave === 'alerta_vencimiento'
+        }">
+          <span *ngIf="item.tipo_clave === 'respuesta_tutoria' || item.tipo_clave === 'SOLICITUD_TUTORIA'">🎓</span>
+          <span *ngIf="item.tipo_clave === 'invitacion_proyecto' || item.tipo_clave === 'INVITACION_COLABORADOR'">🤝</span>
+          <span *ngIf="item.tipo_clave === 'alerta_vencimiento'">⏰</span>
           <span *ngIf="!item.tipo_clave || (item.tipo_clave !== 'respuesta_tutoria' && item.tipo_clave !== 'SOLICITUD_TUTORIA' && item.tipo_clave !== 'invitacion_proyecto' && item.tipo_clave !== 'INVITACION_COLABORADOR' && item.tipo_clave !== 'alerta_vencimiento')">📩</span>
         </div>
 
         <div class="item-content">
           <h4 class="item-title">{{ item.title || item.titulo }}</h4>
           <p class="item-message">{{ item.mensaje }}</p>
-          <span class="item-date">{{ item.created_at | date:'short' }}</span>
+          <span class="item-date">{{ item.created_at | date:'mediumDate' }} • {{ item.created_at | date:'shortTime' }}</span>
         </div>
 
         <span *ngIf="!item.leida && !item.read_at" class="unread-dot"></span>

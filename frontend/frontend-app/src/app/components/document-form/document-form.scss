@@ -1,0 +1,459 @@
+// ==========================================================
+//  SUBIR DOCUMENTO (Ventana Modal) — Universidad de Nariño
+// ==========================================================
+
+// --- Paleta institucional ---
+$udenar-verde:        #006633; // Verde Sinople Oficial
+$udenar-verde-hover:  #004d26;
+$udenar-verde-soft:   #e6f0eb;
+
+$udenar-dorado:       #FFCC00; // Amarillo Gualda Oficial
+$udenar-dorado-dark:  #a37f00;
+
+// --- Neutros y superficies ---
+$bg-card:             #FFFFFF;
+$bg-soft:             #F7F9F8;
+
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
+
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
+
+// --- Tipografía ---
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// --- Radios y movimiento ---
+$radius-sm:    8px;
+$radius-md:    12px;
+$radius-full:  9999px;
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ==========================================================
+//  HOST Y BACKDROP MODAL
+// ==========================================================
+:host {
+  display: block;
+  font-family: $font-sans;
+  color: $text-main;
+  -webkit-font-smoothing: antialiased;
+
+  *, *::before, *::after { box-sizing: border-box; }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+  animation: backdropIn 0.3s ease-out both;
+}
+
+// ==========================================================
+//  ICONOS
+// ==========================================================
+.icon-sprite { display: none; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  display: block;
+
+  &.icon-xs { width: 13px; height: 13px; stroke-width: 2.3; }
+  &.icon-sm { width: 15px; height: 15px; }
+}
+
+// ==========================================================
+//  TARJETA MODAL
+// ==========================================================
+.upload-card {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  background: $bg-card;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: cardIn 0.35s $ease-out both;
+
+  // Franja dorada institucional
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: $udenar-dorado;
+    z-index: 2;
+  }
+}
+
+// ---------- Cabecera ----------
+.upload-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 1.35rem 1.4rem 1rem;
+  border-bottom: 1px solid $border-color;
+  position: relative;
+  animation: fadeUp 0.45s $ease-out 0.06s both;
+}
+
+.header-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: $radius-sm;
+  background: $udenar-verde-soft;
+  color: $udenar-verde;
+}
+
+.header-copy {
+  min-width: 0;
+  flex-grow: 1;
+
+  .header-eyebrow {
+    margin: 0;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: $udenar-dorado-dark;
+  }
+
+  h3 {
+    margin: 0.2rem 0 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: $text-main;
+  }
+
+  small {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: $text-muted;
+    text-wrap: pretty;
+  }
+}
+
+// Botón de cerrar de la esquina superior
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-full;
+  display: grid;
+  place-items: center;
+  color: $text-muted;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background: $bg-soft;
+    color: $text-main;
+  }
+}
+
+// ==========================================================
+//  FORMULARIO
+// ==========================================================
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.15rem 1.4rem 1.25rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  animation: fadeUp 0.45s $ease-out both;
+
+  &:nth-of-type(1) { animation-delay: 0.12s; }
+  &:nth-of-type(2) { animation-delay: 0.18s; }
+  &:nth-of-type(3) { animation-delay: 0.24s; }
+}
+
+.field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $text-main;
+    cursor: pointer;
+
+    .icon { color: $udenar-verde; }
+  }
+}
+
+.field-tag {
+  flex-shrink: 0;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $text-faint;
+
+  &--req {
+    padding: 0.12rem 0.4rem;
+    border-radius: $radius-full;
+    background: rgba(255, 204, 0, 0.18);
+    color: $udenar-dorado-dark;
+  }
+}
+
+// ---------- Campos de texto ----------
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-sm;
+  background: $bg-soft;
+  font-family: inherit;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: $text-main;
+  outline: none;
+  transition: border-color 0.2s $ease-out, background 0.2s $ease-out,
+              box-shadow 0.2s $ease-out;
+
+  &::placeholder { color: $text-faint; }
+
+  &:hover { border-color: $border-strong; }
+
+  &:focus {
+    background: $bg-card;
+    border-color: $udenar-verde;
+    box-shadow: 0 0 0 3px rgba(0, 102, 51, 0.12);
+  }
+}
+
+textarea {
+  min-height: 78px;
+  max-height: 180px;
+  resize: vertical;
+}
+
+// ---------- Selector de archivo ----------
+.file-drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px dashed $border-strong;
+  border-radius: $radius-sm;
+  background: $bg-soft;
+  cursor: pointer;
+  transition: border-color 0.2s $ease-out, background 0.2s $ease-out;
+
+  &:hover {
+    border-color: $udenar-verde;
+    background: $udenar-verde-soft;
+  }
+
+  &:focus-within {
+    border-color: $udenar-verde;
+    border-style: solid;
+    box-shadow: 0 0 0 3px rgba(0, 102, 51, 0.12);
+  }
+
+  input[type="file"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__icon {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    border-radius: $radius-sm;
+    background: $bg-card;
+    border: 1px solid $border-color;
+    color: $udenar-verde;
+  }
+
+  &__copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    strong {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: $text-main;
+    }
+
+    small {
+      margin-top: 0.1rem;
+      font-size: 0.72rem;
+      color: $text-muted;
+    }
+  }
+}
+
+// ==========================================================
+//  ACCIONES
+// ==========================================================
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.9rem 1.4rem;
+  border-top: 1px solid $border-color;
+  background: $bg-soft;
+  animation: fadeUp 0.45s $ease-out 0.3s both;
+}
+
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.58rem 1rem;
+  border-radius: $radius-sm;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s $ease-out, color 0.2s $ease-out,
+              border-color 0.2s $ease-out, transform 0.2s $ease-out,
+              box-shadow 0.2s $ease-out;
+
+  &:focus-visible {
+    outline: 2px solid $udenar-dorado-dark;
+    outline-offset: 2px;
+  }
+}
+
+.btn-primary {
+  border: none;
+  background: $udenar-verde;
+  color: #FFFFFF;
+
+  &:hover {
+    background: $udenar-verde-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px -8px rgba(0, 102, 51, 0.4);
+  }
+
+  &:active { transform: translateY(0); }
+
+  &:disabled {
+    background: $border-strong;
+    color: $text-faint;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.btn-ghost {
+  border: 1px solid $border-color;
+  background: $bg-card;
+  color: $text-muted;
+
+  &:hover {
+    border-color: $border-strong;
+    color: $text-main;
+  }
+
+  &:active { transform: translateY(1px); }
+}
+
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ==========================================================
+//  RESPONSIVE
+// ==========================================================
+@media (max-width: 480px) {
+  .modal-backdrop { padding: 0.5rem; align-items: flex-end; }
+  .upload-card { max-height: 90vh; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+  .upload-header { padding: 1.15rem 1rem 0.9rem; }
+  .form-body { padding: 1rem 1rem 1.1rem; }
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    padding: 0.9rem 1rem;
+  }
+
+  .btn-primary,
+  .btn-ghost { width: 100%; }
+}
+
+// ==========================================================
+//  ACCESIBILIDAD
+// ==========================================================
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

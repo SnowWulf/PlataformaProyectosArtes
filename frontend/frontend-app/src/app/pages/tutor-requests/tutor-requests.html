@@ -1,82 +1,182 @@
-<div class="requests-container">
+<!-- ==========================================================
+     SPRITE DE ICONOS (Feather style, 24x24, stroke)
+     ========================================================== -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="s-cap" viewBox="0 0 24 24">
+    <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+    <path d="M6 12v5c0 1 2.5 2.5 6 2.5s6-1.5 6-2.5v-5" />
+  </symbol>
+  <symbol id="s-book" viewBox="0 0 24 24">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+  </symbol>
+  <symbol id="s-user" viewBox="0 0 24 24">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </symbol>
+  <symbol id="s-mail" viewBox="0 0 24 24">
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+  </symbol>
+  <symbol id="s-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3.5 2" />
+  </symbol>
+  <symbol id="s-message" viewBox="0 0 24 24">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z" />
+  </symbol>
+  <symbol id="s-check" viewBox="0 0 24 24">
+    <path d="M20 6 9 17l-5-5" />
+  </symbol>
+  <symbol id="s-x" viewBox="0 0 24 24">
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
+  </symbol>
+  <symbol id="s-check-circle" viewBox="0 0 24 24">
+    <path d="M21.8 11.1V12a9.8 9.8 0 1 1-5.8-8.9" />
+    <path d="m9 11 3 3 10-10" />
+  </symbol>
+  <symbol id="s-inbox" viewBox="0 0 24 24">
+    <path d="M22 12h-6l-2 3h-4l-2-3H2" />
+    <path
+      d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z" />
+  </symbol>
+</svg>
 
-  <!-- Header / Encabezado -->
-  <header class="page-header">
-    <div class="header-info">
-      <h2>👩‍🏫 Solicitudes de Tutor</h2>
-      <p class="resumen-solicitudes">
-        Tienes <strong>{{ solicitudes.length }}</strong> {{ solicitudes.length === 1 ? 'solicitud pendiente' : 'solicitudes pendientes' }}.
-      </p>
+<div class="art-dashboard tutor-requests">
+
+  <!-- ==========================================================
+       1. HERO / CABECERA
+       ========================================================== -->
+  <header class="art-hero">
+    <div class="hero-main">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Facultad de Artes &middot; Panel del Tutor</span>
+        <h1 class="hero-title">Solicitudes de Tutoría</h1>
+        <p class="hero-subtitle">
+          Revisa y gestiona las solicitudes de acompañamiento enviadas por los estudiantes.
+        </p>
+      </div>
+
+      <div class="hero-summary" role="group" aria-label="Resumen de solicitudes">
+        <div class="summary-item">
+          <span class="summary-value" [class.is-alert]="solicitudes.length > 0">{{ solicitudes.length }}</span>
+          <span class="summary-label">{{ solicitudes.length === 1 ? 'Pendiente' : 'Pendientes' }}</span>
+        </div>
+      </div>
     </div>
   </header>
 
-  <!-- Lista Continua de Solicitudes -->
-  <div class="requests-list">
-    @for (solicitud of solicitudes; track solicitud.id) {
+  <!-- ==========================================================
+       2. SECCIÓN / LISTA DE SOLICITUDES
+       ========================================================== -->
+  <section class="content-section">
+    <div class="section-header">
+      <div class="section-heading">
+        <svg class="icon icon-md">
+          <use href="#s-inbox"></use>
+        </svg>
+        <div>
+          <h2>Bandeja de solicitudes</h2>
+          <p class="section-subtitle">Acepta o rechaza cada petición de tutoría</p>
+        </div>
+      </div>
+      <span class="section-count">{{ solicitudes.length }} registro(s)</span>
+    </div>
+
+    <div class="requests-list">
+      @for (solicitud of solicitudes; track solicitud.id) {
       <article class="solicitud-item">
-        
+
         <!-- Columna Izquierda: Información Principal -->
         <div class="item-main">
           <div class="item-header">
-            <h3>📚 {{ solicitud.project?.titulo || 'Proyecto sin título' }}</h3>
-            <span class="badge-pendiente">Pendiente</span>
+            <span class="title-icon" aria-hidden="true">
+              <svg class="icon icon-sm">
+                <use href="#s-book"></use>
+              </svg>
+            </span>
+            <h3>{{ solicitud.project?.titulo || 'Proyecto sin título' }}</h3>
+            <span class="status-pill status-pending">
+              <span class="status-dot" aria-hidden="true"></span>
+              Pendiente
+            </span>
           </div>
 
           <div class="item-details">
             <span class="detail-tag">
-              👤 <strong>Estudiante:</strong> {{ solicitud.student?.name || 'Estudiante sin nombre' }}
+              <svg class="icon icon-xs">
+                <use href="#s-user"></use>
+              </svg>
+              <strong>Estudiante:</strong> {{ solicitud.student?.name || 'Estudiante sin nombre' }}
             </span>
 
             @if (solicitud.student?.email) {
-              <span class="detail-tag">
-                ✉️ <strong>Correo:</strong> 
-                <a [href]="'mailto:' + solicitud.student?.email" class="link">
-                  {{ solicitud.student?.email }}
-                </a>
-              </span>
+            <span class="detail-tag">
+              <svg class="icon icon-xs">
+                <use href="#s-mail"></use>
+              </svg>
+              <strong>Correo:</strong>
+              <a [href]="'mailto:' + solicitud.student?.email" class="link">
+                {{ solicitud.student?.email }}
+              </a>
+            </span>
             }
 
             @if (solicitud.created_at) {
-              <span class="detail-tag date">
-                🕒 <strong>Fecha:</strong> {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
-              </span>
+            <span class="detail-tag">
+              <svg class="icon icon-xs">
+                <use href="#s-clock"></use>
+              </svg>
+              <strong>Fecha:</strong> {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
+            </span>
             }
           </div>
 
-          <!-- Mensaje desplegado horizontalmente -->
+          <!-- Mensaje -->
           <div class="mensaje-box">
-            <span class="label">💬 Mensaje:</span>
+            <span class="label">
+              <svg class="icon icon-xs">
+                <use href="#s-message"></use>
+              </svg>
+              Mensaje
+            </span>
             <p>{{ solicitud.mensaje || 'Sin mensaje adicional.' }}</p>
           </div>
         </div>
 
         <!-- Columna Derecha: Botones de Acción -->
         <div class="item-actions">
-          <button
-            type="button"
-            class="btn-aceptar"
-            [disabled]="procesandoId === solicitud.id"
+          <button type="button" class="btn-aceptar" [disabled]="procesandoId === solicitud.id"
             (click)="aceptarSolicitud(solicitud.id)">
-            <span class="icon">✔️</span> Aceptar
+            <svg class="icon icon-sm">
+              <use href="#s-check"></use>
+            </svg>
+            Aceptar
           </button>
 
-          <button
-            type="button"
-            class="btn-rechazar"
-            [disabled]="procesandoId === solicitud.id"
+          <button type="button" class="btn-rechazar" [disabled]="procesandoId === solicitud.id"
             (click)="rechazarSolicitud(solicitud.id)">
-            <span class="icon">✕</span> Rechazar
+            <svg class="icon icon-sm">
+              <use href="#s-x"></use>
+            </svg>
+            Rechazar
           </button>
         </div>
 
       </article>
-    } @empty {
+      } @empty {
       <div class="empty-state">
-        <div class="empty-icon">🎉</div>
-        <h3>Todo al día</h3>
-        <p>No tienes solicitudes de tutoría pendientes en este momento.</p>
+        <span class="empty-icon">
+          <svg class="icon icon-lg">
+            <use href="#s-check-circle"></use>
+          </svg>
+        </span>
+        <p class="empty-title">Todo al día</p>
+        <p class="empty-text">No tienes solicitudes de tutoría pendientes en este momento.</p>
       </div>
-    }
-  </div>
+      }
+    </div>
+  </section>
 
 </div>

@@ -186,10 +186,11 @@ class TutorRequestController extends Controller
             $solicitud->estado = 'Aceptada';
             $solicitud->save();
 
-            // 2. Asignar el tutor al proyecto
+            // 2. Asignar el tutor al proyecto y cambiar el estado del proyecto
             $proyecto = $solicitud->project;
 
             $proyecto->tutor_id = $user->id;
+            $proyecto->estado = 'Propuesta Inicial'; // Cambio de estado a "Propuesta Inicial"
 
             $proyecto->save();
 
@@ -201,7 +202,7 @@ class TutorRequestController extends Controller
 
                 'tutor_assigned',
 
-                $user->name . ' fue asignado como tutor',
+                $user->name . ' fue asignado como tutor y el proyecto paso a Propuesta Inicial.',
 
                 []
 

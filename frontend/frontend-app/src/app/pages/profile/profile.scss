@@ -1,249 +1,760 @@
-// VARIABLES DE PALETA (Verde institucional + Tema claro)
-$bg-card: #ffffff;
-$bg-main: #f8fafc;
-$border-color: #e2e8f0;
+// ==========================================================
+//  PALETA INSTITUCIONAL UNIVERSIDAD DE NARIÑO (UDENAR)
+//  Misma base que student-home / tools / community-profile
+// ==========================================================
+$udenar-verde:        #006633; // Verde Sinople Oficial
+$udenar-verde-hover:  #004d26;
+$udenar-verde-soft:   #e6f0eb;
+$udenar-verde-light:  #cce1d6;
 
-$primary-green: #10b981;    /* Verde esmeralda para acciones */
-$primary-hover: #059669;
-$brand-green: #1b3f33;      /* Verde institucional para títulos */
+$udenar-dorado:       #FFCC00; // Amarillo Gualda Oficial
+$udenar-dorado-dark:  #b38f00;
+$udenar-dorado-soft:  #fff9e6;
 
-$text-main: #0f172a;        /* Texto oscuro principal */
-$text-muted: #64748b;       /* Texto secundario */
+$udenar-azul:         #1E3A8A;
+$udenar-azul-soft:    #eff6ff;
 
-.perfil-container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 1.5rem;
-  font-family: system-ui, -apple-system, sans-serif;
+// Neutros y superficies
+$bg-main:             #F4F7F5;
+$bg-card:             #FFFFFF;
+$bg-subtle:           #EBF0EC;
+$bg-soft:             #F7F9F8;
+
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
+
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
+
+// Tipografía
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// Sombras y radios
+$shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.04);
+$shadow-card:  0 4px 10px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+$shadow-hover: 0 12px 24px -4px rgba(0, 102, 51, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+
+$radius-sm:   8px;
+$radius-md:   12px;
+$radius-lg:   16px;
+$radius-full: 9999px;
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ==========================================================
+//  RESET DEL HOST
+// ==========================================================
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: $font-sans;
   color: $text-main;
+  background-color: $bg-main;
+
+  *, *::before, *::after { box-sizing: border-box; }
 }
 
-// ENCABEZADO
-.page-header {
-  margin-bottom: 1.5rem;
-
-  h2 {
-    font-size: 1.6rem;
-    color: $brand-green;
-    margin: 0 0 0.25rem 0;
-    font-weight: 700;
-  }
-
-  p {
-    margin: 0;
-    color: $text-muted;
-    font-size: 0.95rem;
-  }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-// TARJETA DE EDICIÓN
-.profile-card {
-  background: $bg-card;
-  border: 1px solid $border-color;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+// ==========================================================
+//  SISTEMA DE ICONOS (SVG SPRITE)
+// ==========================================================
+.icon-sprite { display: none; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+
+  &.icon-xs { width: 13px; height: 13px; stroke-width: 2.6; }
+  &.icon-sm { width: 15px; height: 15px; }
+  &.icon-md { width: 20px; height: 20px; }
+  &.icon-lg { width: 26px; height: 26px; stroke-width: 1.5; }
+
+  &.is-spinning { animation: spin 0.9s linear infinite; }
+}
+
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ==========================================================
+//  1. CONTENEDOR
+// ==========================================================
+.art-dashboard.settings-dashboard {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding: 1.75rem;
+  max-width: 860px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow-x: hidden;
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+    gap: 1.15rem;
+  }
 }
 
-// AVATAR Y DATOS BÁSICOS
-.foto-section {
+// ==========================================================
+//  2. HERO / CABECERA
+// ==========================================================
+.art-hero {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.75rem 1.9rem;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.35s $ease-out both;
+
+  // Línea dorada institucional
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 3px;
+    background-color: $udenar-dorado;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1.35rem 1.25rem;
+  }
+}
+
+.hero-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.hero-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: $radius-md;
+  background-color: $udenar-verde-soft;
+  border: 1px solid $udenar-verde-light;
+  color: $udenar-verde;
+}
+
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.hero-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: $udenar-verde;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: $text-main;
+}
+
+.hero-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: $text-muted;
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+
+// ==========================================================
+//  3. SECCIONES DE CONTENIDO
+// ==========================================================
+.content-section {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.4rem 1.6rem 1.6rem;
+  box-shadow: $shadow-card;
+  animation: slideUp 0.4s $ease-out both;
+
+  &:nth-of-type(1) { animation-delay: 0.05s; }
+  &:nth-of-type(2) { animation-delay: 0.1s; }
+  &:nth-of-type(3) { animation-delay: 0.15s; }
+
+  @media (max-width: 640px) {
+    padding: 1.15rem 1.1rem 1.35rem;
+  }
+}
+
+.section-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-
-  @media (max-width: 480px) {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .avatar-wrapper {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    flex-shrink: 0;
-
-    .profile-photo {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #f1f5f9;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    }
-
-    .btn-change-photo {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      background: $brand-green;
-      color: #ffffff;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      transition: transform 0.2s, background 0.2s;
-
-      &:hover {
-        transform: scale(1.1);
-        background: $primary-green;
-      }
-
-      input[type="file"] {
-        display: none;
-      }
-
-      .icon {
-        font-size: 0.85rem;
-      }
-    }
-  }
-
-  .datos-section {
-    h3 {
-      margin: 0 0 0.35rem 0;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: $text-main;
-    }
-
-    .program-badge {
-      margin: 0;
-      font-size: 0.88rem;
-      color: $text-muted;
-      font-weight: 500;
-    }
-  }
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.85rem;
+  margin-bottom: 1.15rem;
+  border-bottom: 1px solid $border-color;
 }
 
-.divider {
-  border: 0;
-  height: 1px;
-  background: $border-color;
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $text-main;
+
+  .icon { color: $udenar-verde; }
 }
 
-// CAMPOS DEL FORMULARIO
+.count-pill {
+  padding: 0.2rem 0.6rem;
+  border-radius: $radius-full;
+  background-color: $bg-subtle;
+  border: 1px solid $border-color;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: $text-muted;
+  white-space: nowrap;
+}
+
+// ==========================================================
+//  4. IDENTIDAD (AVATAR + DATOS)
+// ==========================================================
+.identity-body {
+  display: flex;
+  align-items: center;
+  gap: 1.35rem;
+
+  @media (max-width: 560px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+.avatar-frame {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  border-radius: $radius-md;
+  border: 1px solid $border-strong;
+  background-color: $bg-subtle;
+  overflow: visible;
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: $radius-md;
+    object-fit: cover;
+    display: block;
+  }
+
+  .btn-photo {
+    position: absolute;
+    right: -8px;
+    bottom: -8px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-sm;
+    background-color: $udenar-verde;
+    border: 2px solid $bg-card;
+    color: $bg-card;
+    cursor: pointer;
+    transition: background-color 0.18s ease, transform 0.18s $ease-out;
+
+    input[type="file"] { display: none; }
+
+    &:hover {
+      background-color: $udenar-verde-hover;
+      transform: translateY(-1px);
+    }
+
+    &:focus-within {
+      outline: 2px solid $udenar-dorado;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.identity-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.identity-name {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: $text-main;
+}
+
+.identity-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: $text-faint;
+}
+
+.meta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: $radius-full;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: $text-muted;
+
+  .icon { color: $udenar-verde; }
+}
+
+// ==========================================================
+//  5. CAMPOS DE FORMULARIO
+// ==========================================================
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
 
-  label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: $text-main;
-  }
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: $text-main;
 
-  textarea {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: #f8fafc;
-    border: 1px solid $border-color;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 0.9rem;
-    color: $text-main;
-    resize: vertical;
-    box-sizing: border-box;
-    transition: all 0.2s ease;
+  .icon { color: $udenar-verde; }
+}
 
-    &::placeholder {
-      color: $text-muted;
-    }
+textarea {
+  width: 100%;
+  padding: 0.8rem 0.95rem;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: $text-main;
+  resize: vertical;
+  transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
 
-    &:focus {
-      outline: none;
-      background: #ffffff;
-      border-color: $primary-green;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
-    }
+  &::placeholder { color: $text-faint; }
+
+  &:hover { border-color: $border-strong; }
+
+  &:focus {
+    outline: none;
+    background-color: $bg-card;
+    border-color: $udenar-verde;
+    box-shadow: 0 0 0 3px rgba(0, 102, 51, 0.12);
   }
 }
 
-// SECCIÓN DE PRIVACIDAD
-.privacidad-section {
+.field-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: $text-faint;
+}
+
+// ==========================================================
+//  6. INTERRUPTORES DE PRIVACIDAD
+// ==========================================================
+.switch-list {
   display: flex;
   flex-direction: column;
+  gap: 0.65rem;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  background-color: $bg-card;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
 
-  h4 {
-    margin: 0;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: $brand-green;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
+  &:hover {
+    border-color: $border-strong;
+    background-color: $bg-soft;
   }
 
-  .checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-  }
-
-  .checkbox-label {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    cursor: pointer;
-
-    input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin-top: 0.15rem;
-      accent-color: $primary-green;
-      cursor: pointer;
-    }
-
-    .checkbox-text {
-      display: flex;
-      flex-direction: column;
-
-      strong {
-        font-size: 0.9rem;
-        color: $text-main;
-      }
-
-      small {
-        font-size: 0.8rem;
-        color: $text-muted;
-      }
-    }
+  &:focus-within {
+    border-color: $udenar-verde;
+    box-shadow: 0 0 0 3px rgba(0, 102, 51, 0.1);
   }
 }
 
-// ACCIONES Y BOTÓN DE GUARDADO
+.switch-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.switch-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $text-main;
+
+  .icon { color: $udenar-verde; }
+}
+
+.switch-desc {
+  font-size: 0.79rem;
+  line-height: 1.5;
+  color: $text-muted;
+}
+
+.switch-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.switch-track {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 22px;
+  border-radius: $radius-full;
+  background-color: $border-strong;
+  transition: background-color 0.22s $ease-out;
+
+  .switch-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: $bg-card;
+    box-shadow: $shadow-sm;
+    transition: transform 0.22s $ease-out;
+  }
+}
+
+.switch-input:checked + .switch-track {
+  background-color: $udenar-verde;
+
+  .switch-thumb { transform: translateX(18px); }
+}
+
+// ==========================================================
+//  7. VISIBILIDAD INDIVIDUAL DE PROYECTOS
+// ==========================================================
+.visibility-panel {
+  margin-top: 1.15rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid $border-color;
+  border-left: 2px solid $udenar-dorado;
+  border-radius: $radius-md;
+  background-color: $bg-soft;
+  animation: fadeIn 0.3s $ease-out both;
+}
+
+.visibility-head {
+  margin-bottom: 0.85rem;
+}
+
+.visibility-title {
+  margin: 0 0 0.2rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: $text-main;
+}
+
+.visibility-desc {
+  margin: 0;
+  font-size: 0.79rem;
+  line-height: 1.5;
+  color: $text-muted;
+}
+
+.project-visibility-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-sm;
+  background-color: $bg-card;
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s $ease-out;
+
+  &:hover {
+    border-color: $udenar-verde-light;
+    transform: translateX(2px);
+  }
+
+  &:focus-within {
+    border-color: $udenar-verde;
+    box-shadow: 0 0 0 3px rgba(0, 102, 51, 0.1);
+  }
+}
+
+.check-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.check-box {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border: 1.5px solid $border-strong;
+  border-radius: 5px;
+  background-color: $bg-card;
+  color: transparent;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.check-input:checked + .check-box {
+  background-color: $udenar-verde;
+  border-color: $udenar-verde;
+  color: $bg-card;
+}
+
+.check-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $text-main;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ==========================================================
+//  8. ACCIONES
+// ==========================================================
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  padding-top: 0.5rem;
+  animation: slideUp 0.4s $ease-out 0.2s both;
 
-  .btn-primary {
-    background: $primary-green;
+  @media (max-width: 560px) {
+    justify-content: stretch;
+
+    .btn-action { width: 100%; justify-content: center; }
+  }
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.62rem 1.15rem;
+  border-radius: $radius-md;
+  border: 1px solid $border-strong;
+  background-color: $bg-card;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $text-main;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+              transform 0.18s $ease-out, box-shadow 0.18s ease;
+
+  &:hover:not(:disabled) {
+    border-color: $udenar-verde-light;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-dorado;
+    outline-offset: 2px;
+  }
+
+  &.is-primary {
+    background-color: $udenar-verde;
+    border-color: $udenar-verde;
     color: #ffffff;
-    border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 10px;
-    font-size: 0.9rem;
+
+    &:hover:not(:disabled) {
+      background-color: $udenar-verde-hover;
+      border-color: $udenar-verde-hover;
+      box-shadow: $shadow-hover;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// ==========================================================
+//  9. ACCESIBILIDAD — MOVIMIENTO REDUCIDO
+// ==========================================================
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================
+   MODAL DE VERIFICACIÓN 2FA
+   ========================================================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.modal-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  max-width: 440px;
+  width: 100%;
+  padding: 1.75rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: modalFadeIn 0.2s ease-out forwards;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+
+  .modal-title {
+    font-size: 1.25rem;
     font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
-    transition: all 0.2s ease;
+    margin: 0;
+  }
+}
 
-    &:hover {
-      background: $primary-hover;
-      transform: translateY(-1px);
-    }
+.modal-desc {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
 
-    &:active {
-      transform: translateY(0);
-    }
+.digit-spacing {
+  letter-spacing: 0.4em;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

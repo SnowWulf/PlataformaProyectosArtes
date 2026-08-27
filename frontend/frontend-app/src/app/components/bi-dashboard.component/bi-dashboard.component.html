@@ -1,32 +1,65 @@
+<!-- Sprite de iconos (Vectoriales / Estilo Feather) -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-chart" viewBox="0 0 24 24">
+    <line x1="18" y1="20" x2="18" y2="10"></line>
+    <line x1="12" y1="20" x2="12" y2="4"></line>
+    <line x1="6" y1="20" x2="6" y2="14"></line>
+  </symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24">
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+    <line x1="12" y1="9" x2="12" y2="13"></line>
+    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+  </symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24">
+    <polyline points="23 4 23 10 17 10"></polyline>
+    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+  </symbol>
+</svg>
+
 <div class="bi-container">
-  <div class="header">
-    <h2>📊 Módulo de Analítica y Estadísticas</h2>
-    <p>Visualización del estado general de proyectos para la coordinación.</p>
-  </div>
+  <!-- CABECERA DE SECCIÓN -->
+  <header class="bi-header">
+    <div class="header-icon" aria-hidden="true">
+      <svg class="icon"><use href="#i-chart"></use></svg>
+    </div>
+    <div class="header-copy">
+      <span class="header-eyebrow">Universidad de Nariño &middot; Coordinación</span>
+      <h2>Analítica y Estadísticas</h2>
+      <p>Visualización en tiempo real del estado general de proyectos institucional.</p>
+    </div>
+  </header>
 
-  <!-- Estado 1: Spinner de carga (se muestra mientras isLoading sea true) -->
+  <!-- ESTADO 1: SPINNER DE CARGA -->
   <div *ngIf="isLoading" class="state-card loading">
-    <div class="spinner"></div>
-    <p>Cargando panel de inteligencia de negocios...</p>
+    <div class="spinner-ring" aria-hidden="true"></div>
+    <div class="state-copy">
+      <p class="state-title">Cargando panel de inteligencia</p>
+      <small>Procesando los indicadores estadísticos del sistema…</small>
+    </div>
   </div>
 
-  <!-- Estado 2: Error HTTP -->
+  <!-- ESTADO 2: ERROR HTTP -->
   <div *ngIf="hasError" class="state-card error">
-    <p>⚠️ No se pudo cargar el panel de análisis.</p>
-    <button (click)="cargarDashboard()">Reintentar</button>
+    <span class="state-icon" aria-hidden="true">
+      <svg class="icon"><use href="#i-alert"></use></svg>
+    </span>
+    <div class="state-copy">
+      <p class="state-title">No se pudo cargar el panel de análisis</p>
+      <small>Ocurrió un inconveniente al conectar con el servidor de analítica.</small>
+    </div>
+    <button type="button" class="btn-primary" (click)="cargarDashboard()">
+      <svg class="icon icon-xs" aria-hidden="true"><use href="#i-refresh"></use></svg>
+      Reintentar conexión
+    </button>
   </div>
 
-  <!-- Estado 3: Contenedor del Iframe -->
-  <!-- Usamos [hidden] en lugar de *ngIf para que el iframe exista en el DOM y se descargue en segundo plano -->
+  <!-- ESTADO 3: CONTENEDOR DEL IFRAME -->
   <div *ngIf="iframeUrl" [hidden]="isLoading" class="iframe-wrapper">
     <iframe
       [src]="iframeUrl"
       (load)="onIframeLoad()"
-      frameborder="0"
-      width="100%"
-      height="800"
-      style="width: 100%; height: 800px; border: none;"
-      allowtransparency
-    ></iframe>
+      title="Panel de inteligencia de negocios"
+      allowtransparency>
+    </iframe>
   </div>
 </div>

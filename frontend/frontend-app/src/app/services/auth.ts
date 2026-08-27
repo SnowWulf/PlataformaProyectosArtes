@@ -3,9 +3,35 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
 
-export interface LoginResponse {
+// Respuesta cuando el 2FA está desactivado
+export interface LoginResponseSuccess {
+  requires_two_factor: false;
   token: string;
   user: User;
+}
+
+// Respuesta cuando el 2FA está activado
+export interface TwoFactorLoginResponse {
+  requires_two_factor: true;
+  email: string;
+  message: string;
+}
+
+export type LoginResult = LoginResponseSuccess | TwoFactorLoginResponse;
+
+export interface VerifyTwoFactorRequest {
+  email: string;
+  two_factor_code: string;
+}
+
+export interface ToggleTwoFactorResponse {
+  message: string;
+  two_factor_enabled: boolean;
+}
+
+export interface ConfirmTwoFactorResponse {
+  message: string;
+  two_factor_enabled: boolean;
 }
 
 @Injectable({
@@ -19,8 +45,8 @@ export class Auth {
     private http: HttpClient
   ) {}
 
-  login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(
+  login(email: string, password: string): Observable<LoginResult> {
+    return this.http.post<LoginResult>(
       `${this.apiUrl}/login`,
       {
         email,
@@ -29,7 +55,31 @@ export class Auth {
     );
   }
 
-  guardarSesion(data: LoginResponse) {
+  // Verifica el código de 6 dígitos enviado por correo en el proceso de Login
+  verifyTwoFactor(payload: VerifyTwoFactorRequest): Observable<{ token: string; user: User }> {
+    return this.http.post<{ token: string; user: User }>(
+      `${this.apiUrl}/login/verify-2fa`,
+      payload
+    );
+  }
+
+  // Solicita/inicia la activación o desactivación de la verificación en 2 pasos desde la configuración del perfil
+  toggleTwoFactor(enabled: boolean): Observable<ToggleTwoFactorResponse> {
+    return this.http.post<ToggleTwoFactorResponse>(
+      `${this.apiUrl}/user/toggle-2fa`,
+      { enabled }
+    );
+  }
+
+  // Confirma el código de 6 dígitos ingresado en el modal de perfil para finalizar el cambio de estado de 2FA
+  confirmTwoFactor(code: string, enabled: boolean): Observable<ConfirmTwoFactorResponse> {
+    return this.http.post<ConfirmTwoFactorResponse>(
+      `${this.apiUrl}/user/confirm-2fa`,
+      { code, enabled }
+    );
+  }
+
+  guardarSesion(data: { token: string; user: User }) {
     localStorage.setItem(
       'token',
       data.token
@@ -62,7 +112,7 @@ export class Auth {
     return this.http.post<any>(`${this.apiUrl}/change-password`, data);
   }
 
-  // Actualiza los datos del usuario en localStorage una vez cambia la contraseña
+  // Actualiza los datos del usuario en localStorage una vez cambia la contraseña o activa/desactiva el 2FA
   actualizarUsuarioEnSesion(user: User) {
     localStorage.setItem('user', JSON.stringify(user));
   }

@@ -1,39 +1,95 @@
-<!-- Toolbar / Controles Superiores -->
+<!-- ===== SPRITE DE ICONOS ===== -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="ic-calendar" viewBox="0 0 24 24">
+    <rect x="3" y="5" width="18" height="16" rx="2" />
+    <path d="M8 3v4M16 3v4M3 11h18" />
+  </symbol>
+  <symbol id="ic-list" viewBox="0 0 24 24">
+    <path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01" />
+  </symbol>
+  <symbol id="ic-plus" viewBox="0 0 24 24">
+    <path d="M12 5v14M5 12h14" />
+  </symbol>
+  <symbol id="ic-prev" viewBox="0 0 24 24">
+    <path d="M15 6l-6 6 6 6" />
+  </symbol>
+  <symbol id="ic-next" viewBox="0 0 24 24">
+    <path d="M9 6l6 6-6 6" />
+  </symbol>
+  <symbol id="ic-target" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="3" />
+  </symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7.5V12l3 2" />
+  </symbol>
+  <symbol id="ic-arrow-right" viewBox="0 0 24 24">
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </symbol>
+  <symbol id="ic-edit" viewBox="0 0 24 24">
+    <path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3z" />
+  </symbol>
+  <symbol id="ic-trash" viewBox="0 0 24 24">
+    <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6" />
+  </symbol>
+  <symbol id="ic-empty" viewBox="0 0 24 24">
+    <rect x="3" y="5" width="18" height="16" rx="2" />
+    <path d="M8 3v4M16 3v4M3 11h18M9.5 15.5h5" />
+  </symbol>
+</svg>
+
+<!-- ===== TOOLBAR ===== -->
 <div class="calendar-toolbar">
-  <div class="view-toggle">
-    <button 
-      [class.active]="vista === 'calendario'" 
+  <div class="view-toggle" role="tablist" aria-label="Cambiar vista">
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="vista === 'calendario'"
+      [class.active]="vista === 'calendario'"
       (click)="vista = 'calendario'">
-      📅 Calendario
+      <svg class="icon" aria-hidden="true"><use href="#ic-calendar"></use></svg>
+      <span>Calendario</span>
     </button>
-    <button 
-      [class.active]="vista === 'lista'" 
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="vista === 'lista'"
+      [class.active]="vista === 'lista'"
       (click)="vista = 'lista'">
-      📋 Lista de Eventos
+      <svg class="icon" aria-hidden="true"><use href="#ic-list"></use></svg>
+      <span>Lista</span>
     </button>
   </div>
 
-  <button class="btn-primary" (click)="abrirNuevoEvento()">
-    + Nuevo evento
+  <button type="button" class="btn-primary" (click)="abrirNuevoEvento()">
+    <svg class="icon" aria-hidden="true"><use href="#ic-plus"></use></svg>
+    <span>Nuevo evento</span>
   </button>
 </div>
 
-<!-- VISTA 1: GRILLA DE CALENDARIO -->
+<!-- ===== VISTA 1: GRILLA ===== -->
 @if (vista === 'calendario') {
-  <div class="calendar-container">
+  <section class="calendar-container">
 
-    <!-- Encabezado de Navegación -->
-    <div class="calendar-header">
+    <header class="calendar-header">
       <div class="month-navigation">
-        <button class="nav-button" (click)="mesAnterior()" title="Mes anterior">◀</button>
+        <button type="button" class="nav-button" (click)="mesAnterior()" title="Mes anterior" aria-label="Mes anterior">
+          <svg class="icon" aria-hidden="true"><use href="#ic-prev"></use></svg>
+        </button>
         <h2>{{ mesActual | date:'MMMM yyyy' }}</h2>
-        <button class="nav-button" (click)="mesSiguiente()" title="Mes siguiente">▶</button>
+        <button type="button" class="nav-button" (click)="mesSiguiente()" title="Mes siguiente" aria-label="Mes siguiente">
+          <svg class="icon" aria-hidden="true"><use href="#ic-next"></use></svg>
+        </button>
       </div>
-      <button class="btn-today" (click)="irAHoy()">Hoy</button>
-    </div>
 
-    <!-- Cabecera de Días de la Semana -->
-    <div class="weekdays">
+      <button type="button" class="btn-today" (click)="irAHoy()">
+        <svg class="icon" aria-hidden="true"><use href="#ic-target"></use></svg>
+        <span>Hoy</span>
+      </button>
+    </header>
+
+    <div class="weekdays" aria-hidden="true">
       <div>Lun</div>
       <div>Mar</div>
       <div>Mié</div>
@@ -43,39 +99,43 @@
       <div>Dom</div>
     </div>
 
-    <!-- Grilla del Calendario -->
     <div class="calendar-grid">
       @for (celda of diasCalendario; track celda.fechaKey) {
-        <div 
-          class="calendar-cell" 
-          [class.other-month]="!celda.esMesActual" 
+        <div
+          class="calendar-cell"
+          [class.other-month]="!celda.esMesActual"
           [class.is-today]="celda.esHoy"
+          [class.has-events]="celda.eventos.length > 0"
           (click)="seleccionarDia(celda.fecha)">
 
           <div class="cell-header">
             <span class="day-number">{{ celda.fecha | date:'d' }}</span>
+            @if (celda.eventos.length > 0) {
+              <span class="cell-count" aria-hidden="true">{{ celda.eventos.length }}</span>
+            }
           </div>
 
-          <!-- Eventos del Día -->
           <div class="events-wrapper">
             @for (evento of celda.eventos.slice(0, 3); track evento.id) {
-              <div 
-                class="calendar-event" 
-                [style.border-left-color]="evento.color || '#10b981'"
+              <button
+                type="button"
+                class="calendar-event"
+                [style.--event-color]="evento.color || '#006633'"
+                [title]="evento.titulo"
                 (click)="$event.stopPropagation(); manejarClickEvento(evento)">
-                
                 @if (evento.fecha_fin || evento.fecha_inicio) {
                   <span class="event-time">
                     {{ (evento.fecha_fin || evento.fecha_inicio) | date:'HH:mm' }}
                   </span>
                 }
                 <span class="event-title">{{ evento.titulo }}</span>
-              </div>
+              </button>
             }
 
             @if (celda.eventos.length > 3) {
-              <button 
-                class="more-events" 
+              <button
+                type="button"
+                class="more-events"
                 (click)="$event.stopPropagation(); verMasEventos(celda)">
                 +{{ celda.eventos.length - 3 }} más
               </button>
@@ -86,58 +146,81 @@
       }
     </div>
 
-  </div>
+  </section>
 }
 
-<!-- VISTA 2: LISTA DE EVENTOS -->
+<!-- ===== VISTA 2: LISTA ===== -->
 @if (vista === 'lista') {
-  <div class="calendar-container">
-    <div class="list-header">
-      <h2>📋 Lista de Eventos</h2>
-    </div>
+  <section class="calendar-container">
+    <header class="list-header">
+      <div class="list-title">
+        <svg class="icon" aria-hidden="true"><use href="#ic-list"></use></svg>
+        <h2>Lista de eventos</h2>
+      </div>
+      <span class="list-count">{{ eventos.length }} registrados</span>
+    </header>
 
     <div class="events-list">
       @for (evento of eventos; track evento.id) {
-        <div class="event-card">
-          <div class="color-indicator" [style.background]="evento.color || '#10b981'"></div>
+        <article class="event-card" [style.--event-color]="evento.color || '#006633'">
+          <span class="color-indicator" aria-hidden="true"></span>
 
           <div class="event-info">
             <span class="event-type-badge">
-              📅 {{ evento.tipo || 'Evento' }}
+              <svg class="icon" aria-hidden="true"><use href="#ic-calendar"></use></svg>
+              {{ evento.tipo || 'Evento' }}
             </span>
+
             <h3>{{ evento.titulo }}</h3>
-            
+
             @if (evento.descripcion) {
               <p class="event-desc">{{ evento.descripcion }}</p>
             }
 
             <div class="event-dates">
-              <small>📅 {{ evento.fecha_inicio | date:'dd/MM/yyyy HH:mm' }}</small>
+              <span class="date-chip">
+                <svg class="icon" aria-hidden="true"><use href="#ic-clock"></use></svg>
+                {{ evento.fecha_inicio | date:'dd/MM/yyyy HH:mm' }}
+              </span>
               @if (evento.fecha_fin) {
-                <small> → {{ evento.fecha_fin | date:'dd/MM/yyyy HH:mm' }}</small>
+                <svg class="icon date-arrow" aria-hidden="true"><use href="#ic-arrow-right"></use></svg>
+                <span class="date-chip">
+                  {{ evento.fecha_fin | date:'dd/MM/yyyy HH:mm' }}
+                </span>
               }
             </div>
           </div>
 
           <div class="event-actions">
-            <button class="btn-secondary-sm" (click)="editarEvento(evento)">✏️ Editar</button>
-            <button class="btn-danger-sm" (click)="eliminarEvento(evento.id)">🗑️ Eliminar</button>
+            <button type="button" class="btn-secondary-sm" (click)="editarEvento(evento)">
+              <svg class="icon" aria-hidden="true"><use href="#ic-edit"></use></svg>
+              <span>Editar</span>
+            </button>
+            <button type="button" class="btn-danger-sm" (click)="eliminarEvento(evento.id)">
+              <svg class="icon" aria-hidden="true"><use href="#ic-trash"></use></svg>
+              <span>Eliminar</span>
+            </button>
           </div>
-        </div>
+        </article>
       } @empty {
         <div class="empty-state">
+          <svg class="icon" aria-hidden="true"><use href="#ic-empty"></use></svg>
           <p>No tienes eventos registrados en el calendario.</p>
+          <button type="button" class="btn-primary" (click)="abrirNuevoEvento()">
+            <svg class="icon" aria-hidden="true"><use href="#ic-plus"></use></svg>
+            <span>Crear el primero</span>
+          </button>
         </div>
       }
     </div>
-  </div>
+  </section>
 }
 
-<!-- MODAL EVENTO -->
+<!-- ===== MODAL EVENTO ===== -->
 @if (mostrarModal) {
-  <app-calendar-event-modal 
-    [evento]="eventoActual" 
-    [modoEdicion]="modoEdicion" 
+  <app-calendar-event-modal
+    [evento]="eventoActual"
+    [modoEdicion]="modoEdicion"
     (guardar)="guardarEvento($event)"
     (cancelar)="cerrarModal()">
   </app-calendar-event-modal>

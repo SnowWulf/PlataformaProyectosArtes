@@ -21,6 +21,7 @@ use App\Http\Controllers\TelegramAuthController;
 use App\Http\Controllers\Api\ProjectAiChatController;
 use App\Http\Controllers\BiController;
 use App\Http\Controllers\RegistrationRequestController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,10 @@ use App\Http\Controllers\RegistrationRequestController;
 |--------------------------------------------------------------------------
 */
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login/verify-2fa', [AuthController::class, 'verifyTwoFactor']); // <--- NUEVA RUTA 2FA
+
+// RUTA PÚBLICA DE RESEÑAS PARA LANDING PAGE
+Route::get('/landing/reviews', [ReviewController::class, 'landingReviews']);
 
 // Telegram envía notificaciones aquí sin cabecera Bearer/Sanctum
 Route::post('/telegram/webhook', [TelegramAuthController::class, 'handleWebhook']);
@@ -54,6 +59,19 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::get('/profile', [UserController::class, 'myProfile']);
     Route::post('/profile', [UserController::class, 'updateProfile']);
+
+    // GESTIÓN DE 2FA (CONFIGURACIÓN)
+    Route::post('/user/toggle-2fa', [AuthController::class, 'toggleTwoFactorSetting']); // <--- NUEVA RUTA CONFIGURACIÓN
+
+    // FEEDBACK Y RESEÑAS (ESTUDIANTES Y TUTORES)
+    Route::post('/feedback', [ReviewController::class, 'store']);
+
+    // GESTIÓN DE RESEÑAS (COORDINADOR)
+    Route::prefix('coordinador')->group(function () {
+        Route::get('/reviews', [ReviewController::class, 'indexCoordinador']);
+        Route::patch('/reviews/{review}', [ReviewController::class, 'actualizarEstadoCoordinador']);
+        Route::delete('/reviews/{review}', [ReviewController::class, 'destroyCoordinador']);
+    });
 
     // RECURSOS GENERALES
     Route::apiResource('documents', DocumentController::class);
@@ -139,6 +157,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
     Route::get('/notifications/preferences', [NotificationController::class, 'getPreferences']);
     Route::put('/notifications/preferences', [NotificationController::class, 'updatePreferences']);
+    Route::post('/notifications', [NotificationController::class, 'store']);
 
     // TELEGRAM (Rutas protegidas para el usuario autenticado en la Web)
     Route::get('/telegram/connect-link', [TelegramAuthController::class, 'getConnectLink']);
@@ -153,5 +172,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // RUTA PARA CAMBIO DE CONTRASEÑA (PRIMER INGRESO)
     Route::post('/change-password', [AuthController::class, 'changePassword']);
+
+    // RUTA PARA ACTUALIZAR LA REVISIÓN DE UNA ENTREGA (SUBMISSION)
+    Route::put('/delivery-submissions/{id}', [DeliverySubmissionController::class, 'update']);
 
 });

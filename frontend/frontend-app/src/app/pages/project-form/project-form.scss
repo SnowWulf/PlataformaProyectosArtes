@@ -1,103 +1,186 @@
-.project-form-container {
+@use "sass:color";
 
-  padding-top: 10px;
+// Paleta institucional
+$udenar-verde: #006837;
+$udenar-gold: #d4af37;
+$text-primary: #1f2937;
+$text-muted: #6b7280;
+$border-color: #e5e7eb;
+$bg-input: #f9fafb;
 
+.icon-sprite {
+  display: none;
 }
 
-.form-subtitle {
+.project-form-container {
+  padding: 0.5rem 0;
 
-  color: #6b7280;
+  .form-subtitle {
+    color: $text-muted;
+    font-size: 0.9375rem;
+    margin-bottom: 1.75rem;
+    line-height: 1.5;
+  }
+}
 
-  margin-bottom: 24px;
-
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .form-group {
-
   display: flex;
-
   flex-direction: column;
+  gap: 0.5rem;
 
-  margin-bottom: 18px;
-
+  label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-primary;
+  }
 }
 
-.form-group label {
-
-  font-weight: 600;
-
-  margin-bottom: 8px;
-
-  color: #374151;
-
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-
-  border: 1px solid #d1d5db;
-
-  border-radius: 10px;
-
-  padding: 12px;
-
-  font-size: 14px;
-
-  transition: .2s;
-
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-
-  outline: none;
-
-  border-color: #2563eb;
-
-  box-shadow:
-    0 0 0 3px
-    rgba(37, 99, 235, 0.15);
-
-}
-
-.form-group textarea {
-
-  resize: vertical;
-
-}
-
-.form-actions {
-
+// Shell para envolver icono + input/select/textarea
+.input-shell {
   display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: $bg-input;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: 0 0.875rem;
+  transition: all 0.2s ease;
 
+  .field-icon {
+    width: 18px;
+    height: 18px;
+    stroke: $text-muted;
+    fill: none;
+    flex-shrink: 0;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 0.75rem 0;
+    font-size: 0.9375rem;
+    color: $text-primary;
+    outline: none;
+    font-family: inherit;
+
+    &::placeholder {
+      color: color.adjust($text-muted, $lightness: 20%);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  select {
+    cursor: pointer;
+    appearance: none;
+  }
+
+  // Estado al hacer foco
+  &:focus-within {
+    border-color: $udenar-verde;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba($udenar-verde, 0.12);
+
+    .field-icon {
+      stroke: $udenar-verde;
+    }
+  }
+
+  // Variante para textareas
+  &.textarea-shell {
+    align-items: flex-start;
+    padding-top: 0.75rem;
+
+    textarea {
+      padding: 0;
+      resize: vertical;
+      min-height: 110px;
+    }
+  }
+
+  // Flecha personalizada para el select
+  &.select-shell {
+    position: relative;
+    padding-right: 2.25rem;
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid $text-muted;
+      pointer-events: none;
+    }
+  }
+}
+
+// Botones de acción
+.form-actions {
+  display: flex;
   justify-content: flex-end;
-
-  margin-top: 25px;
-
+  margin-top: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid $border-color;
 }
 
 .btn-guardar {
-
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: $udenar-verde;
+  color: #ffffff;
   border: none;
-
-  background: #2563eb;
-
-  color: white;
-
-  padding: 12px 22px;
-
+  padding: 0.75rem 1.5rem;
   border-radius: 10px;
-
+  font-size: 0.9375rem;
   font-weight: 600;
-
   cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 
-}
+  .icon {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+  }
 
-.btn-guardar:hover {
+  &:hover:not(:disabled) {
+    background-color: color.adjust($udenar-verde, $lightness: -6%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  }
 
-  opacity: .9;
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
 
+  &:disabled {
+    background-color: color.adjust($border-color, $lightness: -5%);
+    color: $text-muted;
+    cursor: not-allowed;
+    box-shadow: none;
+
+    .icon {
+      stroke: $text-muted;
+    }
+  }
 }

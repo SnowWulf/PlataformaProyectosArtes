@@ -1,65 +1,301 @@
+// ==========================================================
+//  BI DASHBOARD — Universidad de Nariño
+//  Misma línea gráfica institucional (Paleta Sinople & Gualda)
+// ==========================================================
+
+// --- Paleta institucional ---
+$udenar-verde:        #006633;
+$udenar-verde-hover:  #004d26;
+$udenar-verde-soft:   #e6f0eb;
+
+$udenar-dorado:       #FFCC00;
+$udenar-dorado-dark:  #a37f00;
+
+// --- Neutros y superficies ---
+$bg-card:             #FFFFFF;
+$bg-soft:             #F7F9F8;
+
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
+
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
+
+// --- Estados de error ---
+$error-soft:          #FDF2F2;
+$error-border:        #F87171;
+$error-text:          #991B1B;
+
+// --- Tipografía ---
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// --- Radios y movimiento ---
+$radius-sm:    8px;
+$radius-md:    12px;
+$radius-full:  9999px;
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ==========================================================
+//  HOST
+// ==========================================================
+:host {
+  display: block;
+  width: 100%;
+  font-family: $font-sans;
+  color: $text-main;
+  -webkit-font-smoothing: antialiased;
+
+  *, *::before, *::after { box-sizing: border-box; }
+}
+
+// ==========================================================
+//  ICONOS & SPRITE
+// ==========================================================
+.icon-sprite { display: none; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  display: block;
+
+  &.icon-xs { width: 13px; height: 13px; stroke-width: 2.3; }
+  &.icon-sm { width: 15px; height: 15px; }
+}
+
+// ==========================================================
+//  CONTENEDOR PRINCIPAL
+// ==========================================================
 .bi-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
 
-  .header {
-    margin-bottom: 1.5rem;
-    h2 {
-      margin: 0;
-      color: #1e293b;
-    }
-    p {
-      color: #64748b;
-      margin-top: 0.25rem;
-    }
-  }
+// ---------- Cabecera ----------
+.bi-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1.25rem 1.4rem;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.45s $ease-out both;
 
-  .state-card {
-    padding: 2rem;
-    text-align: center;
-    border-radius: 8px;
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-
-    &.error {
-      border-color: #fca5a5;
-      background-color: #fef2f2;
-      color: #991b1b;
-
-      button {
-        margin-top: 1rem;
-        padding: 0.5rem 1rem;
-        background-color: #dc2626;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-    }
-  }
-
-  .iframe-wrapper {
-    width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-
-    iframe {
-      display: block;
-      border: none;
-      min-height: 750px;
-    }
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: $udenar-dorado;
   }
 }
 
+.header-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: $radius-sm;
+  background: $udenar-verde-soft;
+  color: $udenar-verde;
+}
+
+.header-copy {
+  min-width: 0;
+
+  .header-eyebrow {
+    margin: 0;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $udenar-dorado-dark;
+  }
+
+  h2 {
+    margin: 0.15rem 0 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: $text-main;
+  }
+
+  p {
+    margin: 0.2rem 0 0;
+    font-size: 0.82rem;
+    color: $text-muted;
+  }
+}
+
+// ==========================================================
+//  TARJETAS DE ESTADO (Carga y Error)
+// ==========================================================
+.state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  animation: cardIn 0.4s $ease-out both;
+
+  .state-copy {
+    margin-top: 1rem;
+
+    .state-title {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: $text-main;
+    }
+
+    small {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.78rem;
+      color: $text-muted;
+    }
+  }
+
+  // --- Estado: Error ---
+  &.error {
+    background: $error-soft;
+    border-color: rgba($error-border, 0.4);
+
+    .state-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: $radius-full;
+      background: rgba($error-border, 0.15);
+      color: $error-text;
+
+      .icon { width: 22px; height: 22px; }
+    }
+
+    .state-title { color: $error-text; }
+    small { color: rgba($error-text, 0.8); }
+
+    .btn-primary { margin-top: 1.25rem; }
+  }
+}
+
+// Spinner institucional
+.spinner-ring {
+  width: 36px;
+  height: 36px;
+  border: 3px solid $udenar-verde-soft;
+  border-top-color: $udenar-verde;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+// ==========================================================
+//  IFRAME WRAPPER
+// ==========================================================
 .iframe-wrapper {
+  position: relative;
   width: 100%;
-  min-height: 800px;
-  display: block;
+  border-radius: $radius-md;
+  overflow: hidden;
+  border: 1px solid $border-color;
+  background: $bg-card;
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.04);
+  animation: cardIn 0.45s $ease-out both;
 
   iframe {
+    display: block;
     width: 100%;
-    height: 800px;
+    height: 820px;
     border: none;
-    border-radius: 8px;
+    background: transparent;
+  }
+}
+
+// ==========================================================
+//  BOTONES
+// ==========================================================
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.58rem 1.1rem;
+  border: none;
+  border-radius: $radius-sm;
+  background: $udenar-verde;
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s $ease-out, transform 0.2s $ease-out, box-shadow 0.2s $ease-out;
+
+  &:hover {
+    background: $udenar-verde-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px -4px rgba(0, 102, 51, 0.35);
+  }
+
+  &:active { transform: translateY(0); }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-dorado-dark;
+    outline-offset: 2px;
+  }
+}
+
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ==========================================================
+//  RESPONSIVE Y ACCESIBILIDAD
+// ==========================================================
+@media (max-width: 768px) {
+  .bi-container { padding: 1rem; }
+  .bi-header { padding: 1rem; }
+  .iframe-wrapper iframe { height: 650px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
   }
 }

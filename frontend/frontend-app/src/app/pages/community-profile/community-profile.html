@@ -1,153 +1,271 @@
+<!-- ==========================================================
+     PERFIL DE COMUNIDAD — Universidad de Nariño
+     Sistema visual compartido con student-home / tools
+     ========================================================== -->
+
+<!-- SPRITE DE ICONOS -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="ic-cap" viewBox="0 0 24 24">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+    </symbol>
+    <symbol id="ic-layers" viewBox="0 0 24 24">
+      <path d="M12 2 2 7l10 5 10-5-10-5z"/>
+      <path d="m2 17 10 5 10-5"/>
+      <path d="m2 12 10 5 10-5"/>
+    </symbol>
+    <symbol id="ic-mail" viewBox="0 0 24 24">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+      <polyline points="22,6 12,13 2,6"/>
+    </symbol>
+    <symbol id="ic-info" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 16v-4"/>
+      <path d="M12 8h.01"/>
+    </symbol>
+    <symbol id="ic-briefcase" viewBox="0 0 24 24">
+      <path d="M2 7h20M2 7v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7M8 7V5c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v2"/>
+    </symbol>
+    <symbol id="ic-folder" viewBox="0 0 24 24">
+      <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2z"/>
+    </symbol>
+    <symbol id="ic-arrow" viewBox="0 0 24 24">
+      <line x1="4" y1="12" x2="19" y2="12"/>
+      <polyline points="13,6 19,12 13,18"/>
+    </symbol>
+    <symbol id="ic-close" viewBox="0 0 24 24">
+      <line x1="6" y1="6" x2="18" y2="18"/>
+      <line x1="18" y1="6" x2="6" y2="18"/>
+    </symbol>
+    <symbol id="ic-user-plus" viewBox="0 0 24 24">
+      <path d="M15 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+      <circle cx="8.5" cy="7" r="4"/>
+      <line x1="19" y1="8" x2="19" y2="14"/>
+      <line x1="16" y1="11" x2="22" y2="11"/>
+    </symbol>
+  </defs>
+</svg>
+
 @if (usuario) {
-<div class="profile-container">
+<div class="art-dashboard profile-dashboard">
 
-  <!-- HEADER DEL PERFIL -->
-  <header class="profile-header">
-    <div class="avatar-container">
-      <img
-        [src]="usuario.foto_url || '/user.webp'"
-        [alt]="'Foto de perfil de ' + usuario.name"
-        class="profile-photo"
-      />
-    </div>
+  <!-- ======================= 1. CABECERA DEL PERFIL ======================= -->
+  <header class="art-hero profile-hero">
+    <div class="hero-main">
+      <div class="identity">
+        <div class="avatar-frame">
+          <img
+            [src]="usuario.foto_url || '/user.png'"
+            [alt]="'Foto de perfil de ' + usuario.name"
+            class="avatar-img"
+          />
+          <span class="presence-dot" title="Miembro activo" aria-hidden="true"></span>
+        </div>
 
-    <div class="header-details">
-      <div class="title-row">
-        <h1>{{ usuario.name }}</h1>
-        <span class="role-badge">{{ usuario.role?.nombre }}</span>
+        <div class="identity-text">
+          <span class="hero-eyebrow">Perfil de la comunidad académica</span>
+
+          <div class="title-row">
+            <h1 class="hero-title">{{ usuario.name }}</h1>
+            <span
+              class="role-pill"
+              [ngClass]="{
+                'is-estudiante': usuario.role?.nombre === 'Estudiante',
+                'is-tutor': usuario.role?.nombre === 'Tutor',
+                'is-coordinador': usuario.role?.nombre === 'Coordinador'
+              }">
+              {{ usuario.role?.nombre }}
+            </span>
+          </div>
+
+          <div class="meta-chips">
+            @if (usuario.programa) {
+              <span class="meta-chip">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#ic-cap"></use></svg>
+                {{ usuario.programa }}
+              </span>
+            }
+            <span class="meta-chip">
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#ic-layers"></use></svg>
+              {{ proyectos.length }} {{ proyectos.length === 1 ? 'proyecto' : 'proyectos' }}
+            </span>
+            @if (usuario.mostrar_correo && usuario.email) {
+              <span class="meta-chip">
+                <svg class="icon icon-sm" aria-hidden="true"><use href="#ic-mail"></use></svg>
+                {{ usuario.email }}
+              </span>
+            }
+          </div>
+        </div>
       </div>
 
-      @if (usuario.programa) {
-        <p class="program-info">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-          </svg>
-          {{ usuario.programa }}
-        </p>
-      }
-
-      <!-- ACCIONES DE INTERACCIÓN (Solo si NO es mi propio perfil) -->
       @if (!esPropioPerfil) {
-        <div class="header-actions">
+        <div class="hero-actions">
           @if (misProyectos.length > 0) {
-            <button 
-              class="btn-secondary-sm"
+            <button
+              type="button"
+              class="btn-action"
+              [class.is-open]="mostrarSelectorProyecto"
               (click)="mostrarSelectorProyecto = !mostrarSelectorProyecto">
-              📨 Invitar a un proyecto
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#ic-user-plus"></use></svg>
+              Invitar a un proyecto
             </button>
           }
 
           @if (esTutor) {
             <button
-              class="btn-primary-sm"
+              type="button"
+              class="btn-action is-primary"
               (click)="mostrarModalTutoria = true">
-              🎓 Solicitar tutoría
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#ic-cap"></use></svg>
+              Solicitar tutoría
             </button>
           }
         </div>
-
-        <!-- DESPLEGABLE DE INVITACIÓN RÁPIDA -->
-        @if (mostrarSelectorProyecto) {
-          <div class="inline-invite-box">
-            <select [(ngModel)]="proyectoSeleccionado">
-              <option [ngValue]="null">Selecciona uno de tus proyectos...</option>
-              @for (proyecto of misProyectos; track proyecto.id) {
-                <option [ngValue]="proyecto.id">{{ proyecto.titulo }}</option>
-              }
-            </select>
-            <button
-              class="btn-primary-sm"
-              [disabled]="!proyectoSeleccionado"
-              (click)="invitarAProyecto()">
-              Enviar
-            </button>
-          </div>
-        }
       }
     </div>
+
+    <!-- INVITACIÓN RÁPIDA -->
+    @if (!esPropioPerfil && mostrarSelectorProyecto) {
+      <div class="invite-bar">
+        <label class="invite-label" for="invite-project">Proyecto de origen</label>
+        <div class="invite-controls">
+          <select id="invite-project" [(ngModel)]="proyectoSeleccionado">
+            <option [ngValue]="null">Selecciona uno de tus proyectos...</option>
+            @for (proyecto of misProyectos; track proyecto.id) {
+              <option [ngValue]="proyecto.id">{{ proyecto.titulo }}</option>
+            }
+          </select>
+          <button
+            type="button"
+            class="btn-action is-primary"
+            [disabled]="!proyectoSeleccionado"
+            (click)="invitarAProyecto()">
+            Enviar invitación
+          </button>
+        </div>
+      </div>
+    }
   </header>
 
-  <!-- ACERCA DE -->
+  <!-- ======================= 2. ACERCA DE ======================= -->
   @if (usuario.bio) {
-    <section class="profile-section">
-      <h2>Acerca de</h2>
+    <section class="content-section delay-1">
+      <div class="section-header">
+        <h2 class="section-title">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ic-info"></use></svg>
+          Acerca de
+        </h2>
+      </div>
       <p class="bio-text">{{ usuario.bio }}</p>
     </section>
   }
 
-  <!-- CONTACTO -->
+  <!-- ======================= 3. CONTACTO ======================= -->
   @if (usuario.mostrar_correo && usuario.email) {
-    <section class="profile-section">
-      <h2>Contacto</h2>
-      <div class="contact-card">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-          <polyline points="22,6 12,13 2,6"/>
-        </svg>
-        <a [href]="'mailto:' + usuario.email">{{ usuario.email }}</a>
+    <section class="content-section delay-1">
+      <div class="section-header">
+        <h2 class="section-title">
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ic-mail"></use></svg>
+          Contacto institucional
+        </h2>
       </div>
+      <a class="contact-row" [href]="'mailto:' + usuario.email">
+        <svg class="icon icon-md" aria-hidden="true"><use href="#ic-mail"></use></svg>
+        <span class="contact-body">
+          <span class="contact-label">Correo electrónico</span>
+          <span class="contact-value">{{ usuario.email }}</span>
+        </span>
+        <svg class="icon icon-sm contact-arrow" aria-hidden="true"><use href="#ic-arrow"></use></svg>
+      </a>
     </section>
   }
 
-  <!-- PROYECTOS -->
-  <section class="profile-section">
-    <h2>Proyectos Públicos</h2>
+  <!-- ======================= 4. PROYECTOS PÚBLICOS ======================= -->
+  <section class="content-section delay-2">
+    <div class="section-header">
+      <h2 class="section-title">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#ic-layers"></use></svg>
+        Proyectos públicos
+      </h2>
+      <span class="count-pill">{{ proyectos.length }}</span>
+    </div>
 
     @if (proyectos.length > 0) {
       <div class="projects-grid">
         @for (proyecto of proyectos; track proyecto.id) {
-          <div class="project-card">
-            <div class="project-header">
-              <h3>{{ proyecto.titulo }}</h3>
-              <span class="status-tag" [ngClass]="proyecto.estado | lowercase">
+          <article class="project-card stagger">
+            <div class="project-top">
+              <h3 class="project-title">{{ proyecto.titulo }}</h3>
+              <span class="status-pill" [ngClass]="proyecto.estado | lowercase">
                 {{ proyecto.estado }}
               </span>
             </div>
 
-            <p class="project-type">{{ proyecto.tipo_proyecto }}</p>
+            <p class="project-type">
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#ic-briefcase"></use></svg>
+              {{ proyecto.tipo_proyecto }}
+            </p>
 
-            <!-- Ocultamos el botón de solicitar colaboración si es el propio perfil -->
             @if (!esPropioPerfil) {
               <button
-                class="btn-primary-sm"
+                type="button"
+                class="btn-action is-block"
                 (click)="solicitarColaboracion(proyecto.id)">
                 Solicitar colaboración
+                <svg class="icon icon-sm btn-arrow" aria-hidden="true"><use href="#ic-arrow"></use></svg>
               </button>
             }
-          </div>
+          </article>
         }
       </div>
     } @else {
-      <p class="empty-state">
-        Este usuario no posee proyectos públicos o ha decidido mantenerlos privados.
-      </p>
+      <div class="empty-state">
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#ic-folder"></use></svg>
+        <p>Este usuario no posee proyectos públicos o ha decidido mantenerlos privados.</p>
+      </div>
     }
   </section>
 
-  <!-- MODAL DE TUTORÍA -->
+  <!-- ======================= 5. MODAL DE TUTORÍA ======================= -->
   @if (mostrarModalTutoria && !esPropioPerfil) {
     <div class="modal-backdrop" (click)="mostrarModalTutoria = false">
-      <div class="modal" (click)="$event.stopPropagation()">
-        <h3>Solicitar Tutoría</h3>
-        <p class="modal-subtitle">Selecciona en cuál de tus proyectos deseas recibir tutoría:</p>
+      <div
+        class="modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tutoria-title"
+        (click)="$event.stopPropagation()">
+        <header class="modal-header">
+          <div class="modal-title">
+            <svg class="icon icon-md" aria-hidden="true"><use href="#ic-cap"></use></svg>
+            <div>
+              <h3 id="tutoria-title">Solicitar tutoría</h3>
+              <p>Selecciona en cuál de tus proyectos deseas recibir acompañamiento</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close" aria-label="Cerrar" (click)="mostrarModalTutoria = false">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#ic-close"></use></svg>
+          </button>
+        </header>
 
-        <div class="modal-project-list">
-          @for (proyecto of misProyectos; track proyecto.id) {
-            <button
-              class="modal-item-btn"
-              (click)="solicitarTutoria(proyecto.id)">
-              <span>{{ proyecto.titulo }}</span>
-              <span class="arrow">→</span>
-            </button>
-          }
+        <div class="modal-body">
+          <div class="option-list">
+            @for (proyecto of misProyectos; track proyecto.id) {
+              <button type="button" class="option-row" (click)="solicitarTutoria(proyecto.id)">
+                <span class="option-text">{{ proyecto.titulo }}</span>
+                <svg class="icon icon-sm option-arrow" aria-hidden="true"><use href="#ic-arrow"></use></svg>
+              </button>
+            }
+          </div>
         </div>
 
-        <div class="modal-actions">
-          <button class="btn-cancel" (click)="mostrarModalTutoria = false">
+        <footer class="modal-footer">
+          <button type="button" class="btn-action" (click)="mostrarModalTutoria = false">
             Cancelar
           </button>
-        </div>
+        </footer>
       </div>
     </div>
   }

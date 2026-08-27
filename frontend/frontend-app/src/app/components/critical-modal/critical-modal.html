@@ -1,30 +1,67 @@
+<!-- Sprite de iconos (Vectoriales / Estilo Feather) -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-alert-triangle" viewBox="0 0 24 24">
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+    <line x1="12" y1="9" x2="12" y2="13"></line>
+    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+  </symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"></circle>
+    <polyline points="12 6 12 12 16 14"></polyline>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24">
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+    <polyline points="12 5 19 12 12 19"></polyline>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </symbol>
+</svg>
+
 <div *ngIf="projects.length > 0" class="modal-backdrop">
   <div class="modal-card">
-    <div class="modal-header">
-      <div class="alert-badge">🚨 ATENCIÓN URGENTE</div>
+    
+    <!-- CABECERA DE ALERTA -->
+    <header class="modal-header">
+      <div class="alert-badge">
+        <svg class="icon icon-xs" aria-hidden="true"><use href="#i-alert-triangle"></use></svg>
+        <span>Atención urgente</span>
+      </div>
       <h2>Fecha Límite Inminente</h2>
-    </div>
+      <p class="header-subtitle">Universidad de Nariño &middot; Control de entregas</p>
+    </header>
 
+    <!-- CUERPO DE LA MODAL -->
     <div class="modal-body">
-      <p class="intro-text">Tienes entregas críticas que requieren tu atención inmediata:</p>
-      
+      <p class="intro-text">
+        Tienes entregas críticas que requieren tu revisión inmediata:
+      </p>
+
       <div class="critical-list">
         <div *ngFor="let p of projects" class="critical-item">
           <div class="item-info">
             <span class="project-title">{{ p.titulo }}</span>
             <span class="deadline-tag" [class.today]="p.dias_restantes === 0">
-              {{ p.dias_restantes === 0 ? '¡VENCE HOY!' : 'VENCE MAÑANA' }}
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#i-clock"></use></svg>
+              {{ p.dias_restantes === 0 ? 'Vence hoy' : 'Vence mañana' }}
             </span>
           </div>
-          <button (click)="goToProject(p.id)" class="btn-action">
-            Revisar Proyecto
+
+          <button type="button" (click)="goToProject(p.id)" class="btn-action">
+            <span>Revisar</span>
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
           </button>
         </div>
       </div>
     </div>
 
-    <div class="modal-footer">
-      <button (click)="closeModal()" class="btn-dismiss">Entendido, cerrar</button>
-    </div>
+    <!-- PIE DE PÁGINA -->
+    <footer class="modal-footer">
+      <button type="button" (click)="closeModal()" class="btn-ghost">
+        <svg class="icon icon-xs" aria-hidden="true"><use href="#i-check"></use></svg>
+        Entendido, cerrar
+      </button>
+    </footer>
+
   </div>
 </div>

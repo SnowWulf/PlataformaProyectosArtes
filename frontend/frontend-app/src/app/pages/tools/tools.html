@@ -1,98 +1,186 @@
-<div class="tools-container">
-  <!-- ENCABEZADO PRINCIPAL -->
-  <header class="tools-header">
-    <div class="header-info">
-      <h1>🛠️ Herramientas</h1>
-      <p>Organiza tu trabajo académico, automatiza avisos y gestiona tus eventos desde un solo lugar.</p>
+<!-- ==========================================================
+     SPRITE DE ICONOS (Feather style, 24x24, stroke)
+     ========================================================== -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="t-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
+  <symbol id="t-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></symbol>
+  <symbol id="t-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="t-send" viewBox="0 0 24 24"><path d="M21.5 4.5 2.5 12.5l6 2 2 6 3.5-4.5 5 3.5 2.5-15Z"/></symbol>
+  <symbol id="t-notebook" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></symbol>
+  <symbol id="t-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="4" width="3" height="14"/></symbol>
+  <symbol id="t-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></symbol>
+  <symbol id="t-layout" viewBox="0 0 24 24"><path d="M9 11H3v10h6Z"/><path d="M21 3h-6v18h6Z"/><path d="M15 7H9v14h6Z"/></symbol>
+  <symbol id="t-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="t-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></symbol>
+  <symbol id="t-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="t-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="t-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></symbol>
+</svg>
+
+<div class="art-dashboard tools-dashboard">
+
+  <!-- ==========================================================
+       1. HERO / CABECERA INSTITUCIONAL
+       ========================================================== -->
+  <header class="art-hero">
+    <div class="hero-main">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Facultad de Artes &middot; Universidad de Nariño</span>
+        <h1 class="hero-title">Herramientas académicas</h1>
+        <p class="hero-subtitle">
+          Gestión de actividades, notificaciones institucionales y análisis para el seguimiento de proyectos.
+        </p>
+      </div>
+
+      <div class="hero-summary" role="group" aria-label="Estado de las herramientas">
+        <div class="summary-item">
+          <span class="summary-value">{{ esCoordinador ? 5 : 4 }}</span>
+          <span class="summary-label">Herramientas</span>
+        </div>
+        <span class="summary-divider" aria-hidden="true"></span>
+        <div class="summary-item">
+          <span class="summary-value" [class.is-alert]="!alertasGlobalesActivas">
+            {{ alertasGlobalesActivas ? 'On' : 'Off' }}
+          </span>
+          <span class="summary-label">Alertas</span>
+        </div>
+      </div>
     </div>
   </header>
 
-  <!-- GRID DE HERRAMIENTAS -->
-  <div class="tools-grid">
+  <!-- ==========================================================
+       2. CATÁLOGO DE HERRAMIENTAS
+       ========================================================== -->
+  <section class="tools-grid" aria-label="Catálogo de herramientas">
 
-    <!-- HERRAMIENTA 1: CALENDARIO -->
-    <div class="tool-card">
+    <!-- CALENDARIO -->
+    <article class="tool-card stagger">
       <div class="card-top">
-        <div class="tool-icon">📅</div>
-        <span class="status-tag active">Activo</span>
+        <span class="tool-icon" aria-hidden="true">
+          <svg class="icon icon-md"><use href="#t-calendar"></use></svg>
+        </span>
+        <span class="status-pill is-active">Activo</span>
       </div>
-      <h2>Calendario</h2>
-      <p>Gestiona tus eventos, entregas y fechas importantes de forma visual.</p>
-      <button class="btn-tool" routerLink="/dashboard/tools/calendar">
-        Abrir calendario
-      </button>
-    </div>
 
-    <!-- HERRAMIENTA 2: ALERTAS AUTOMÁTICAS -->
-    <div class="tool-card feature-card">
+      <div class="card-body">
+        <h2 class="card-title">Calendario académico</h2>
+        <p class="card-text">Consulta entregas de proyectos, parciales y eventos de la facultad.</p>
+      </div>
+
+      <button class="btn-tool is-primary" routerLink="/dashboard/tools/calendar" type="button">
+        <span>Abrir calendario</span>
+        <svg class="icon icon-sm btn-arrow"><use href="#t-arrow-right"></use></svg>
+      </button>
+    </article>
+
+    <!-- ALERTAS -->
+    <article class="tool-card stagger">
       <div class="card-top">
-        <div class="tool-icon">🔔</div>
-        <span class="status-tag" [class.active]="alertasGlobalesActivas" [class.inactive]="!alertasGlobalesActivas">
-          {{ alertasGlobalesActivas ? 'Activo' : 'Desactivado' }}
+        <span class="tool-icon" aria-hidden="true">
+          <svg class="icon icon-md"><use href="#t-bell"></use></svg>
+        </span>
+        <span class="status-pill" [class.is-active]="alertasGlobalesActivas" [class.is-off]="!alertasGlobalesActivas">
+          {{ alertasGlobalesActivas ? 'Activo' : 'Inactivo' }}
         </span>
       </div>
-      <h2>Alertas Automáticas</h2>
-      <p>Recibe notificaciones sobre vencimientos próximos y documentos pendientes.</p>
-      
-      <button class="btn-tool btn-secondary" (click)="togglePanelAlertas()">
-        ⚙️ {{ mostrarConfiguracionAlertas ? 'Ocultar ajustes' : 'Configurar alertas' }}
-      </button>
-    </div>
 
-    <!-- HERRAMIENTA 3: VINCULAR A TU TELÉFONO -->
-    <div class="tool-card feature-card">
-      <div class="card-top">
-        <div class="tool-icon">📱</div>
-        <span class="status-tag active">Disponible</span>
+      <div class="card-body">
+        <h2 class="card-title">Alertas automáticas</h2>
+        <p class="card-text">Configura avisos de fechas límite, entregas y respuestas de tutorías.</p>
       </div>
-      <h2>Vincular a tu teléfono</h2>
-      <p>Conecta Telegram para recibir avisos y alertas al instante en tu celular.</p>
-      <button class="btn-tool btn-secondary" (click)="abrirModalTelegram()">
-        📲 Gestionar Telegram
-      </button>
-    </div>
 
-    <!-- HERRAMIENTA 4: TAREAS Y NOTAS -->
-    <div class="tool-card feature-card">
+      <button class="btn-tool" (click)="togglePanelAlertas()" type="button">
+        <svg class="icon icon-sm"><use href="#t-settings"></use></svg>
+        <span>{{ mostrarConfiguracionAlertas ? 'Cerrar ajustes' : 'Configurar alertas' }}</span>
+      </button>
+    </article>
+
+    <!-- TELEGRAM -->
+    <article class="tool-card stagger">
       <div class="card-top">
-        <div class="tool-icon">📝</div>
-        <span class="status-tag active">Activo</span>
+        <span class="tool-icon" aria-hidden="true">
+          <svg class="icon icon-md"><use href="#t-send"></use></svg>
+        </span>
+        <span class="status-pill is-info">Disponible</span>
       </div>
-      <h2>Tareas y Notas</h2>
-      <p>Organiza tus actividades pendientes del día y toma notas/apuntes rápidos.</p>
-      <button class="btn-tool btn-secondary" (click)="togglePanelTareasNotas()">
-        📋 {{ mostrarTareasNotas ? 'Cerrar panel' : 'Abrir Tareas y Notas' }}
-      </button>
-    </div>
 
-    <!-- 📊 HERRAMIENTA 5: ANALÍTICA Y ESTADÍSTICAS (SÓLO PARA COORDINADORES) -->
+      <div class="card-body">
+        <h2 class="card-title">Notificaciones móviles</h2>
+        <p class="card-text">Vincula tu cuenta con Telegram para recibir avisos en tiempo real.</p>
+      </div>
+
+      <button class="btn-tool" (click)="abrirModalTelegram()" type="button">
+        <svg class="icon icon-sm"><use href="#t-send"></use></svg>
+        <span>Vincular Telegram</span>
+      </button>
+    </article>
+
+    <!-- TAREAS Y NOTAS -->
+    <article class="tool-card stagger">
+      <div class="card-top">
+        <span class="tool-icon" aria-hidden="true">
+          <svg class="icon icon-md"><use href="#t-notebook"></use></svg>
+        </span>
+        <span class="status-pill is-active">Activo</span>
+      </div>
+
+      <div class="card-body">
+        <h2 class="card-title">Bitácora y pendientes</h2>
+        <p class="card-text">Organiza tus ideas, anotaciones de proyectos y tareas individuales.</p>
+      </div>
+
+      <button class="btn-tool" (click)="togglePanelTareasNotas()" type="button">
+        <svg class="icon icon-sm"><use href="#t-layout"></use></svg>
+        <span>{{ mostrarTareasNotas ? 'Cerrar panel' : 'Abrir bitácora' }}</span>
+      </button>
+    </article>
+
+    <!-- ANALÍTICA (COORDINACIÓN) -->
     @if (esCoordinador) {
-      <div class="tool-card feature-card admin-card">
+      <article class="tool-card is-admin stagger">
         <div class="card-top">
-          <div class="tool-icon">📊</div>
-          <span class="status-tag admin-tag">Administración</span>
+          <span class="tool-icon" aria-hidden="true">
+            <svg class="icon icon-md"><use href="#t-chart"></use></svg>
+          </span>
+          <span class="status-pill is-admin">
+            <svg class="icon icon-xs"><use href="#t-shield"></use></svg>
+            Coordinación
+          </span>
         </div>
-        <h2>Analítica e Informes BI</h2>
-        <p>Estadísticas y métricas en tiempo real sobre el estado de proyectos de la facultad.</p>
-        <button class="btn-tool btn-admin" (click)="togglePanelBi()">
-          📈 {{ mostrarModalBi ? 'Cerrar panel' : 'Abrir Dashboard BI' }}
+
+        <div class="card-body">
+          <h2 class="card-title">Analítica e informes</h2>
+          <p class="card-text">Estadísticas institucionales de proyectos y rendimiento académico.</p>
+        </div>
+
+        <button class="btn-tool is-admin" (click)="togglePanelBi()" type="button">
+          <svg class="icon icon-sm"><use href="#t-chart"></use></svg>
+          <span>{{ mostrarModalBi ? 'Cerrar panel' : 'Abrir dashboard BI' }}</span>
         </button>
-      </div>
+      </article>
     }
 
-  </div>
+  </section>
 
-  <!-- MODAL FLOTANTE: TAREAS Y NOTAS -->
+  <!-- ==========================================================
+       3. MODAL: BITÁCORA DE TAREAS Y NOTAS
+       ========================================================== -->
   @if (mostrarTareasNotas) {
-    <div class="modal-backdrop" (click)="togglePanelTareasNotas()">
-      <div class="modal-dialog modal-large" (click)="$event.stopPropagation()">
-        <div class="modal-header">
+    <div class="modal-backdrop" (click)="togglePanelTareasNotas()" role="presentation">
+      <div class="modal-dialog is-large" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-tareas-title">
+        <header class="modal-header">
           <div class="modal-title">
-            <h3>📋 Panel de Tareas y Notas</h3>
-            <p>Organiza tus compromisos rápidos y redacta apuntes personales</p>
+            <svg class="icon icon-md"><use href="#t-layout"></use></svg>
+            <div>
+              <h3 id="modal-tareas-title">Bitácora académica</h3>
+              <p>Gestiona tus tareas y anotaciones universitarias</p>
+            </div>
           </div>
-          <button class="btn-close-modal" (click)="togglePanelTareasNotas()">✕</button>
-        </div>
+          <button class="btn-close" (click)="togglePanelTareasNotas()" type="button" aria-label="Cerrar bitácora">
+            <svg class="icon icon-sm"><use href="#t-x"></use></svg>
+          </button>
+        </header>
+
         <div class="modal-body">
           <app-sidebar-panel
             [events]="eventos"
@@ -107,95 +195,77 @@
     </div>
   }
 
-  <!-- MODAL FLOTANTE: CONFIGURACIÓN DE ALERTAS -->
+  <!-- ==========================================================
+       4. MODAL: CONFIGURACIÓN DE ALERTAS
+       ========================================================== -->
   @if (mostrarConfiguracionAlertas) {
-    <div class="modal-backdrop" (click)="togglePanelAlertas()">
-      <div class="modal-dialog" (click)="$event.stopPropagation()">
-        <div class="modal-header">
+    <div class="modal-backdrop" (click)="togglePanelAlertas()" role="presentation">
+      <div class="modal-dialog" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-alertas-title">
+        <header class="modal-header">
           <div class="modal-title">
-            <h3>🔔 Ajustes de Alertas Automáticas</h3>
-            <p>Personaliza las notificaciones del sistema</p>
-          </div>
-          <button class="btn-close-modal" (click)="togglePanelAlertas()">✕</button>
-        </div>
-        <div class="modal-body alerts-modal-content">
-          <div class="master-switch-card">
-            <div class="switch-info">
-              <span>Sistema de Alertas Global</span>
-              <p>Activa o desactiva todas las notificaciones del sistema</p>
+            <svg class="icon icon-md"><use href="#t-bell"></use></svg>
+            <div>
+              <h3 id="modal-alertas-title">Alertas institucionales</h3>
+              <p>Ajustes de notificaciones académicas</p>
             </div>
-            <label class="switch-container">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="alertasGlobalesActivas" 
+          </div>
+          <button class="btn-close" (click)="togglePanelAlertas()" type="button" aria-label="Cerrar ajustes de alertas">
+            <svg class="icon icon-sm"><use href="#t-x"></use></svg>
+          </button>
+        </header>
+
+        <div class="modal-body alerts-panel">
+          <div class="switch-row is-master">
+            <div class="switch-info">
+              <h4>Notificaciones globales</h4>
+              <p>Activa o desactiva todos los avisos del sistema</p>
+            </div>
+            <label class="switch">
+              <input
+                type="checkbox"
+                [(ngModel)]="alertasGlobalesActivas"
                 (change)="guardarConfiguracionAlertas()"
-              />
-              <span class="slider"></span>
+                aria-label="Activar notificaciones globales" />
+              <span class="switch-track" aria-hidden="true"></span>
             </label>
           </div>
 
-          <div class="alerts-options-grid" [class.disabled-grid]="!alertasGlobalesActivas">
-            <div class="alert-option-item">
-              <div class="option-info">
-                <h4>⏳ Vencimientos próximos</h4>
-                <p>Aviso 3 días antes del límite</p>
+          <div class="alerts-options" [class.is-disabled]="!alertasGlobalesActivas">
+            <div class="switch-row">
+              <div class="switch-info">
+                <h4>
+                  <svg class="icon icon-xs"><use href="#t-clock"></use></svg>
+                  Vencimiento de entregas
+                </h4>
+                <p>Aviso con 3 días de antelación</p>
               </div>
-              <label class="switch-container">
-                <input 
-                  type="checkbox" 
-                  [(ngModel)]="configuracionAlertas.vencimientos" 
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="configuracionAlertas.vencimientos"
                   [disabled]="!alertasGlobalesActivas"
                   (change)="guardarConfiguracionAlertas()"
-                />
-                <span class="slider"></span>
+                  aria-label="Alertas de vencimiento de entregas" />
+                <span class="switch-track" aria-hidden="true"></span>
               </label>
             </div>
 
-            <div class="alert-option-item">
-              <div class="option-info">
-                <h4>📄 Documentos pendientes</h4>
-                <p>Notificar cuando falten entregas</p>
+            <div class="switch-row">
+              <div class="switch-info">
+                <h4>
+                  <svg class="icon icon-xs"><use href="#t-file"></use></svg>
+                  Documentos pendientes
+                </h4>
+                <p>Notificación de archivos requeridos</p>
               </div>
-              <label class="switch-container">
-                <input 
-                  type="checkbox" 
-                  [(ngModel)]="configuracionAlertas.documentosPendientes" 
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="configuracionAlertas.documentosPendientes"
                   [disabled]="!alertasGlobalesActivas"
                   (change)="guardarConfiguracionAlertas()"
-                />
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="alert-option-item">
-              <div class="option-info">
-                <h4>👩‍🏫 Solicitudes de Tutoría</h4>
-                <p>Cambios en estado de reunión</p>
-              </div>
-              <label class="switch-container">
-                <input 
-                  type="checkbox" 
-                  [(ngModel)]="configuracionAlertas.solicitudesTutoria" 
-                  [disabled]="!alertasGlobalesActivas"
-                  (change)="guardarConfiguracionAlertas()"
-                />
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="alert-option-item">
-              <div class="option-info">
-                <h4>📧 Resumen semanal</h4>
-                <p>Boletín enviado los lunes</p>
-              </div>
-              <label class="switch-container">
-                <input 
-                  type="checkbox" 
-                  [(ngModel)]="configuracionAlertas.resumenSemanal" 
-                  [disabled]="!alertasGlobalesActivas"
-                  (change)="guardarConfiguracionAlertas()"
-                />
-                <span class="slider"></span>
+                  aria-label="Alertas de documentos pendientes" />
+                <span class="switch-track" aria-hidden="true"></span>
               </label>
             </div>
           </div>
@@ -204,19 +274,24 @@
     </div>
   }
 
-  <!-- MODAL FLOTANTE: VINCULACIÓN CON TELEGRAM -->
+  <!-- ==========================================================
+       5. MODAL: TELEGRAM
+       ========================================================== -->
   @if (mostrarModalTelegram) {
-    <div class="modal-backdrop" (click)="cerrarModalTelegram()">
-      <div class="modal-dialog" (click)="$event.stopPropagation()">
-        <div class="modal-header">
+    <div class="modal-backdrop" (click)="cerrarModalTelegram()" role="presentation">
+      <div class="modal-dialog" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-telegram-title">
+        <header class="modal-header">
           <div class="modal-title">
-            <h3>📱 Vinculación con Telegram</h3>
-            <p>Conecta tu dispositivo para recibir alertas push al instante</p>
+            <svg class="icon icon-md"><use href="#t-send"></use></svg>
+            <div>
+              <h3 id="modal-telegram-title">Vinculación con Telegram</h3>
+              <p>Avisos institucionales directo a tu teléfono</p>
+            </div>
           </div>
-          <button class="btn-close-modal" (click)="cerrarModalTelegram()" title="Cerrar modal">
-            ✕
+          <button class="btn-close" (click)="cerrarModalTelegram()" type="button" aria-label="Cerrar vinculación con Telegram">
+            <svg class="icon icon-sm"><use href="#t-x"></use></svg>
           </button>
-        </div>
+        </header>
 
         <div class="modal-body">
           <app-telegram-connect></app-telegram-connect>
@@ -225,18 +300,26 @@
     </div>
   }
 
-  <!-- 📊 MODAL FLOTANTE EXTRA-ANCHO: ANALÍTICA Y BI METABASE -->
+  <!-- ==========================================================
+       6. MODAL: DASHBOARD BI (COORDINACIÓN)
+       ========================================================== -->
   @if (mostrarModalBi && esCoordinador) {
-    <div class="modal-backdrop" (click)="togglePanelBi()">
-      <div class="modal-dialog modal-xlarge" (click)="$event.stopPropagation()">
-        <div class="modal-header">
+    <div class="modal-backdrop" (click)="togglePanelBi()" role="presentation">
+      <div class="modal-dialog is-xlarge" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modal-bi-title">
+        <header class="modal-header">
           <div class="modal-title">
-            <h3>📊 Dashboard de Analítica de Proyectos</h3>
-            <p>Métricas y visualizaciones interactivas de Metabase</p>
+            <svg class="icon icon-md"><use href="#t-chart"></use></svg>
+            <div>
+              <h3 id="modal-bi-title">Panel de control institucional</h3>
+              <p>Métricas y análisis global de la facultad</p>
+            </div>
           </div>
-          <button class="btn-close-modal" (click)="togglePanelBi()">✕</button>
-        </div>
-        <div class="modal-body p-0">
+          <button class="btn-close" (click)="togglePanelBi()" type="button" aria-label="Cerrar panel institucional">
+            <svg class="icon icon-sm"><use href="#t-x"></use></svg>
+          </button>
+        </header>
+
+        <div class="modal-body is-flush">
           <app-bi-dashboard></app-bi-dashboard>
         </div>
       </div>

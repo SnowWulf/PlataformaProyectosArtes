@@ -1,400 +1,1009 @@
+// ==========================================================
+//  PALETA INSTITUCIONAL UNIVERSIDAD DE NARIÑO (UDENAR)
+//  Misma base que tutor-home / community / project-detail
+// ==========================================================
+$udenar-verde:        #006633; // Verde Sinople Oficial
+$udenar-verde-hover:  #004d26;
+$udenar-verde-soft:   #e6f0eb;
+$udenar-verde-light:  #cce1d6;
+
+$udenar-dorado:       #FFCC00; // Amarillo Gualda Oficial
+$udenar-dorado-dark:  #b38f00;
+$udenar-dorado-soft:  #fff9e6;
+
+$udenar-azul:         #1E3A8A;
+$udenar-azul-soft:    #eff6ff;
+$udenar-rojo:         #D32F2F;
+$udenar-rojo-soft:    #fdecec;
+$udenar-rojo-border:  #f3c9c9;
+
+$udenar-naranja:      #C2410C;
+$udenar-naranja-soft: #fff2e8;
+
+// Neutros y superficies
+$bg-main:             #F4F7F5;
+$bg-card:             #FFFFFF;
+$bg-subtle:           #EBF0EC;
+$bg-soft:             #F7F9F8;
+
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
+
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
+
+// Tipografía
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// Sombras y radios
+$shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.04);
+$shadow-card:  0 4px 10px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+$shadow-hover: 0 12px 24px -4px rgba(0, 102, 51, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+
+$radius-sm:   8px;
+$radius-md:   12px;
+$radius-lg:   16px;
+$radius-full: 9999px;
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ==========================================================
+//  RESET DEL HOST
+// ==========================================================
 :host {
-  --primary: #00933f;
-  --primary-hover: #007632;
-  --primary-light: #e6f4ec;
-  --bg-main: #f8faf9;
-  --surface: #ffffff;
-  --text-main: #1f2937;
-  --text-muted: #6b7280;
-  --border-color: #e5e7eb;
-  
-  --status-success: #10b981;
-  --status-warning: #f59e0b;
-  --status-danger: #ef4444;
-
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: var(--text-main);
   display: block;
-  background-color: var(--bg-main);
-  min-height: 100vh;
-  padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: $font-sans;
+  color: $text-main;
+  background-color: $bg-main;
 
-  /* Fondo estilo lienzo creativo */
-
-  background: radial-gradient(circle at top left, rgba(0, 147, 63, 0.08), transparent 40%),
-              radial-gradient(circle at bottom right, rgba(0, 147, 63, 0.04), transparent 50%),
-              #fcfdfc;
+  *, *::before, *::after { box-sizing: border-box; }
 }
 
+// ==========================================================
+//  SISTEMA DE ICONOS (SVG SPRITE)
+// ==========================================================
+.icon-sprite { display: none; }
 
-.dashboard-container {
-  max-width: 1100px;
-  margin: 0 auto;
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+
+  &.icon-xs { width: 13px; height: 13px; }
+  &.icon-sm { width: 15px; height: 15px; }
+  &.icon-md { width: 20px; height: 20px; }
+  &.icon-lg { width: 26px; height: 26px; stroke-width: 1.5; }
 }
 
-/* Header */
-.dashboard-header {
-  margin-bottom: 1.5rem;
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.dashboard-header h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-main);
-  margin: 0;
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.subtitle {
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-  font-size: 0.95rem;
+@keyframes growBar {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
 }
 
-/* Tabs Nav */
-.tabs-nav {
+// ==========================================================
+//  1. CONTENEDOR
+// ==========================================================
+.art-dashboard.student-dashboard {
   display: flex;
-  gap: 0.5rem;
-  border-bottom: 2px solid var(--border-color);
-  margin-bottom: 1.5rem;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.75rem;
+  max-width: 1240px;
+  margin: 0 auto;
+  min-height: 100vh;
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+    gap: 1.15rem;
+  }
+}
+
+// ==========================================================
+//  2. HERO / CABECERA
+// ==========================================================
+.art-hero {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.75rem 1.9rem;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.35s $ease-out both;
+
+  // Línea dorada institucional
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 3px;
+    background-color: $udenar-dorado;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1.4rem 1.25rem;
+  }
+}
+
+.hero-main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.hero-text { max-width: 620px; }
+
+.hero-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $udenar-verde;
+  margin-bottom: 0.6rem;
+}
+
+.hero-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: $text-main;
+  text-wrap: balance;
+
+  @media (max-width: 640px) { font-size: 1.35rem; }
+}
+
+.hero-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: $text-muted;
+  text-wrap: pretty;
+}
+
+.hero-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.85rem 1.1rem;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.summary-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: $udenar-verde;
+
+  &.is-alert { color: $udenar-rojo; }
+}
+
+.summary-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-faint;
+}
+
+.summary-divider {
+  width: 1px;
+  align-self: stretch;
+  background-color: $border-color;
+}
+
+// ==========================================================
+//  3. NAVEGACIÓN POR PESTAÑAS
+// ==========================================================
+.tab-nav {
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.35rem;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
   overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
 }
 
 .tab-btn {
-  background: transparent;
-  border: none;
-  padding: 0.75rem 1.25rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
+  flex: 1 0 auto;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: $text-muted;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+
+  .icon { color: $text-faint; transition: color 0.18s ease; }
+
+  &:hover {
+    background-color: $bg-subtle;
+    color: $text-main;
+
+    .icon { color: $udenar-verde; }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-verde;
+    outline-offset: 2px;
+  }
+
+  &.active {
+    background-color: $udenar-verde;
+    border-color: $udenar-verde;
+    color: #ffffff;
+
+    .icon { color: #ffffff; }
+
+    .tab-count {
+      background-color: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+    }
+  }
+}
+
+.tab-count {
+  min-width: 20px;
+  padding: 0.1rem 0.4rem;
+  border-radius: $radius-full;
+  background-color: $bg-subtle;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: $text-muted;
+  text-align: center;
+}
+
+// ==========================================================
+//  4. PANEL DE PESTAÑA
+// ==========================================================
+.tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeIn 0.3s $ease-out both;
+}
+
+// ==========================================================
+//  5. MÉTRICAS
+// ==========================================================
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.metric-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.15rem;
+  text-align: left;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  animation: slideUp 0.35s $ease-out both;
+
+  &:nth-child(2) { animation-delay: 0.04s; }
+  &:nth-child(3) { animation-delay: 0.08s; }
+  &:nth-child(4) { animation-delay: 0.12s; }
+  &:nth-child(5) { animation-delay: 0.16s; }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: $border-strong;
+    box-shadow: $shadow-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-verde;
+    outline-offset: 2px;
+  }
+
+  &.active {
+    border-color: $udenar-verde;
+    box-shadow: 0 0 0 1px $udenar-verde inset, $shadow-card;
+  }
+}
+
+.metric-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-sm;
+  flex-shrink: 0;
+
+  &.tone-neutral { background-color: $bg-subtle;          color: $text-muted; }
+  &.tone-green   { background-color: $udenar-verde-soft;  color: $udenar-verde; }
+  &.tone-gold    { background-color: $udenar-dorado-soft; color: $udenar-dorado-dark; }
+  &.tone-orange  { background-color: $udenar-naranja-soft;color: $udenar-naranja; }
+  &.tone-red     { background-color: $udenar-rojo-soft;   color: $udenar-rojo; }
+  &.tone-blue    { background-color: $udenar-azul-soft;   color: $udenar-azul; }
+}
+
+.metric-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.metric-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: $text-faint;
+}
+
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: $text-main;
+}
+
+.metric-footer {
+  font-size: 0.76rem;
+  color: $text-muted;
+}
+
+.tone-text-green  { color: $udenar-verde; }
+.tone-text-gold   { color: $udenar-dorado-dark; }
+.tone-text-orange { color: $udenar-naranja; }
+.tone-text-red    { color: $udenar-rojo; }
+
+// ==========================================================
+//  6. SECCIONES DE CONTENIDO
+// ==========================================================
+.content-section {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.5rem;
+  box-shadow: $shadow-card;
+  animation: fadeIn 0.3s $ease-out both;
+
+  @media (max-width: 640px) { padding: 1.15rem; }
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid $border-color;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+
+  > .icon { color: $udenar-verde; margin-top: 0.15rem; }
+
+  h2 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $text-main;
+  }
+}
+
+.section-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.79rem;
+  color: $text-muted;
+
+  strong { color: $udenar-verde; font-weight: 700; }
+}
+
+.section-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: $text-faint;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-.tab-btn:hover {
-  color: var(--primary);
-  background-color: var(--primary-light);
-  border-radius: 6px 6px 0 0;
-}
-
-.tab-btn.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-  font-weight: 600;
-}
-
-/* Tarjetas base */
-.dashboard-card {
-  background: var(--surface);
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  margin-bottom: 1.5rem;
-}
-
-.card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-top: 0;
-  margin-bottom: 1.25rem;
-  color: var(--text-main);
-}
-
-/* Proyecto Card */
-.project-card {
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.project-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 147, 63, 0.12);
-  border-color: var(--primary);
-}
-
-.card-header {
+// ==========================================================
+//  7. PROYECTO ACTUAL
+// ==========================================================
+.project-panel {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  flex-direction: column;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  animation: slideUp 0.35s $ease-out both;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: $udenar-verde-light;
+    box-shadow: $shadow-hover;
+
+    .link-action .icon { transform: translateX(3px); }
+  }
 }
 
-.badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.badge-primary {
-  background: var(--primary-light);
-  color: var(--primary);
-}
-
-.badge-status {
-  background: #f3f4f6;
-  color: var(--text-main);
-}
+.project-panel-body { padding: 1.25rem 1.3rem; }
 
 .project-title {
-  font-size: 1.4rem;
-  margin: 0 0 0.5rem 0;
-  color: var(--text-main);
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: $text-main;
+  text-wrap: balance;
 }
 
 .project-description {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
+  margin: 0 0 1.2rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: $text-muted;
+  text-wrap: pretty;
 }
 
-/* Barra de progreso */
-.progress-section {
-  margin-bottom: 1.25rem;
-}
+.progress-block { margin-bottom: 1.1rem; }
 
-.progress-info {
+.progress-head {
   display: flex;
+  align-items: baseline;
   justify-content: space-between;
-  font-size: 0.875rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  gap: 0.75rem;
+  margin-bottom: 0.45rem;
+}
+
+.progress-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: $text-faint;
+}
+
+.progress-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: $udenar-verde;
 }
 
 .progress-track {
-  height: 10px;
-  background-color: #e5e7eb;
-  border-radius: 999px;
+  height: 6px;
+  border-radius: $radius-full;
+  background-color: $bg-subtle;
   overflow: hidden;
 }
 
 .progress-fill {
+  display: block;
   height: 100%;
-  background-color: var(--primary);
-  border-radius: 999px;
-  transition: width 0.4s ease;
+  border-radius: $radius-full;
+  background-color: $udenar-verde;
+  transform-origin: left center;
+  animation: growBar 0.9s $ease-out both;
+  transition: width 0.6s $ease-out;
 }
 
-.project-meta {
-  border-top: 1px solid var(--border-color);
-  padding-top: 1rem;
-  font-size: 0.9rem;
+.project-panel-footer,
+.alert-card-footer {
+  padding: 0.8rem 1.3rem;
+  background-color: $bg-soft;
+  border-top: 1px solid $border-color;
 }
 
-.meta-label {
-  color: var(--text-muted);
+.link-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: $udenar-verde;
+
+  .icon { transition: transform 0.18s ease; }
 }
 
-.meta-value {
-  font-weight: 600;
-  margin-left: 0.5rem;
+.context-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
-/* Alertas */
+.context-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: $radius-sm;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  font-size: 0.77rem;
+  color: $text-main;
+}
+
+.pill-label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: $text-faint;
+}
+
+// ==========================================================
+//  8. ALERTAS
+// ==========================================================
 .alerts-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
   gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 
 .alert-card {
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border-color);
-  border-left: 4px solid var(--status-warning);
-  padding: 1rem;
-  border-radius: 8px;
+  flex-direction: column;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  overflow: hidden;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  animation: slideUp 0.35s $ease-out both;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: $udenar-verde-light;
+    box-shadow: $shadow-hover;
+
+    .link-action .icon { transform: translateX(3px); }
+  }
 }
 
-.alert-card:hover {
-  background: #fefce8;
-}
-
-.alert-info h4 {
-  margin: 0 0 0.25rem 0;
-  font-size: 0.95rem;
-}
-
-.alert-info p {
-  margin: 0.2rem 0;
-  font-size: 0.85rem;
-}
-
-/* Stats Grid */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1rem;
-}
-
-.stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 1rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.stat-card:hover {
-  border-color: var(--primary);
-  background-color: var(--primary-light);
-}
-
-.stat-number {
-  display: block;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.stat-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-/* Documentos */
-.documents-grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-}
-
-.document-card {
-  background: var(--surface);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 1rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-.document-card:hover {
-  border-color: var(--primary);
-}
-
-.document-header {
+.alert-card-head {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1rem 1.1rem 0.85rem;
+}
+
+.alert-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: $text-main;
+}
+
+.alerts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0 1.1rem 1.1rem;
+  flex: 1;
+}
+
+.alert-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: $radius-sm;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  strong { font-weight: 700; }
+
+  &.tone-red    { background-color: $udenar-rojo-soft;    color: $udenar-rojo; }
+  &.tone-gold   { background-color: $udenar-dorado-soft;  color: $udenar-dorado-dark; }
+  &.tone-orange { background-color: $udenar-naranja-soft; color: $udenar-naranja; }
+  &.tone-green  { background-color: $udenar-verde-soft;   color: $udenar-verde; }
+}
+
+// ==========================================================
+//  9. LISTA DE DOCUMENTOS
+// ==========================================================
+.document-list {
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
-.document-header h4 {
-  margin: 0;
-  font-size: 0.95rem;
+.document-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+  animation: fadeIn 0.3s $ease-out both;
+
+  &:hover {
+    border-color: $udenar-verde-light;
+    background-color: $bg-soft;
+
+    .row-chevron { transform: translateX(3px); color: $udenar-verde; }
+  }
 }
 
-.status-badge {
-  font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  background: #f3f4f6;
-  font-weight: 600;
+.doc-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: $radius-sm;
+  background-color: $udenar-verde-soft;
+  color: $udenar-verde;
+  flex-shrink: 0;
 }
 
-/* Revisiones */
+.doc-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-title {
+  margin: 0 0 0.15rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: $text-main;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doc-subtitle {
+  display: block;
+  font-size: 0.76rem;
+  color: $text-muted;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-chevron {
+  color: $text-faint;
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+// ==========================================================
+//  10. ESTADOS (PILLS)
+// ==========================================================
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: $radius-full;
+  border: 1px solid transparent;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.status-neutral   { background-color: $bg-subtle;          color: $text-muted;         border-color: $border-color; }
+.status-pending   { background-color: $udenar-rojo-soft;   color: $udenar-rojo;        border-color: $udenar-rojo-border; }
+.status-reviewing { background-color: $udenar-dorado-soft; color: $udenar-dorado-dark; border-color: #f2e0a8; }
+.status-approved  { background-color: $udenar-verde-soft;  color: $udenar-verde;       border-color: $udenar-verde-light; }
+.status-correction{ background-color: $udenar-naranja-soft;color: $udenar-naranja;     border-color: #f7d5bf; }
+.status-rejected  { background-color: $udenar-rojo-soft;   color: #991b1b;             border-color: $udenar-rojo-border; }
+
+// ==========================================================
+//  11. REVISIONES
+// ==========================================================
 .reviews-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.65rem;
 }
 
 .review-card {
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 1rem;
-  background: var(--surface);
+  display: flex;
+  gap: 0.9rem;
+  padding: 1.1rem;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  animation: fadeIn 0.3s $ease-out both;
+
+  &:hover {
+    border-color: $udenar-verde-light;
+    box-shadow: $shadow-hover;
+  }
 }
 
-.review-header {
+.review-accent {
+  width: 3px;
+  border-radius: $radius-full;
+  background-color: $udenar-verde;
+  flex-shrink: 0;
+}
+
+.review-main { flex: 1; min-width: 0; }
+
+.review-head {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
 }
 
-.review-project {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: $radius-full;
+  background-color: $udenar-verde-soft;
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: $udenar-verde;
 }
 
-.review-doc {
-  margin: 0;
-  font-size: 1rem;
+.review-date,
+.activity-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.74rem;
+  color: $text-faint;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
-.review-comment {
-  background: #f9fafb;
-  border-left: 3px solid var(--primary);
-  padding: 0.75rem;
-  border-radius: 0 6px 6px 0;
-  margin: 0.75rem 0;
-  font-size: 0.9rem;
+.review-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: $text-main;
+  line-height: 1.35;
 }
 
-.review-comment p {
-  margin: 0.25rem 0 0 0;
-  color: var(--text-main);
+.review-quote {
+  margin: 0 0 0.7rem;
+  padding: 0.7rem 0.9rem;
+  background-color: $bg-soft;
+  border-left: 2px solid $udenar-dorado;
+  border-radius: 0 $radius-sm $radius-sm 0;
+  font-size: 0.83rem;
+  line-height: 1.55;
+  color: $text-main;
+  text-wrap: pretty;
 }
 
-.review-footer {
+.review-meta {
   display: flex;
-  gap: 1.5rem;
-  font-size: 0.8rem;
-  color: var(--text-muted);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: 0.78rem;
+  color: $text-muted;
+
+  span { display: inline-flex; align-items: center; gap: 0.35rem; }
+  strong { color: $text-main; font-weight: 600; }
+  .icon { color: $udenar-verde; }
 }
 
-/* Timeline (Actividad) */
+// ==========================================================
+//  12. BITÁCORA / TIMELINE
+// ==========================================================
 .timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
+}
+
+.timeline-entry {
+  display: flex;
   gap: 1rem;
-  position: relative;
-  padding-left: 1rem;
-  border-left: 2px solid var(--border-color);
+  padding-bottom: 1.15rem;
+  animation: fadeIn 0.3s $ease-out both;
+
+  &:last-child {
+    padding-bottom: 0;
+
+    .node-line { display: none; }
+  }
+
+  &:hover .timeline-card {
+    border-color: $udenar-verde-light;
+    box-shadow: $shadow-hover;
+  }
 }
 
-.timeline-item {
-  position: relative;
-  padding-left: 1rem;
+.timeline-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-.timeline-dot {
-  position: absolute;
-  left: -21px;
-  top: 4px;
-  width: 10px;
-  height: 10px;
+.node-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background-color: var(--primary);
+  background-color: $bg-subtle;
+  border: 1px solid $border-color;
+  color: $text-muted;
+  flex-shrink: 0;
+
+  &.node-red    { background-color: $udenar-rojo-soft;    border-color: $udenar-rojo-border; color: $udenar-rojo; }
+  &.node-gold   { background-color: $udenar-dorado-soft;  border-color: #f2e0a8;             color: $udenar-dorado-dark; }
+  &.node-orange { background-color: $udenar-naranja-soft; border-color: #f7d5bf;             color: $udenar-naranja; }
+  &.node-green  { background-color: $udenar-verde-soft;   border-color: $udenar-verde-light; color: $udenar-verde; }
 }
 
-.activity-desc {
-  margin: 0;
-  font-size: 0.95rem;
+.node-line {
+  width: 1px;
+  flex: 1;
+  margin-top: 0.4rem;
+  background-color: $border-color;
 }
 
-.activity-date {
-  font-size: 0.8rem;
-  color: var(--text-muted);
+.timeline-card {
+  flex: 1;
+  min-width: 0;
+  padding: 0.95rem 1.1rem;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-.empty-message {
-  color: var(--text-muted);
-  font-style: italic;
+.timeline-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $text-main;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+// ==========================================================
+//  13. ESTADO VACÍO
+// ==========================================================
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 2rem;
+  padding: 2.75rem 1rem;
+  animation: fadeIn 0.3s $ease-out both;
 }
 
+.empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 0.9rem;
+  border-radius: 50%;
+  background-color: $bg-subtle;
+  color: $text-faint;
+}
+
+.empty-title {
+  margin: 0 0 0.3rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: $text-main;
+}
+
+.empty-text {
+  margin: 0;
+  font-size: 0.82rem;
+  color: $text-muted;
+  max-width: 380px;
+}
+
+// ==========================================================
+//  14. RESPONSIVE
+// ==========================================================
+@media (max-width: 720px) {
+  .hero-main { align-items: flex-start; }
+  .hero-summary { width: 100%; justify-content: space-between; }
+  .tab-text { display: none; }
+  .tab-btn { padding: 0.6rem 0.75rem; }
+  .review-head,
+  .review-meta { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .timeline-entry { gap: 0.75rem; }
+  .project-panel-body { padding: 1.1rem; }
+  .project-panel-footer,
+  .alert-card-footer { padding: 0.75rem 1.1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

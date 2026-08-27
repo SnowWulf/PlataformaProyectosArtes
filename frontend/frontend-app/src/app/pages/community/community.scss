@@ -1,211 +1,642 @@
-// VARIABLES Y PALETA DE COLORES (Consistencia con el tema claro)
-$bg-card: #ffffff;
-$bg-main: #f8fafc;
-$border-color: #e2e8f0;
+// ==========================================================
+//  COMUNIDAD ACADÉMICA — Facultad de Artes
+//  Paleta institucional Universidad de Nariño (UDENAR)
+//  Misma base que tutor-request / users / projects
+// ==========================================================
+$udenar-verde:        #006633; // Verde Sinople Oficial
+$udenar-verde-hover:  #004d26;
+$udenar-verde-soft:   #e6f0eb;
+$udenar-verde-light:  #cce1d6;
 
-$accent-green: #059669;    /* Verde títulos y acentos */
-$primary-green: #10b981;   /* Verde botones */
-$primary-hover: #059669;
-$text-main: #0f172a;       /* Texto oscuro principal */
-$text-muted: #64748b;      /* Texto secundario */
+$udenar-dorado:       #FFCC00; // Amarillo Gualda Oficial
+$udenar-dorado-dark:  #b38f00;
+$udenar-dorado-soft:  #fff9e6;
 
-.community-container {
+$udenar-azul:         #1E3A8A; // Azul Institucional
+$udenar-azul-soft:    #eff6ff;
+$udenar-azul-border:  #c7d7f5;
+
+// Neutros y superficies
+$bg-main:             #F4F7F5;
+$bg-card:             #FFFFFF;
+$bg-subtle:           #EBF0EC;
+$bg-soft:             #F7F9F8;
+
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
+
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
+
+// Tipografía
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// Sombras y radios
+$shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.04);
+$shadow-card:  0 4px 10px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+$shadow-hover: 0 12px 24px -4px rgba(0, 102, 51, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+
+$radius-sm:   8px;
+$radius-md:   12px;
+$radius-lg:   16px;
+$radius-full: 9999px;
+
+// ==========================================================
+//  RESET DEL HOST
+// ==========================================================
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: $font-sans;
+  color: $text-main;
+  background-color: $bg-main;
+
+  *, *::before, *::after { box-sizing: border-box; }
+}
+
+// ==========================================================
+//  SISTEMA DE ICONOS (SVG SPRITE)
+// ==========================================================
+.icon-sprite { display: none; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+
+  &.icon-xs { width: 14px; height: 14px; }
+  &.icon-sm { width: 16px; height: 16px; }
+  &.icon-md { width: 20px; height: 20px; }
+  &.icon-lg { width: 30px; height: 30px; stroke-width: 1.5; }
+}
+
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba($udenar-verde, 0.5); }
+  70%      { box-shadow: 0 0 0 6px rgba($udenar-verde, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+// ==========================================================
+//  1. CONTENEDOR
+// ==========================================================
+.art-dashboard.community {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 1200px;
+  padding: 1.75rem;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 1.5rem;
-  color: $text-main;
-  background-color: $bg-main;
-  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+    gap: 1.15rem;
+  }
 }
 
-// HEADER DE LA COMUNIDAD
-.community-header {
-  background: $bg-card;
+// ==========================================================
+//  2. HERO / CABECERA
+// ==========================================================
+.art-hero {
+  background-color: $bg-card;
   border: 1px solid $border-color;
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: $radius-lg;
+  padding: 1.75rem 1.9rem;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.35s ease both;
 
-  h1 {
-    font-size: 1.8rem;
-    color: $accent-green;
-    margin: 0 0 0.25rem 0;
-    font-weight: 700;
+  // Línea dorada institucional
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 3px;
+    background-color: $udenar-dorado;
   }
 
-  p {
-    margin: 0;
-    color: $text-muted;
-    font-size: 0.95rem;
-    font-weight: 500;
+  @media (max-width: 640px) {
+    padding: 1.4rem 1.25rem;
   }
 }
 
-// SECCIÓN DE FILTROS Y BÚSQUEDA
-.community-filters {
+.hero-main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.hero-text { max-width: 620px; }
+
+.hero-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $udenar-verde;
+  margin-bottom: 0.6rem;
+}
+
+.hero-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: $text-main;
+  text-wrap: balance;
+
+  @media (max-width: 640px) { font-size: 1.35rem; }
+}
+
+.hero-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: $text-muted;
+  text-wrap: pretty;
+}
+
+.hero-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.85rem 1.4rem;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+}
+
+.summary-item {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
 
-  @media (min-width: 768px) {
+.summary-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: $udenar-verde;
+}
+
+.summary-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-faint;
+}
+
+// ==========================================================
+//  3. SECCIÓN DE CONTENIDO
+// ==========================================================
+.content-section {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.5rem;
+  box-shadow: $shadow-card;
+  animation: fadeIn 0.3s ease both;
+
+  @media (max-width: 640px) { padding: 1.15rem; }
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid $border-color;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+
+  > .icon { color: $udenar-verde; margin-top: 0.15rem; }
+
+  h2 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $text-main;
+  }
+}
+
+.section-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.79rem;
+  color: $text-muted;
+}
+
+.section-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: $text-faint;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+// ==========================================================
+//  4. TOOLBAR (BÚSQUEDA + FILTROS)
+// ==========================================================
+.section-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+
+  @media (min-width: 860px) {
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+
+  .search-icon {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-faint;
+    pointer-events: none;
+    transition: color 0.2s ease;
   }
 
-  // Input de Búsqueda
-  input[type="text"] {
+  input {
     width: 100%;
-    max-width: 380px;
-    padding: 0.65rem 1rem;
-    background: $bg-card;
+    padding: 0.62rem 0.9rem 0.62rem 2.5rem;
+    background-color: $bg-soft;
     border: 1px solid $border-color;
-    border-radius: 10px;
-    font-size: 0.9rem;
+    border-radius: $radius-md;
+    font-family: inherit;
+    font-size: 0.86rem;
     color: $text-main;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    transition: all 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 
-    &::placeholder {
-      color: $text-muted;
-    }
+    &::placeholder { color: $text-faint; }
 
     &:focus {
       outline: none;
-      border-color: $primary-green;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+      background-color: $bg-card;
+      border-color: $udenar-verde;
+      box-shadow: 0 0 0 3px rgba($udenar-verde, 0.1);
     }
+
+    &:focus + .search-icon { color: $udenar-verde; }
   }
+}
 
-  // Filtros por Rol (Pestañas/Botones)
-  .role-filters {
-    display: flex;
+.role-filters {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.3rem;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  button {
+    display: inline-flex;
+    align-items: center;
     gap: 0.4rem;
-    background: #f1f5f9;
-    padding: 0.35rem;
-    border-radius: 10px;
-    border: 1px solid $border-color;
-    overflow-x: auto;
+    padding: 0.5rem 0.85rem;
+    background-color: transparent;
+    border: none;
+    border-radius: $radius-sm;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $text-muted;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
 
-    button {
-      background: transparent;
-      border: none;
-      padding: 0.5rem 0.9rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: $text-muted;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s ease;
+    .icon { color: currentColor; }
 
-      &:hover {
-        color: $text-main;
-        background: rgba(255, 255, 255, 0.6);
-      }
+    &:hover {
+      color: $udenar-verde;
+      background-color: $udenar-verde-soft;
+    }
 
-      &.active {
-        background: $bg-card;
-        color: $accent-green;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-      }
+    &.active {
+      background-color: $udenar-verde;
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba($udenar-verde, 0.25);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $udenar-verde;
+      outline-offset: 2px;
     }
   }
 }
 
-// GRILLA DE USUARIOS Y PERFILES
+// ==========================================================
+//  5. BARRA DE RESULTADOS
+// ==========================================================
+.results-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.65rem;
+  background-color: $udenar-verde-soft;
+  color: $udenar-verde;
+  border: 1px solid rgba($udenar-verde, 0.15);
+  border-radius: $radius-full;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  .tag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+}
+
+// ==========================================================
+//  6. GRILLA DE PERFILES
+// ==========================================================
 .community-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.15rem;
+  width: 100%;
 }
 
 .profile-card {
-  background: $bg-card;
-  border: 1px solid $border-color;
-  border-radius: 16px;
-  padding: 1.5rem 1.25rem;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 0 1.1rem 1.1rem;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: slideUp 0.35s ease both;
+
+  @for $i from 1 through 16 {
+    &:nth-child(#{$i}) { animation-delay: #{$i * 0.04}s; }
+  }
+
+  .card-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 52px;
+    background-color: $udenar-verde-soft;
+    border-bottom: 2px solid $udenar-dorado;
+  }
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-    border-color: #cbd5e1;
-  }
-
-  // Avatar / Foto de Perfil
-  .profile-avatar {
-    margin-bottom: 0.85rem;
+    box-shadow: $shadow-hover;
+    border-color: $udenar-verde-light;
 
     .user-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #f1f5f9;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transform: scale(1.03);
+      border-color: $udenar-verde;
+    }
+
+    .btn-profile {
+      background-color: $udenar-verde;
+      color: #ffffff;
+      border-color: $udenar-verde;
+
+      .arrow-icon { transform: translateX(3px); }
     }
   }
 
-  h3 {
-    margin: 0 0 0.35rem 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: $text-main;
+  .profile-avatar {
+    position: relative;
+    margin-top: 1.1rem;
+    margin-bottom: 0.75rem;
+    z-index: 1;
+
+    .user-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid $bg-card;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      background-color: $bg-subtle;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .status-dot {
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: $udenar-verde;
+      border: 2px solid $bg-card;
+      animation: pulseDot 2.5s infinite;
+    }
   }
 
-  // Insignia del Rol
+  .user-name {
+    margin: 0 0 0.35rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $text-main;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+
   .role-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
+    margin-bottom: 0.7rem;
+    padding: 0.18rem 0.65rem;
+    border-radius: $radius-full;
+    font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    background: #e0e7ff;
-    color: #4338ca;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    margin: 0 0 1.25rem 0;
-    font-size: 0.85rem;
+    background-color: $bg-subtle;
     color: $text-muted;
-    line-height: 1.4;
-    // Limita el programa a 2 líneas si es muy largo
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
+    border: 1px solid transparent;
 
-  // Botón Ver Perfil
-  button {
-    margin-top: auto;
-    width: 100%;
-    background: #f1f5f9;
-    color: $text-main;
-    border: 1px solid $border-color;
-    padding: 0.55rem 1rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    &.role-estudiante {
+      background-color: $udenar-verde-soft;
+      color: $udenar-verde;
+      border-color: rgba($udenar-verde, 0.15);
+    }
 
-    &:hover {
-      background: $primary-green;
-      color: #ffffff;
-      border-color: $primary-green;
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+    &.role-tutor {
+      background-color: $udenar-azul-soft;
+      color: $udenar-azul;
+      border-color: $udenar-azul-border;
+    }
+
+    &.role-coordinador {
+      background-color: $udenar-dorado-soft;
+      color: $udenar-dorado-dark;
+      border-color: rgba($udenar-dorado, 0.3);
     }
   }
+
+  .program {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin: 0 0 1rem;
+    font-size: 0.8rem;
+    color: $text-muted;
+    line-height: 1.35;
+    word-break: break-word;
+
+    .icon { color: $text-faint; }
+  }
+
+  .btn-profile {
+    margin-top: auto;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.85rem;
+    background-color: $bg-soft;
+    color: $text-main;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+
+    .arrow-icon { transition: transform 0.18s ease; }
+
+    &:focus-visible {
+      outline: 2px solid $udenar-verde;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// ==========================================================
+//  7. ESTADO VACÍO
+// ==========================================================
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3.25rem 1.5rem;
+  animation: fadeIn 0.35s ease both;
+}
+
+.empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background-color: $udenar-verde-soft;
+  color: $udenar-verde;
+}
+
+.empty-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: $text-main;
+}
+
+.empty-text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: $text-muted;
+  max-width: 340px;
+}
+
+// ==========================================================
+//  8. RESPONSIVE
+// ==========================================================
+@media (max-width: 640px) {
+  .community-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .profile-card {
+    padding: 0 0.75rem 0.75rem;
+
+    .profile-avatar .user-avatar {
+      width: 60px;
+      height: 60px;
+    }
+
+    .user-name { font-size: 0.9rem; }
+  }
+
+  .role-filters { width: 100%; }
 }

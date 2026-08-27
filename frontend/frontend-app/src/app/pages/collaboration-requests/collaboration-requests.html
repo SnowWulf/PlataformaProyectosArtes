@@ -1,37 +1,67 @@
-<div class="collaboration-container">
+<!-- ==========================================================
+     SPRITE DE ICONOS (Feather style, 24x24, stroke)
+     ========================================================== -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="s-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="s-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></symbol>
+  <symbol id="s-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="s-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="s-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
+  <symbol id="s-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="s-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="s-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></symbol>
+  <symbol id="s-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="s-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="s-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="s-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></symbol>
+  <symbol id="s-check-circle" viewBox="0 0 24 24"><path d="M21.8 11.1V12a9.8 9.8 0 1 1-5.8-8.9"/><path d="m9 11 3 3 10-10"/></symbol>
+</svg>
 
-  <!-- Header y Métricas Superiores -->
-  <header class="page-header">
-    <div class="header-text">
-      <h2>🤝 Solicitudes de Colaboración</h2>
-      <p>Gestiona las invitaciones, postulaciones a proyectos y el historial de interacciones.</p>
-    </div>
+<div class="art-dashboard collab-requests">
 
-    <!-- Bloque de Métricas para llenar el layout -->
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <span class="metric-value">{{ recibidasPendientes.length }}</span>
-        <span class="metric-label">Por responder</span>
+  <!-- ==========================================================
+       1. HERO / CABECERA
+       ========================================================== -->
+  <header class="art-hero">
+    <div class="hero-main">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Comunidad &middot; Colaboraciones</span>
+        <h1 class="hero-title">Solicitudes de Colaboración</h1>
+        <p class="hero-subtitle">
+          Gestiona las invitaciones, postulaciones a proyectos y el historial de interacciones.
+        </p>
       </div>
-      <div class="metric-card">
-        <span class="metric-value">{{ enviadasPendientes.length }}</span>
-        <span class="metric-label">Enviadas activas</span>
-      </div>
-      <div class="metric-card">
-        <span class="metric-value">{{ historial.length }}</span>
-        <span class="metric-label">Procesadas</span>
+
+      <div class="hero-summary" role="group" aria-label="Resumen de solicitudes">
+        <div class="summary-item">
+          <span class="summary-value" [class.is-alert]="recibidasPendientes.length > 0">{{ recibidasPendientes.length }}</span>
+          <span class="summary-label">Por responder</span>
+        </div>
+        <span class="summary-divider" aria-hidden="true"></span>
+        <div class="summary-item">
+          <span class="summary-value">{{ enviadasPendientes.length }}</span>
+          <span class="summary-label">Enviadas</span>
+        </div>
+        <span class="summary-divider" aria-hidden="true"></span>
+        <div class="summary-item">
+          <span class="summary-value">{{ historial.length }}</span>
+          <span class="summary-label">Procesadas</span>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Navegación por Pestañas -->
-  <nav class="tabs-nav">
+  <!-- ==========================================================
+       2. PESTAÑAS DE NAVEGACIÓN
+       ========================================================== -->
+  <nav class="tabs-nav" aria-label="Navegación de solicitudes">
     <button
       type="button"
       class="tab-btn"
       [class.active]="vistaActiva === 'recibidas'"
       (click)="vistaActiva = 'recibidas'">
-      📥 Recibidas
+      <svg class="icon icon-sm"><use href="#s-inbox"></use></svg>
+      Recibidas
       <span class="tab-badge" *ngIf="recibidasPendientes.length > 0">{{ recibidasPendientes.length }}</span>
     </button>
 
@@ -40,7 +70,8 @@
       class="tab-btn"
       [class.active]="vistaActiva === 'enviadas'"
       (click)="vistaActiva = 'enviadas'">
-      📤 Enviadas
+      <svg class="icon icon-sm"><use href="#s-send"></use></svg>
+      Enviadas
       <span class="tab-badge secondary" *ngIf="enviadasPendientes.length > 0">{{ enviadasPendientes.length }}</span>
     </button>
 
@@ -49,162 +80,244 @@
       class="tab-btn"
       [class.active]="vistaActiva === 'historial'"
       (click)="vistaActiva = 'historial'">
-      🕒 Historial
+      <svg class="icon icon-sm"><use href="#s-clock"></use></svg>
+      Historial
     </button>
   </nav>
 
-  <!-- TAB: RECIBIDAS -->
-  <section class="tab-content" *ngIf="vistaActiva === 'recibidas'">
+  <!-- ==========================================================
+       3. TAB: RECIBIDAS
+       ========================================================== -->
+  <section class="content-section tab-content" *ngIf="vistaActiva === 'recibidas'">
+    <div class="section-header">
+      <div class="section-heading">
+        <svg class="icon icon-md"><use href="#s-inbox"></use></svg>
+        <div>
+          <h2>Solicitudes recibidas</h2>
+          <p class="section-subtitle">Acepta o rechaza las peticiones dirigidas a tus proyectos</p>
+        </div>
+      </div>
+      <span class="section-count">{{ recibidasPendientes.length }} pendiente(s)</span>
+    </div>
+
     <div class="requests-list" *ngIf="recibidasPendientes.length > 0">
-      <article class="request-item" *ngFor="let solicitud of recibidasPendientes">
-        
-        <!-- Usuario / Avatar -->
-        <div class="user-avatar-col">
-          <img
-            [src]="solicitud.requester?.foto_url || '/user.webp'"
-            (error)="solicitud.requester.foto_url = '/user.webp'"
-            [alt]="solicitud.requester?.name || 'Usuario'"
-            class="avatar-img"
-          />
+      <article class="solicitud-item" *ngFor="let solicitud of recibidasPendientes">
+
+        <!-- Avatar -->
+        <div class="avatar-col">
+          <a [routerLink]="['/dashboard/community/profile', solicitud.requester?.id]" title="Ver perfil del participante">
+            <img
+              [src]="solicitud.requester?.foto_url || '/user.png'"
+              (error)="solicitud.requester.foto_url = '/user.png'"
+              [alt]="solicitud.requester?.name || 'Usuario'"
+              class="avatar-img clickable"
+            />
+          </a>
         </div>
 
-        <!-- Información Detallada -->
-        <div class="request-main-info">
-          <div class="info-header">
-            <h3 class="user-name">{{ solicitud.requester?.name || 'Usuario desconocido' }}</h3>
+        <!-- Info principal -->
+        <div class="item-main">
+          <div class="item-header">
+            <a [routerLink]="['/dashboard/community/profile', solicitud.requester?.id]" class="user-link">
+              <h3>{{ solicitud.requester?.name || 'Usuario desconocido' }}</h3>
+            </a>
+
             <span class="type-badge" [ngClass]="solicitud.tipo === 'invite' ? 'badge-invite' : 'badge-request'">
-              {{ solicitud.tipo === 'invite' ? '📩 Te invitó' : '🙋 Solicita unirse' }}
+              <svg class="icon icon-xs"><use [attr.href]="solicitud.tipo === 'invite' ? '#s-mail' : '#s-user'"></use></svg>
+              {{ solicitud.tipo === 'invite' ? 'Te invitó' : 'Solicita unirse' }}
             </span>
+
             <span class="date-tag" *ngIf="solicitud.created_at">
-              🕒 {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
+              <svg class="icon icon-xs"><use href="#s-clock"></use></svg>
+              {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
             </span>
           </div>
 
-          <p class="project-context">
-            <span class="label">Proyecto:</span>
-            <strong class="project-title">📚 {{ solicitud.project?.titulo || 'Proyecto sin título' }}</strong>
-            <span class="project-category" *ngIf="solicitud.project?.categoria">
-              • {{ solicitud.project?.categoria }}
+          <div class="item-details">
+            <span class="detail-tag">
+              <svg class="icon icon-xs"><use href="#s-book"></use></svg>
+              <strong>Proyecto:</strong> {{ solicitud.project?.titulo || 'Proyecto sin título' }}
+              <span class="detail-extra" *ngIf="solicitud.project?.categoria">&middot; {{ solicitud.project?.categoria }}</span>
             </span>
-          </p>
 
-          <p class="contact-email" *ngIf="solicitud.requester?.email">
-            ✉️ <a [href]="'mailto:' + solicitud.requester?.email" class="email-link">{{ solicitud.requester?.email }}</a>
-          </p>
+            <span class="detail-tag" *ngIf="solicitud.requester?.email">
+              <svg class="icon icon-xs"><use href="#s-mail"></use></svg>
+              <a [href]="'mailto:' + solicitud.requester?.email" class="link">{{ solicitud.requester?.email }}</a>
+            </span>
+          </div>
 
-          <!-- Mensaje / Motivo de colaboración -->
-          <div class="message-quote">
-            <span class="quote-title">💬 Mensaje:</span>
+          <!-- Mensaje -->
+          <div class="mensaje-box">
+            <span class="label">
+              <svg class="icon icon-xs"><use href="#s-message"></use></svg>
+              Mensaje
+            </span>
             <p>{{ solicitud.mensaje || 'No incluyó un mensaje personalizado.' }}</p>
           </div>
         </div>
 
-        <!-- Botones de Acción -->
-        <div class="request-actions">
-          <button
-            type="button"
-            class="action-btn btn-accept"
-            (click)="aceptarSolicitud(solicitud.id)">
-            ✅ Aceptar
+        <!-- Acciones -->
+        <div class="item-actions">
+          <button type="button" class="btn-aceptar" (click)="aceptarSolicitud(solicitud.id)">
+            <svg class="icon icon-sm"><use href="#s-check"></use></svg>
+            Aceptar
           </button>
-          <button
-            type="button"
-            class="action-btn btn-reject"
-            (click)="rechazarSolicitud(solicitud.id)">
-            ❌ Rechazar
+          <button type="button" class="btn-rechazar" (click)="rechazarSolicitud(solicitud.id)">
+            <svg class="icon icon-sm"><use href="#s-x"></use></svg>
+            Rechazar
           </button>
         </div>
 
       </article>
     </div>
 
+    <!-- Estado vacío -->
     <div class="empty-state" *ngIf="recibidasPendientes.length === 0">
-      <div class="empty-icon">🎉</div>
-      <h3>Bandeja al día</h3>
-      <p>No tienes solicitudes de colaboración pendientes por responder.</p>
+      <span class="empty-icon">
+        <svg class="icon icon-lg"><use href="#s-check-circle"></use></svg>
+      </span>
+      <p class="empty-title">Bandeja al día</p>
+      <p class="empty-text">No tienes solicitudes de colaboración pendientes por responder.</p>
     </div>
   </section>
 
-  <!-- TAB: ENVIADAS -->
-  <section class="tab-content" *ngIf="vistaActiva === 'enviadas'">
+  <!-- ==========================================================
+       4. TAB: ENVIADAS
+       ========================================================== -->
+  <section class="content-section tab-content" *ngIf="vistaActiva === 'enviadas'">
+    <div class="section-header">
+      <div class="section-heading">
+        <svg class="icon icon-md"><use href="#s-send"></use></svg>
+        <div>
+          <h2>Solicitudes enviadas</h2>
+          <p class="section-subtitle">Invitaciones y postulaciones a la espera de respuesta</p>
+        </div>
+      </div>
+      <span class="section-count">{{ enviadasPendientes.length }} activa(s)</span>
+    </div>
+
     <div class="requests-list" *ngIf="enviadasPendientes.length > 0">
-      <article class="request-item" *ngFor="let solicitud of enviadasPendientes">
-        
-        <div class="request-main-info">
-          <div class="info-header">
-            <h3 class="project-title-heading">📚 {{ solicitud.project?.titulo || 'Proyecto sin título' }}</h3>
-            <span class="status-badge status-pending">⏳ Pendiente de respuesta</span>
-          </div>
+      <article class="solicitud-item is-stacked" *ngFor="let solicitud of enviadasPendientes">
 
-          <div class="metadata-row">
-            <span class="meta-item" *ngIf="solicitud.recipient?.name">
-              👤 <strong>Destinatario / Líder:</strong> {{ solicitud.recipient?.name }}
+        <div class="item-main">
+          <div class="item-header">
+            <span class="title-icon" aria-hidden="true">
+              <svg class="icon icon-sm"><use href="#s-book"></use></svg>
             </span>
-            <span class="meta-item" *ngIf="solicitud.created_at">
-              🕒 <strong>Enviada el:</strong> {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
-            </span>
-            <span class="meta-item" *ngIf="solicitud.tipo">
-              📌 <strong>Tipo:</strong> {{ solicitud.tipo === 'invite' ? 'Invitación' : 'Postulación' }}
+            <h3>{{ solicitud.project?.titulo || 'Proyecto sin título' }}</h3>
+            <span class="status-pill status-pending">
+              <span class="status-dot" aria-hidden="true"></span>
+              Pendiente de respuesta
             </span>
           </div>
 
-          <div class="message-quote" *ngIf="solicitud.mensaje">
-            <span class="quote-title">💬 Tu mensaje adjunto:</span>
+          <div class="item-details">
+            <span class="detail-tag" *ngIf="solicitud.recipient?.name">
+              <svg class="icon icon-xs"><use href="#s-user"></use></svg>
+              <strong>Destinatario:</strong> {{ solicitud.recipient?.name }}
+            </span>
+            <span class="detail-tag" *ngIf="solicitud.created_at">
+              <svg class="icon icon-xs"><use href="#s-clock"></use></svg>
+              <strong>Enviada:</strong> {{ solicitud.created_at | date:'dd/MM/yyyy HH:mm' }}
+            </span>
+            <span class="detail-tag" *ngIf="solicitud.tipo">
+              <svg class="icon icon-xs"><use href="#s-pin"></use></svg>
+              <strong>Modalidad:</strong> {{ solicitud.tipo === 'invite' ? 'Invitación' : 'Postulación' }}
+            </span>
+          </div>
+
+          <div class="mensaje-box" *ngIf="solicitud.mensaje">
+            <span class="label">
+              <svg class="icon icon-xs"><use href="#s-message"></use></svg>
+              Tu mensaje
+            </span>
             <p>{{ solicitud.mensaje }}</p>
           </div>
         </div>
 
-        <div class="request-actions align-center">
+        <div class="item-actions">
           <button
             type="button"
-            class="action-btn btn-cancel"
+            class="btn-rechazar"
             (click)="cancelarSolicitud(solicitud.id)"
             *ngIf="cancelarSolicitud">
-            🚫 Cancelar
+            <svg class="icon icon-sm"><use href="#s-x-circle"></use></svg>
+            Cancelar
           </button>
         </div>
 
       </article>
     </div>
 
+    <!-- Estado vacío -->
     <div class="empty-state" *ngIf="enviadasPendientes.length === 0">
-      <div class="empty-icon">📤</div>
-      <h3>Sin solicitudes enviadas</h3>
-      <p>No has realizado postulaciones o invitaciones pendientes a otros proyectos.</p>
+      <span class="empty-icon">
+        <svg class="icon icon-lg"><use href="#s-send"></use></svg>
+      </span>
+      <p class="empty-title">Sin solicitudes enviadas</p>
+      <p class="empty-text">No has realizado postulaciones o invitaciones pendientes a otros proyectos.</p>
     </div>
   </section>
 
-  <!-- TAB: HISTORIAL -->
-  <section class="tab-content" *ngIf="vistaActiva === 'historial'">
+  <!-- ==========================================================
+       5. TAB: HISTORIAL
+       ========================================================== -->
+  <section class="content-section tab-content" *ngIf="vistaActiva === 'historial'">
+    <div class="section-header">
+      <div class="section-heading">
+        <svg class="icon icon-md"><use href="#s-clock"></use></svg>
+        <div>
+          <h2>Historial de solicitudes</h2>
+          <p class="section-subtitle">Registro de interacciones ya procesadas</p>
+        </div>
+      </div>
+      <span class="section-count">{{ historial.length }} registro(s)</span>
+    </div>
+
     <div class="requests-list" *ngIf="historial.length > 0">
-      <article class="request-item history-item" *ngFor="let solicitud of historial">
-        
-        <div class="request-main-info">
-          <div class="info-header">
-            <h3 class="project-title-heading">📚 {{ solicitud.project?.titulo || 'Proyecto sin título' }}</h3>
-            
+      <article class="solicitud-item is-stacked history-item" *ngFor="let solicitud of historial">
+
+        <div class="item-main">
+          <div class="item-header">
+            <span class="title-icon" aria-hidden="true">
+              <svg class="icon icon-sm"><use href="#s-book"></use></svg>
+            </span>
+            <h3>{{ solicitud.project?.titulo || 'Proyecto sin título' }}</h3>
+
             <span
-              class="status-badge"
+              class="status-pill"
               [ngClass]="{
                 'status-accepted': solicitud.estado === 'Aceptada' || solicitud.estado === 'Aceptado',
-                'status-rejected': solicitud.estado === 'Rechazada' || solicitud.estado === 'Rechazado'
+                'status-rejected': solicitud.estado !== 'Aceptada' && solicitud.estado !== 'Aceptado'
               }">
-              {{ solicitud.estado === 'Aceptada' || solicitud.estado === 'Aceptado' ? '✅ Aceptada' : '❌ Rechazada' }}
+              <svg class="icon icon-xs">
+                <use [attr.href]="(solicitud.estado === 'Aceptada' || solicitud.estado === 'Aceptado') ? '#s-check' : '#s-x'"></use>
+              </svg>
+              {{ (solicitud.estado === 'Aceptada' || solicitud.estado === 'Aceptado') ? 'Aceptada' : 'Rechazada' }}
             </span>
           </div>
 
           <div class="metadata-grid">
             <div class="meta-cell">
-              <span class="label">Participante / Colaborador</span>
-              <span class="value">👤 {{ solicitud.requester?.name || 'N/A' }}</span>
+              <span class="meta-label">Participante</span>
+              <span class="meta-value">
+                <svg class="icon icon-xs"><use href="#s-user"></use></svg>
+                {{ solicitud.requester?.name || 'N/A' }}
+              </span>
             </div>
             <div class="meta-cell" *ngIf="solicitud.updated_at || solicitud.created_at">
-              <span class="label">Fecha de Procesamiento</span>
-              <span class="value">🕒 {{ (solicitud.updated_at || solicitud.created_at) | date:'dd/MM/yyyy HH:mm' }}</span>
+              <span class="meta-label">Fecha procesada</span>
+              <span class="meta-value">
+                <svg class="icon icon-xs"><use href="#s-clock"></use></svg>
+                {{ (solicitud.updated_at || solicitud.created_at) | date:'dd/MM/yyyy HH:mm' }}
+              </span>
             </div>
             <div class="meta-cell" *ngIf="solicitud.tipo">
-              <span class="label">Modalidad</span>
-              <span class="value">📌 {{ solicitud.tipo === 'invite' ? 'Invitación enviada' : 'Postulación voluntaria' }}</span>
+              <span class="meta-label">Modalidad</span>
+              <span class="meta-value">
+                <svg class="icon icon-xs"><use href="#s-pin"></use></svg>
+                {{ solicitud.tipo === 'invite' ? 'Invitación enviada' : 'Postulación voluntaria' }}
+              </span>
             </div>
           </div>
         </div>
@@ -212,10 +325,13 @@
       </article>
     </div>
 
+    <!-- Estado vacío -->
     <div class="empty-state" *ngIf="historial.length === 0">
-      <div class="empty-icon">📜</div>
-      <h3>Historial vacío</h3>
-      <p>No hay registro de solicitudes procesadas previamente.</p>
+      <span class="empty-icon">
+        <svg class="icon icon-lg"><use href="#s-clock"></use></svg>
+      </span>
+      <p class="empty-title">Historial vacío</p>
+      <p class="empty-text">No hay registro de solicitudes procesadas previamente.</p>
     </div>
   </section>
 

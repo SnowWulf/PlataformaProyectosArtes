@@ -1,0 +1,83 @@
+<div class="reviews-management-wrapper animate-fade-in">
+  
+  <header class="management-header">
+    <div class="header-titles">
+      <span class="eyebrow">Panel de Coordinación</span>
+      <h2>Gestión y Moderación de Reseñas</h2>
+      <p>Revisa, aprueba o gestiona los comentarios publicados por estudiantes y docentes.</p>
+    </div>
+
+    <!-- Filtros de Estado -->
+    <div class="filter-tabs">
+      <button class="tab-btn" [class.active]="filtroEstado === 'todos'" (click)="cambiarFiltro('todos')">Todas</button>
+      <button class="tab-btn" [class.active]="filtroEstado === 'pendiente'" (click)="cambiarFiltro('pendiente')">Pendientes</button>
+      <button class="tab-btn" [class.active]="filtroEstado === 'aprobado'" (click)="cambiarFiltro('aprobado')">Aprobadas</button>
+      <button class="tab-btn" [class.active]="filtroEstado === 'rechazado'" (click)="cambiarFiltro('rechazado')">Rechazadas por IA</button>
+    </div>
+  </header>
+
+  <!-- Estado de carga -->
+  <div class="loading-state" *ngIf="cargando">
+    <span class="spinner"></span>
+    <p>Cargando reseñas...</p>
+  </div>
+
+  <!-- Listado de Reseñas -->
+  <div class="reviews-grid" *ngIf="!cargando && reviews.length > 0">
+    <div class="review-card" *ngFor="let item of reviews" [ngClass]="'status-' + item.estado">
+      
+      <div class="card-top">
+        <div class="author-info">
+          <strong>{{ item.usuario?.name || 'Usuario Anónimo' }}</strong>
+          <span class="author-role" *ngIf="item.usuario?.role">{{ item.usuario?.role?.name }}</span>
+        </div>
+        
+        <span class="status-badge" [class]="item.estado">
+          {{ item.estado | uppercase }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="rating-stars">
+          <span>★</span> {{ item.calificacion }} / 5
+        </div>
+        <h4 class="review-title">{{ item.asunto }}</h4>
+        <p class="review-comment">{{ item.observaciones }}</p>
+
+        <!-- Motivo de rechazo emitido por IA -->
+        <div class="ia-reason-box" *ngIf="item.estado === 'rechazado' && item.motivo_rechazo_ia">
+          <strong>🤖 Motivo Moderación IA:</strong>
+          <p>{{ item.motivo_rechazo_ia }}</p>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <!-- Switch Destacado Landing -->
+        <label class="toggle-switch" *ngIf="item.estado === 'aprobado'">
+          <input type="checkbox" [checked]="item.destacado_landing" (change)="toggleDestacado(item)" />
+          <span class="slider"></span>
+          <span class="switch-label">Ver en Landing</span>
+        </label>
+
+        <!-- Acciones Manuales de Cambio de Estado y Borrado -->
+        <div class="btn-group">
+          <button class="btn-action btn-approve" *ngIf="item.estado !== 'aprobado'" (click)="cambiarEstado(item, 'aprobado')">
+            Aprobar
+          </button>
+          <button class="btn-action btn-reject" *ngIf="item.estado !== 'rechazado'" (click)="cambiarEstado(item, 'rechazado')">
+            Rechazar
+          </button>
+          <button class="btn-action btn-delete" (click)="eliminarResena(item)" title="Eliminar permanentemente">
+            Eliminar
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!cargando && reviews.length === 0">
+    <p>No se encontraron reseñas con el filtro seleccionado.</p>
+  </div>
+
+</div>

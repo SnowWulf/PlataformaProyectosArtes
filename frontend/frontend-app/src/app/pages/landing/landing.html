@@ -1,0 +1,427 @@
+<!-- Sprite de iconos (sin emojis) -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="ic-shield" viewBox="0 0 24 24">
+    <path d="M12 3l7 3v5.5c0 4.3-2.9 7.9-7 9.5-4.1-1.6-7-5.2-7-9.5V6l7-3z" />
+    <path d="M9 12.2l2 2 4-4" />
+  </symbol>
+  <symbol id="ic-arrow" viewBox="0 0 24 24">
+    <path d="M5 12h13" />
+    <path d="M13 6l6 6-6 6" />
+  </symbol>
+  <symbol id="ic-ear" viewBox="0 0 24 24">
+    <path d="M8.5 9a3.5 3.5 0 117 0c0 2-2 2.6-2 4.5" />
+    <path d="M13.5 17.5a2 2 0 01-4 0V5.5" />
+    <path d="M6 8a6 6 0 0112 0v4" />
+  </symbol>
+  <symbol id="ic-chart" viewBox="0 0 24 24">
+    <path d="M4 20h16" />
+    <path d="M7 20v-6" />
+    <path d="M12 20V8" />
+    <path d="M17 20v-9" />
+  </symbol>
+  <symbol id="ic-target" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8" />
+    <circle cx="12" cy="12" r="3.4" />
+  </symbol>
+  <symbol id="ic-spark" viewBox="0 0 24 24">
+    <path d="M12 4l1.7 4.6L18.5 10l-4.8 1.4L12 16l-1.7-4.6L5.5 10l4.8-1.4L12 4z" />
+  </symbol>
+  <symbol id="ic-users" viewBox="0 0 24 24">
+    <circle cx="9" cy="8.5" r="3.2" />
+    <path d="M3.5 19.5c.6-3 2.8-4.6 5.5-4.6s4.9 1.6 5.5 4.6" />
+    <path d="M16 5.6a3 3 0 010 5.8" />
+    <path d="M17.2 15.3c2 .5 3.2 1.9 3.6 4.2" />
+  </symbol>
+  <symbol id="ic-folder" viewBox="0 0 24 24">
+    <path d="M4 7.5A1.5 1.5 0 015.5 6h3.2l1.8 2h8A1.5 1.5 0 0120 9.5v8A1.5 1.5 0 0118.5 19h-13A1.5 1.5 0 014 17.5v-10z" />
+  </symbol>
+  <symbol id="ic-doc" viewBox="0 0 24 24">
+    <path d="M7 3.5h6.5L18 8v12.5H7V3.5z" />
+    <path d="M13.2 3.7V8H18" />
+    <path d="M9.6 13h5" />
+    <path d="M9.6 16.2h3.4" />
+  </symbol>
+  <symbol id="ic-message" viewBox="0 0 24 24">
+    <path d="M20 15.5A1.5 1.5 0 0118.5 17H8l-4 3.5V6A1.5 1.5 0 015.5 4.5h13A1.5 1.5 0 0120 6v9.5z" />
+    <path d="M8.5 9h7" />
+    <path d="M8.5 12.2h4.5" />
+  </symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8" />
+    <path d="M12 8v4.3l2.8 1.7" />
+  </symbol>
+</svg>
+
+<div class="landing">
+
+  <!-- ================= NAV ================= -->
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="brand" routerLink="/">
+        <span class="brand__mark" aria-hidden="true">
+          <img src="FacartesIcono.png" alt="Logo Facultad de Artes" class="brand__logo" />
+        </span>
+        <span class="brand__copy">
+          <strong>Facultad de Artes</strong>
+          <small>Universidad de Nariño</small>
+        </span>
+      </a>
+
+      <nav class="nav__links" aria-label="Secciones">
+        <a href="#origen">Origen</a>
+        <a href="#metodologia">Metodología</a>
+        <a href="#modulos">Módulos</a>
+        <a href="#trayectoria">Trayectoria</a>
+        <a href="#testimonios" *ngIf="publicReviews.length > 0">Testimonios</a>
+      </nav>
+
+      <a routerLink="/login" class="btn btn--primary btn--sm">
+        <span>Ingresar</span>
+        <svg class="icon icon-sm" aria-hidden="true">
+          <use href="#ic-arrow" />
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <div class="hero__inner">
+        <div class="hero__copy">
+          <span class="eyebrow">Planeación estratégica · Innovación digital</span>
+          <h1>Una plataforma nacida del diálogo y la co-creación institucional</h1>
+          <p>
+            No empezamos escribiendo código: empezamos escuchando a la comunidad. El diagnóstico
+            participativo se convirtió en acompañamiento real, seguimiento transparente de
+            proyectos y fortalecimiento académico.
+          </p>
+          <div class="hero__actions">
+            <a routerLink="/login" class="btn btn--primary">
+              <span>Acceder a la plataforma</span>
+              <svg class="icon icon-sm" aria-hidden="true">
+                <use href="#ic-arrow" />
+              </svg>
+            </a>
+            <a href="#origen" class="btn btn--ghost">
+              <span>Explorar la historia</span>
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero__note">
+          <span class="note__tag">
+            <svg class="icon icon-sm" aria-hidden="true">
+              <use href="#ic-target" />
+            </svg>
+            Horizonte 2032
+          </span>
+          <h2>El desafío no era tecnológico: era de articulación y escucha activa.</h2>
+          <p>
+            Un espacio unificado que conecta a estudiantes, docentes y directivos para consolidar
+            el acompañamiento y la permanencia académica.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================= CIFRAS ================= -->
+    <section class="stats" aria-label="Indicadores">
+      <div class="stats__inner">
+        <div class="stat">
+          <strong>+150</strong>
+          <span>Participantes en mesas de trabajo</span>
+        </div>
+        <div class="stat">
+          <strong>2022–2032</strong>
+          <span>Horizonte estratégico</span>
+        </div>
+        <div class="stat">
+          <strong>85%</strong>
+          <span>Meta de retención estudiantil</span>
+        </div>
+        <div class="stat">
+          <strong>100%</strong>
+          <span>Procesos unificados</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 01 ORIGEN ================= -->
+    <section id="origen" class="section">
+      <div class="section__inner">
+        <header class="section__head">
+          <span class="eyebrow">01 · Entender el contexto</span>
+          <h2>Un diagnóstico cimentado en la realidad universitaria</h2>
+          <span class="rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="prose">
+          <p>
+            Esta plataforma es resultado del proceso de planeación estratégica de la Facultad de
+            Artes. Para construir una lectura fiel de las necesidades académicas se analizaron el
+            PEI, el Plan de Desarrollo Institucional, el Plan de Gestión de la Facultad y el
+            consolidado <strong>UDENAR en Cifras (2019–2023)</strong>.
+          </p>
+          <blockquote>
+            El análisis cualitativo y cuantitativo permitió contrastar la trayectoria institucional
+            con las expectativas reales de la comunidad, identificando rutas para optimizar la
+            titulación y potenciar el acompañamiento formativo.
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 02 METODOLOGÍA ================= -->
+    <section id="metodologia" class="section section--alt">
+      <div class="section__inner">
+        <header class="section__head">
+          <span class="eyebrow">02 · Metodología de participación</span>
+          <h2>Escuchar, analizar, identificar y proponer</h2>
+          <span class="rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="grid grid--4">
+          <article class="card">
+            <span class="card__icon"><svg class="icon">
+                <use href="#ic-ear" />
+              </svg></span>
+            <span class="card__step">01</span>
+            <h3>Escuchar</h3>
+            <p>Mesas de trabajo y diálogo abierto recogieron las vivencias de estudiantes, docentes y coordinadores de
+              los programas artísticos.</p>
+          </article>
+
+          <article class="card">
+            <span class="card__icon"><svg class="icon">
+                <use href="#ic-chart" />
+              </svg></span>
+            <span class="card__step">02</span>
+            <h3>Analizar</h3>
+            <p>Las reflexiones se contrastaron con indicadores de permanencia, tiempos de titulación y requerimientos
+              administrativos.</p>
+          </article>
+
+          <article class="card">
+            <span class="card__icon"><svg class="icon">
+                <use href="#ic-target" />
+              </svg></span>
+            <span class="card__step">03</span>
+            <h3>Identificar</h3>
+            <p>Se consolidaron ejes prioritarios: seguimiento a proyectos de grado, centralización de observaciones y
+              alertas oportunas.</p>
+          </article>
+
+          <article class="card">
+            <span class="card__icon"><svg class="icon">
+                <use href="#ic-spark" />
+              </svg></span>
+            <span class="card__step">04</span>
+            <h3>Proponer</h3>
+            <p>Se diseñó una arquitectura digital que teje puentes entre el estudiante, su equipo tutoral y su trabajo
+              de investigación o creación.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 03 MÓDULOS ================= -->
+    <section id="modulos" class="section">
+      <div class="section__inner">
+        <header class="section__head">
+          <span class="eyebrow">03 · De la planeación a la acción</span>
+          <h2>Módulos nacidos de acuerdos institucionales</h2>
+          <span class="rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="grid grid--3">
+          <article class="card card--module">
+            <span class="card__icon"><svg class="icon">
+                <use href="#ic-users" />
+              </svg></span>
+            <span class="tag">Acompañamiento</span>
+            <h3>Articulación y mentoría</h3>
+            <p>En sintonía con las metas de retención, el módulo <strong>Estudiante ↔ Tutor</strong> mantiene una
+              comunicación continua y cercana.</p>
+          </article>
+
+          <article class="card card--module">
+            <span class="card__icon"><svg class="icon">
+                <use href="#ic-folder" />
+              </svg></span>
+            <span class="tag">Desarrollo académico</span>
+            <h3>Proyectos como núcleo</h3>
+            <p>El sistema ubica al <strong>proyecto académico</strong> en el centro de las interacciones y visibiliza su
+              avance en cada etapa.</p>
+          </article>
+
+          <article class="card card--module">
+            <span class="card__icon"><svg class="icon">
+                <use href="#ic-doc" />
+              </svg></span>
+            <span class="tag">Digitalización</span>
+            <h3>Gestión documental</h3>
+            <p>Entregas, versiones, correcciones y revisiones quedan centralizadas en un repositorio claro y trazable.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 04 TRAYECTORIA ================= -->
+    <section id="trayectoria" class="section section--alt">
+      <div class="section__inner">
+        <header class="section__head">
+          <span class="eyebrow">04 · El camino colectivo</span>
+          <h2>Línea de evolución del diagnóstico participativo</h2>
+          <span class="rule" aria-hidden="true"></span>
+        </header>
+
+        <ol class="timeline">
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <div class="tl-card">
+              <span class="tl-phase">Fase 1 · Diagnóstico</span>
+              <h3>Análisis de indicadores y marcos institucionales</h3>
+              <p>Revisión de planes de desarrollo, datos de retención de <em>UDENAR en Cifras</em> y referentes
+                estratégicos hacia 2032.</p>
+            </div>
+          </li>
+
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <div class="tl-card">
+              <span class="tl-phase">Fase 2 · Diálogo</span>
+              <h3>Mesas de trabajo y consulta estudiantil</h3>
+              <p>Jornadas con estudiantes de distintos semestres, docentes y tutores para mapear cuellos de botella en
+                los proyectos de grado.</p>
+            </div>
+          </li>
+
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <div class="tl-card">
+              <span class="tl-phase">Fase 3 · Sistematización</span>
+              <h3>Integración institucional</h3>
+              <p>Articulación de requerimientos con programas de acompañamiento, Bienestar Universitario y
+                coordinaciones departamentales.</p>
+            </div>
+          </li>
+
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <div class="tl-card">
+              <span class="tl-phase">Fase 4 · Co-diseño</span>
+              <h3>Arquitectura orientada al usuario</h3>
+              <p>Modelado de datos e interfaces priorizando usabilidad, identidad institucional y trazabilidad de los
+                proyectos.</p>
+            </div>
+          </li>
+
+          <li class="tl-item">
+            <span class="tl-dot" aria-hidden="true"></span>
+            <div class="tl-card">
+              <span class="tl-phase">Fase 5 · Despliegue</span>
+              <h3>Lanzamiento del ecosistema digital</h3>
+              <p>Centralización de tutorías, revisión de archivos y seguimiento continuo del proceso académico.</p>
+            </div>
+          </li>
+
+          <li class="tl-item tl-item--live">
+            <span class="tl-dot tl-dot--pulse" aria-hidden="true"></span>
+            <div class="tl-card tl-card--live">
+              <span class="tl-phase">
+                <svg class="icon icon-xs" aria-hidden="true">
+                  <use href="#ic-clock" />
+                </svg>
+                En construcción continua
+              </span>
+              <h3>Y seguimos trabajando juntos</h3>
+              <p>La plataforma evoluciona con la experiencia de la comunidad. Comparte tus ideas, observaciones o
+                propuestas.</p>
+              <button type="button" class="btn btn--primary btn--sm" (click)="abrirModalFeedback()">
+                <svg class="icon icon-sm" aria-hidden="true">
+                  <use href="#ic-message" />
+                </svg>
+                <span>Enviar sugerencia</span>
+              </button>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= 05 TESTIMONIOS Y EXPERIENCIAS ================= -->
+    <section id="testimonios" class="section" *ngIf="!cargandoReviews && publicReviews.length > 0">
+      <div class="section__inner">
+        <header class="section__head">
+          <span class="eyebrow">05 · La voz de la comunidad</span>
+          <h2>Experiencias y testimonios de la Facultad</h2>
+          <span class="rule" aria-hidden="true"></span>
+        </header>
+
+        <div class="grid grid--3">
+          <article class="card card--testimonial" *ngFor="let review of publicReviews">
+            <div class="testimonial__rating" aria-label="Calificación">
+              <span class="stars-text">{{ getEstrellas(review.calificacion) }}</span>
+            </div>
+            
+            <h3 class="testimonial__title">"{{ review.asunto }}"</h3>
+            <p class="testimonial__body">{{ review.observaciones }}</p>
+
+            <div class="testimonial__author">
+              <div class="author__avatar">
+                <!-- Imagen real de perfil -->
+                <img 
+                  *ngIf="review.usuario?.foto_perfil_url" 
+                  [src]="review.usuario?.foto_perfil_url" 
+                  [alt]="review.usuario?.name || 'Usuario'" 
+                  class="avatar__img" 
+                />
+                
+                <!-- Placeholder con la primera letra del nombre -->
+                <div *ngIf="!review.usuario?.foto_perfil_url" class="avatar__placeholder">
+                  {{ review.usuario?.name?.charAt(0)?.toUpperCase() || 'U' }}
+                </div>
+              </div>
+
+              <div class="author__meta">
+                <strong>{{ review.usuario?.name || 'Comunidad Institucional' }}</strong>
+                <small *ngIf="review.usuario?.role?.name">{{ review.usuario?.role?.name }}</small>
+                <small *ngIf="!review.usuario?.role?.name && review.proyecto_contexto">{{ review.proyecto_contexto }}</small>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CTA ================= -->
+    <section class="cta">
+      <div class="cta__inner">
+        <span class="eyebrow eyebrow--on-dark">Universidad de Nariño</span>
+        <h2>La tecnología al servicio de las personas</h2>
+        <p>
+          Mejorar un proceso significa escuchar a quienes lo viven cada día. Accede a tu espacio de
+          trabajo y continúa impulsando la creación artística en Nariño.
+        </p>
+        <a routerLink="/login" class="btn btn--gold">
+          <span>Ingresar a la plataforma</span>
+          <svg class="icon icon-sm" aria-hidden="true">
+            <use href="#ic-arrow" />
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>© Facultad de Artes · Universidad de Nariño</p>
+    <p>Ecosistema de gestión y sistematización académica</p>
+  </footer>
+</div>
+
+<!-- MODAL DE FEEDBACK -->
+<app-feedback [isOpen]="mostrarModalFeedback" [datosUsuario]="datosParaFeedback" (alCerrar)="cerrarModalFeedback()"
+  (alEnviarExitoso)="onFeedbackExitoso($event)">
+</app-feedback>

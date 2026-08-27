@@ -1,52 +1,152 @@
-<div class="projects-container">
-  <!-- ENCABEZADO PRINCIPAL -->
-  <header class="projects-header">
-    <div class="header-info">
-      <h1>📚 Gestión de Proyectos</h1>
-      <p>Administra tus iniciativas, revisa colaboraciones y explora los proyectos de la plataforma.</p>
-    </div>
-    <button class="btn-primary btn-nuevo" (click)="nuevoProyecto()">
-      <span class="icon">➕</span> Nuevo proyecto
-    </button>
-  </header>
+<!-- ==========================================================
+     SPRITE DE ICONOS (Feather style, 24x24, stroke)
+     ========================================================== -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="s-book" viewBox="0 0 24 24">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+  </symbol>
+  <symbol id="s-folder" viewBox="0 0 24 24">
+    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2Z" />
+  </symbol>
+  <symbol id="s-users" viewBox="0 0 24 24">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </symbol>
+  <symbol id="s-globe" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M2 12h20" />
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z" />
+  </symbol>
+  <symbol id="s-user" viewBox="0 0 24 24">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </symbol>
+  <symbol id="s-cap" viewBox="0 0 24 24">
+    <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+    <path d="M6 12v5c0 1 2.5 2.5 6 2.5s6-1.5 6-2.5v-5" />
+  </symbol>
+  <symbol id="s-eye" viewBox="0 0 24 24">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" />
+    <circle cx="12" cy="12" r="3" />
+  </symbol>
+  <symbol id="s-edit" viewBox="0 0 24 24">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z" />
+  </symbol>
+  <symbol id="s-trash" viewBox="0 0 24 24">
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </symbol>
+  <symbol id="s-search" viewBox="0 0 24 24">
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.35-4.35" />
+  </symbol>
+  <symbol id="s-plus" viewBox="0 0 24 24">
+    <path d="M12 5v14" />
+    <path d="M5 12h14" />
+  </symbol>
+  <symbol id="s-chevron" viewBox="0 0 24 24">
+    <polyline points="9 18 15 12 9 6" />
+  </symbol>
+  <symbol id="s-x" viewBox="0 0 24 24">
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
+  </symbol>
+  <symbol id="s-alert" viewBox="0 0 24 24">
+    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+    <path d="M12 9v4" />
+    <path d="M12 17h.01" />
+  </symbol>
+</svg>
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <main *ngIf="projects && projects.length > 0; else sinDatos" class="projects-content">
+<div class="art-dashboard projects-view">
 
-    <!-- SECCIÓN 1: MIS PROYECTOS (RETRÁCTIL) -->
-    <section class="projects-section accordion-section">
-      <div class="accordion-header" (click)="seccionMisProyectosAbierta = !seccionMisProyectosAbierta">
-        <div class="section-title">
-          <span class="chevron" [class.open]="seccionMisProyectosAbierta">📐</span>
-          <h2>📁 Mis proyectos</h2>
-          <span class="badge-count">{{ misProyectosFiltrados?.length ?? misProyectos?.length ?? 0 }}</span>
-        </div>
+  <!-- ==========================================================
+       1. HERO / CABECERA
+       ========================================================== -->
+  <header class="art-hero">
+    <div class="hero-main">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Facultad de Artes &middot; Repositorio Académico</span>
+        <h1 class="hero-title">Gestión de Proyectos</h1>
+        <p class="hero-subtitle">
+          Administra tus iniciativas, revisa colaboraciones y explora los proyectos de la plataforma.
+        </p>
       </div>
 
+      <div class="hero-actions">
+        <div class="hero-summary" role="group" aria-label="Resumen de proyectos">
+          <div class="summary-item">
+            <span class="summary-value">{{ misProyectos?.length ?? 0 }}</span>
+            <span class="summary-label">Míos</span>
+          </div>
+          <span class="summary-divider" aria-hidden="true"></span>
+          <div class="summary-item">
+            <span class="summary-value">{{ proyectosColaborando?.length ?? 0 }}</span>
+            <span class="summary-label">Colaboro</span>
+          </div>
+        </div>
+        <button class="btn-primary btn-nuevo" (click)="nuevoProyecto()">
+          <svg class="icon icon-sm">
+            <use href="#s-plus"></use>
+          </svg>
+          Nuevo proyecto
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================
+       2. CONTENIDO PRINCIPAL
+       ========================================================== -->
+  <main *ngIf="projects && projects.length > 0; else sinDatos" class="projects-content">
+
+    <!-- SECCIÓN 1: MIS PROYECTOS -->
+    <section class="accordion-section">
+      <button type="button" class="accordion-header" [class.expanded]="seccionMisProyectosAbierta"
+        (click)="seccionMisProyectosAbierta = !seccionMisProyectosAbierta">
+        <div class="section-heading">
+          <svg class="chevron icon icon-sm" [class.open]="seccionMisProyectosAbierta">
+            <use href="#s-chevron"></use>
+          </svg>
+          <span class="section-icon"><svg class="icon icon-sm">
+              <use href="#s-folder"></use>
+            </svg></span>
+          <h2>Mis proyectos</h2>
+        </div>
+        <span class="badge-count">{{ misProyectosFiltrados?.length ?? misProyectos?.length ?? 0 }}</span>
+      </button>
+
       <div class="accordion-content" *ngIf="seccionMisProyectosAbierta">
-        <!-- BUSCADOR INDIVIDUAL -->
         <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input
-            type="text"
-            [(ngModel)]="busquedaMisProyectos"
+          <svg class="search-icon icon icon-sm">
+            <use href="#s-search"></use>
+          </svg>
+          <input type="text" [(ngModel)]="busquedaMisProyectos"
             placeholder="Buscar en mis proyectos por título, descripción o tutor..."
-            (click)="$event.stopPropagation()"
-          />
+            (click)="$event.stopPropagation()" />
         </div>
 
-        <!-- GRID DE TARJETAS -->
         <div class="projects-grid" *ngIf="(misProyectosFiltrados?.length ?? 0) > 0; else sinResultadosMisProyectos">
-          <article class="project-card" *ngFor="let project of misProyectosFiltrados">
+          <article class="project-card stagger" *ngFor="let project of misProyectosFiltrados">
             <div class="card-header">
               <span class="estado-badge" [ngClass]="{
                 'estado-activo': project.estado === 'En desarrollo',
                 'estado-finalizado': project.estado === 'Finalizado',
                 'estado-suspendido': project.estado === 'Suspendido'
               }">
+                <span class="estado-dot" aria-hidden="true"></span>
                 {{ project.estado }}
               </span>
-              <span class="tipo-badge">📂 {{ project.tipo_proyecto }}</span>
+              <span class="tipo-badge">
+                <svg class="icon icon-xs">
+                  <use href="#s-folder"></use>
+                </svg>
+                <span class="tipo-text"><span class="tipo-inner">{{ project.tipo_proyecto }}</span></span>
+              </span>
             </div>
 
             <div class="card-body">
@@ -56,66 +156,104 @@
 
             <div class="card-meta">
               <div class="meta-item">
-                <span class="meta-label">Propietario:</span>
-                <span class="meta-value">👤 {{ project.owner?.name }}</span>
+                <span class="meta-label">Propietario</span>
+                <span class="meta-value">
+                  <svg class="icon icon-xs">
+                    <use href="#s-user"></use>
+                  </svg>
+                  {{ project.owner?.name }}
+                </span>
               </div>
               <div class="meta-item">
-                <span class="meta-label">Tutor asignado:</span>
-                <span class="meta-value">👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}</span>
+                <span class="meta-label">Tutor asignado</span>
+                <span class="meta-value">
+                  <svg class="icon icon-xs">
+                    <use href="#s-cap"></use>
+                  </svg>
+                  {{ project.tutor?.name ?? 'Sin tutor' }}
+                </span>
               </div>
             </div>
 
             <footer class="card-actions">
               <button class="btn-action btn-view" (click)="verProyecto(project)">
-                👁️ Ver
+                <svg class="icon icon-xs">
+                  <use href="#s-eye"></use>
+                </svg>
+                Ver
               </button>
-              <button class="btn-action btn-edit" *ngIf="puedeEditarProyecto(project)" (click)="editarProyecto(project)">
-                ✏️ Editar
+              <button class="btn-action btn-edit" *ngIf="puedeEditarProyecto(project)"
+                (click)="editarProyecto(project)">
+                <svg class="icon icon-xs">
+                  <use href="#s-edit"></use>
+                </svg>
+                Editar
               </button>
               <button class="btn-action btn-tutor" *ngIf="!project.tutor" (click)="solicitarTutor(project)">
-                👩‍🏫 Solicitar tutor
+                <svg class="icon icon-xs">
+                  <use href="#s-cap"></use>
+                </svg>
+                Solicitar tutor
               </button>
-              <button class="btn-action btn-delete" *ngIf="esPropietarioProyecto(project) || auth.esCoordinador()" (click)="abrirModalEliminar(project)">
-                🗑️ Eliminar
+              <button class="btn-action btn-delete" *ngIf="esPropietarioProyecto(project) || auth.esCoordinador()"
+                (click)="abrirModalEliminar(project)">
+                <svg class="icon icon-xs">
+                  <use href="#s-trash"></use>
+                </svg>
+                Eliminar
               </button>
             </footer>
           </article>
         </div>
 
         <ng-template #sinResultadosMisProyectos>
-          <p class="no-results-text">No se encontraron coincidencia en tus proyectos.</p>
+          <p class="no-results-text">No se encontraron coincidencias en tus proyectos.</p>
         </ng-template>
       </div>
     </section>
 
-    <!-- SECCIÓN 2: PROYECTOS DONDE COLABORO (RETRÁCTIL) -->
-    <section class="projects-section accordion-section">
-      <div class="accordion-header" (click)="seccionColaborandoAbierta = !seccionColaborandoAbierta">
-        <div class="section-title">
-          <span class="chevron" [class.open]="seccionColaborandoAbierta">📐</span>
-          <h2>🤝 Proyectos donde colaboro</h2>
-          <span class="badge-count">{{ colaborandoFiltrados?.length ?? proyectosColaborando?.length ?? 0 }}</span>
+    <!-- SECCIÓN 2: PROYECTOS DONDE COLABORO -->
+    <section class="accordion-section">
+      <button type="button" class="accordion-header" [class.expanded]="seccionColaborandoAbierta"
+        (click)="seccionColaborandoAbierta = !seccionColaborandoAbierta">
+        <div class="section-heading">
+          <svg class="chevron icon icon-sm" [class.open]="seccionColaborandoAbierta">
+            <use href="#s-chevron"></use>
+          </svg>
+          <span class="section-icon"><svg class="icon icon-sm">
+              <use href="#s-users"></use>
+            </svg></span>
+          <h2>Proyectos donde colaboro</h2>
         </div>
-      </div>
+        <span class="badge-count">{{ colaborandoFiltrados?.length ?? proyectosColaborando?.length ?? 0 }}</span>
+      </button>
 
       <div class="accordion-content" *ngIf="seccionColaborandoAbierta">
-        <!-- BUSCADOR INDIVIDUAL -->
         <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input
-            type="text"
-            [(ngModel)]="busquedaColaborando"
-            placeholder="Buscar en colaboradores..."
-            (click)="$event.stopPropagation()"
-          />
+          <svg class="search-icon icon icon-sm">
+            <use href="#s-search"></use>
+          </svg>
+          <input type="text" [(ngModel)]="busquedaColaborando" placeholder="Buscar en colaboradores..."
+            (click)="$event.stopPropagation()" />
         </div>
 
-        <!-- GRID DE TARJETAS -->
         <div class="projects-grid" *ngIf="(colaborandoFiltrados?.length ?? 0) > 0; else sinResultadosColaborando">
-          <article class="project-card card-colaborador" *ngFor="let project of colaborandoFiltrados">
+          <article class="project-card card-colaborador stagger" *ngFor="let project of colaborandoFiltrados">
             <div class="card-header">
-              <span class="estado-badge estado-activo">{{ project.estado }}</span>
-              <span class="tipo-badge">📂 {{ project.tipo_proyecto }}</span>
+              <span class="estado-badge" [ngClass]="{
+                'estado-activo': project.estado === 'En desarrollo',
+                'estado-finalizado': project.estado === 'Finalizado',
+                'estado-suspendido': project.estado === 'Suspendido'
+              }">
+                <span class="estado-dot" aria-hidden="true"></span>
+                {{ project.estado }}
+              </span>
+              <span class="tipo-badge">
+                <svg class="icon icon-xs">
+                  <use href="#s-folder"></use>
+                </svg>
+                <span class="tipo-text"><span class="tipo-inner">{{ project.tipo_proyecto }}</span></span>
+              </span>
             </div>
 
             <div class="card-body">
@@ -125,18 +263,31 @@
 
             <div class="card-meta">
               <div class="meta-item">
-                <span class="meta-label">Propietario:</span>
-                <span class="meta-value">👤 {{ project.owner?.name }}</span>
+                <span class="meta-label">Propietario</span>
+                <span class="meta-value">
+                  <svg class="icon icon-xs">
+                    <use href="#s-user"></use>
+                  </svg>
+                  {{ project.owner?.name }}
+                </span>
               </div>
               <div class="meta-item">
-                <span class="meta-label">Tutor asignado:</span>
-                <span class="meta-value">👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}</span>
+                <span class="meta-label">Tutor asignado</span>
+                <span class="meta-value">
+                  <svg class="icon icon-xs">
+                    <use href="#s-cap"></use>
+                  </svg>
+                  {{ project.tutor?.name ?? 'Sin tutor' }}
+                </span>
               </div>
             </div>
 
             <footer class="card-actions">
               <button class="btn-action btn-view" (click)="verProyecto(project)">
-                👁️ Ver detalles
+                <svg class="icon icon-xs">
+                  <use href="#s-eye"></use>
+                </svg>
+                Ver detalles
               </button>
             </footer>
           </article>
@@ -148,40 +299,48 @@
       </div>
     </section>
 
-    <!-- SECCIÓN 3: OTROS PROYECTOS (RETRÁCTIL) -->
-    <section class="projects-section accordion-section">
-      <div class="accordion-header" (click)="seccionExternosAbierta = !seccionExternosAbierta">
-        <div class="section-title">
-          <span class="chevron" [class.open]="seccionExternosAbierta">📐</span>
-          <h2>🌐 Otros proyectos de la plataforma</h2>
-          <span class="badge-count">{{ externosFiltrados?.length ?? proyectosExternos?.length ?? 0 }}</span>
+    <!-- SECCIÓN 3: OTROS PROYECTOS (Solo visible para Tutor y Coordinador) -->
+    <section class="accordion-section" *ngIf="!auth.esEstudiante()">
+      <button type="button" class="accordion-header" [class.expanded]="seccionExternosAbierta"
+        (click)="seccionExternosAbierta = !seccionExternosAbierta">
+        <div class="section-heading">
+          <svg class="chevron icon icon-sm" [class.open]="seccionExternosAbierta">
+            <use href="#s-chevron"></use>
+          </svg>
+          <span class="section-icon"><svg class="icon icon-sm">
+              <use href="#s-globe"></use>
+            </svg></span>
+          <h2>Otros proyectos de la plataforma</h2>
         </div>
-      </div>
+        <span class="badge-count">{{ externosFiltrados?.length ?? proyectosExternos?.length ?? 0 }}</span>
+      </button>
 
       <div class="accordion-content" *ngIf="seccionExternosAbierta">
-        <!-- BUSCADOR INDIVIDUAL -->
         <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input
-            type="text"
-            [(ngModel)]="busquedaExternos"
-            placeholder="Buscar en otros proyectos por título, autor o área..."
-            (click)="$event.stopPropagation()"
-          />
+          <svg class="search-icon icon icon-sm">
+            <use href="#s-search"></use>
+          </svg>
+          <input type="text" [(ngModel)]="busquedaExternos"
+            placeholder="Buscar en otros proyectos por título, autor o área..." (click)="$event.stopPropagation()" />
         </div>
 
-        <!-- GRID DE TARJETAS -->
         <div class="projects-grid" *ngIf="(externosFiltrados?.length ?? 0) > 0; else sinResultadosExternos">
-          <article class="project-card" *ngFor="let project of externosFiltrados">
+          <article class="project-card stagger" *ngFor="let project of externosFiltrados">
             <div class="card-header">
               <span class="estado-badge" [ngClass]="{
                 'estado-activo': project.estado === 'En desarrollo',
                 'estado-finalizado': project.estado === 'Finalizado',
                 'estado-suspendido': project.estado === 'Suspendido'
               }">
+                <span class="estado-dot" aria-hidden="true"></span>
                 {{ project.estado }}
               </span>
-              <span class="tipo-badge">📂 {{ project.tipo_proyecto }}</span>
+              <span class="tipo-badge">
+                <svg class="icon icon-xs">
+                  <use href="#s-folder"></use>
+                </svg>
+                <span class="tipo-text"><span class="tipo-inner">{{ project.tipo_proyecto }}</span></span>
+              </span>
             </div>
 
             <div class="card-body">
@@ -191,27 +350,51 @@
 
             <div class="card-meta">
               <div class="meta-item">
-                <span class="meta-label">Propietario:</span>
-                <span class="meta-value">👤 {{ project.owner?.name }}</span>
+                <span class="meta-label">Propietario</span>
+                <span class="meta-value">
+                  <svg class="icon icon-xs">
+                    <use href="#s-user"></use>
+                  </svg>
+                  {{ project.owner?.name }}
+                </span>
               </div>
               <div class="meta-item">
-                <span class="meta-label">Tutor asignado:</span>
-                <span class="meta-value">👩‍🏫 {{ project.tutor?.name ?? 'Sin tutor' }}</span>
+                <span class="meta-label">Tutor asignado</span>
+                <span class="meta-value">
+                  <svg class="icon icon-xs">
+                    <use href="#s-cap"></use>
+                  </svg>
+                  {{ project.tutor?.name ?? 'Sin tutor' }}
+                </span>
               </div>
             </div>
 
             <footer class="card-actions">
               <button class="btn-action btn-view" (click)="verProyecto(project)">
-                👁️ Ver
+                <svg class="icon icon-xs">
+                  <use href="#s-eye"></use>
+                </svg>
+                Ver
               </button>
-              <button class="btn-action btn-edit" *ngIf="puedeEditarProyecto(project)" (click)="editarProyecto(project)">
-                ✏️ Editar
+              <button class="btn-action btn-edit" *ngIf="puedeEditarProyecto(project)"
+                (click)="editarProyecto(project)">
+                <svg class="icon icon-xs">
+                  <use href="#s-edit"></use>
+                </svg>
+                Editar
               </button>
               <button class="btn-action btn-tutor" *ngIf="!project.tutor" (click)="solicitarTutor(project)">
-                👩‍🏫 Solicitar tutor
+                <svg class="icon icon-xs">
+                  <use href="#s-cap"></use>
+                </svg>
+                Solicitar tutor
               </button>
-              <button class="btn-action btn-delete" *ngIf="auth.esCoordinador()" (click)="eliminarProyecto(project)">
-                🗑️ Eliminar
+              <button class="btn-action btn-delete" *ngIf="esPropietarioProyecto(project)"
+                (click)="abrirModalEliminar(project)">
+                <svg class="icon icon-xs">
+                  <use href="#s-trash"></use>
+                </svg>
+                Eliminar
               </button>
             </footer>
           </article>
@@ -225,93 +408,131 @@
 
   </main>
 
-  <!-- ESTADO VACÍO GLOBAL -->
+  <!-- ==========================================================
+       ESTADO VACÍO GLOBAL
+       ========================================================== -->
   <ng-template #sinDatos>
     <div class="empty-state">
-      <div class="empty-icon">📁</div>
-      <h3>No hay proyectos disponibles</h3>
-      <p>Todavía no has creado ningún proyecto en la plataforma.</p>
+      <span class="empty-icon">
+        <svg class="icon icon-lg">
+          <use href="#s-folder"></use>
+        </svg>
+      </span>
+      <p class="empty-title">No hay proyectos disponibles</p>
+      <p class="empty-text">Todavía no has creado ningún proyecto en la plataforma.</p>
       <button class="btn-primary" (click)="nuevoProyecto()">
-        ➕ Crear mi primer proyecto
+        <svg class="icon icon-sm">
+          <use href="#s-plus"></use>
+        </svg>
+        Crear mi primer proyecto
       </button>
     </div>
   </ng-template>
 
-  <!-- MODAL: FORMULARIO PROYECTO -->
+  <!-- ==========================================================
+       MODAL: FORMULARIO PROYECTO
+       ========================================================== -->
   @if (mostrarFormulario) {
-    <div class="modal-backdrop">
-      <div class="modal-content project-modal">
-        <header class="modal-header">
-          <h2>{{ proyectoSeleccionado ? '✏️ Editar proyecto' : '📚 Nuevo proyecto' }}</h2>
-          <button class="close-btn" (click)="cerrarFormulario()">✕</button>
-        </header>
+  <div class="modal-backdrop">
+    <div class="modal-content project-modal">
+      <header class="modal-header">
+        <h2>
+          <svg class="icon icon-md">
+            <use href="#s-edit"></use>
+          </svg>
+          {{ proyectoSeleccionado ? 'Editar proyecto' : 'Nuevo proyecto' }}
+        </h2>
+        <button class="close-btn" (click)="cerrarFormulario()">
+          <svg class="icon icon-sm">
+            <use href="#s-x"></use>
+          </svg>
+        </button>
+      </header>
 
-        <div class="modal-body">
-          <app-project-form
-            [proyecto]="proyectoSeleccionado"
-            (guardado)="cerrarFormulario(); cargarProyectos()">
-          </app-project-form>
-        </div>
+      <div class="modal-body">
+        <app-project-form [proyecto]="proyectoSeleccionado" (guardado)="cerrarFormulario(); cargarProyectos()">
+        </app-project-form>
       </div>
     </div>
+  </div>
   }
 
-  <!-- MODAL: SOLICITAR TUTOR -->
+  <!-- ==========================================================
+       MODAL: SOLICITAR TUTOR
+       ========================================================== -->
   @if (mostrarSolicitudTutor && proyectoSolicitud) {
-    <div class="modal-backdrop">
-      <div class="modal-content">
-        <header class="modal-header">
-          <h2>👩‍🏫 Solicitar tutor</h2>
-          <button class="close-btn" (click)="cerrarSolicitudTutor()">✕</button>
-        </header>
+  <div class="modal-backdrop">
+    <div class="modal-content">
+      <header class="modal-header">
+        <h2>
+          <svg class="icon icon-md">
+            <use href="#s-cap"></use>
+          </svg>
+          Solicitar tutor
+        </h2>
+        <button class="close-btn" (click)="cerrarSolicitudTutor()">
+          <svg class="icon icon-sm">
+            <use href="#s-x"></use>
+          </svg>
+        </button>
+      </header>
 
-        <div class="modal-body">
-          <div class="document-info">
-            <p><strong>Proyecto:</strong> {{ proyectoSolicitud.titulo }}</p>
-          </div>
-
-          <app-tutor-request-form
-            [proyecto]="proyectoSolicitud"
-            (enviado)="cerrarSolicitudTutor()">
-          </app-tutor-request-form>
+      <div class="modal-body">
+        <div class="document-info">
+          <p><strong>Proyecto:</strong> {{ proyectoSolicitud.titulo }}</p>
         </div>
+
+        <app-tutor-request-form [proyecto]="proyectoSolicitud" (enviado)="cerrarSolicitudTutor()">
+        </app-tutor-request-form>
       </div>
     </div>
+  </div>
   }
 
-  <!-- MODAL: ELIMINAR PROYECTO -->
+  <!-- ==========================================================
+       MODAL: ELIMINAR PROYECTO
+       ========================================================== -->
   @if (mostrarModalEliminar && proyectoEliminar) {
-    <div class="modal-backdrop">
-      <div class="modal-content delete-modal">
-        <header class="modal-header">
-          <h2>🗑️ Eliminar proyecto</h2>
-          <button class="close-btn" (click)="cerrarModalEliminar()">✕</button>
-        </header>
+  <div class="modal-backdrop">
+    <div class="modal-content delete-modal">
+      <header class="modal-header">
+        <h2>
+          <svg class="icon icon-md danger-icon">
+            <use href="#s-trash"></use>
+          </svg>
+          Eliminar proyecto
+        </h2>
+        <button class="close-btn" (click)="cerrarModalEliminar()">
+          <svg class="icon icon-sm">
+            <use href="#s-x"></use>
+          </svg>
+        </button>
+      </header>
 
-        <div class="modal-body">
-          <p class="warning-text">⚠️ Estás a punto de eliminar el proyecto de forma permanente:</p>
-          <h3 class="delete-project-title">{{ proyectoEliminar.titulo }}</h3>
-          <p class="instruction-text">Escribe exactamente el nombre del proyecto para confirmar la eliminación:</p>
+      <div class="modal-body">
+        <p class="warning-text">
+          <svg class="icon icon-sm">
+            <use href="#s-alert"></use>
+          </svg>
+          Estás a punto de eliminar el proyecto de forma permanente:
+        </p>
+        <h3 class="delete-project-title">{{ proyectoEliminar.titulo }}</h3>
+        <p class="instruction-text">Escribe exactamente el nombre del proyecto para confirmar la eliminación:</p>
 
-          <input
-            type="text"
-            class="input-confirm"
-            [(ngModel)]="nombreConfirmacion"
-            placeholder="Nombre exacto del proyecto">
+        <input type="text" class="input-confirm" [(ngModel)]="nombreConfirmacion"
+          placeholder="Nombre exacto del proyecto" />
 
-          <div class="modal-actions">
-            <button class="btn-cancel" (click)="cerrarModalEliminar()">
-              Cancelar
-            </button>
-            <button
-              class="btn-danger"
-              [disabled]="nombreConfirmacion !== proyectoEliminar.titulo"
-              (click)="confirmarEliminarProyecto()">
-              Eliminar definitivamente
-            </button>
-          </div>
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="cerrarModalEliminar()">
+            Cancelar
+          </button>
+          <button class="btn-danger" [disabled]="nombreConfirmacion !== proyectoEliminar.titulo"
+            (click)="confirmarEliminarProyecto()">
+            Eliminar definitivamente
+          </button>
         </div>
       </div>
     </div>
+  </div>
   }
 </div>

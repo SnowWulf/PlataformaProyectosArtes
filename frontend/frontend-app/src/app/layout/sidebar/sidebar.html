@@ -1,85 +1,210 @@
+<!-- ==========================================================
+     BARRA LATERAL — Universidad de Nariño
+     Sistema visual compartido con student-home / tools /
+     community-profile / profile
+     ========================================================== -->
+
+<!-- SPRITE DE ICONOS -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="sb-cap" viewBox="0 0 24 24">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+    </symbol>
+    <symbol id="sb-home" viewBox="0 0 24 24">
+      <path d="M3 9.5 12 3l9 6.5"/>
+      <path d="M5 10v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10"/>
+      <path d="M9 21v-6h6v6"/>
+    </symbol>
+    <symbol id="sb-folder" viewBox="0 0 24 24">
+      <path d="M4 5h5l2 2.5h9a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+    </symbol>
+    <symbol id="sb-handshake" viewBox="0 0 24 24">
+      <path d="m11 17 2 2a1 1 0 0 0 3-3"/>
+      <path d="m14 14 2.5 2.5a1 1 0 0 0 3-3l-3.9-3.9a2 2 0 0 0-2.8 0l-1.3 1.3a2 2 0 0 1-2.8 0L6.5 8.5a1 1 0 0 0-3 3L7 15"/>
+      <path d="M21 3 18 6M3 21l3-3"/>
+    </symbol>
+    <symbol id="sb-clipboard" viewBox="0 0 24 24">
+      <rect x="8" y="3" width="8" height="4" rx="1"/>
+      <path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+      <path d="m9 14 2 2 4-4"/>
+    </symbol>
+    <symbol id="sb-users" viewBox="0 0 24 24">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+    </symbol>
+    <symbol id="sb-globe" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>
+    </symbol>
+    <symbol id="sb-tool" viewBox="0 0 24 24">
+      <path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8 6.2 21l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.5 2.5-2.3-.6-.6-2.3z"/>
+    </symbol>
+    <symbol id="sb-message" viewBox="0 0 24 24">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </symbol>
+    <symbol id="sb-user" viewBox="0 0 24 24">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="sb-chevron" viewBox="0 0 24 24">
+      <path d="m6 9 6 6 6-6"/>
+    </symbol>
+    <symbol id="sb-settings" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </symbol>
+    <symbol id="sb-logout" viewBox="0 0 24 24">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <path d="m16 17 5-5-5-5M21 12H9"/>
+    </symbol>
+  </defs>
+</svg>
+
 <aside class="sidebar">
 
-  <!-- Header / Brand -->
+  <!-- ======================= 1. MARCA ======================= -->
   <div class="sidebar-header">
     <div class="brand-logo">
-      <span class="logo-icon">🎓</span>
-      <h2>GestARTE</h2>
+      <span class="logo-icon" aria-hidden="true">
+        <img src="FacartesIcono.png" alt="Logo Facultad de Artes" class="sidebar-logo-img" />
+      </span>
+      <span class="brand-text">
+        <h2>GestARTE</h2>
+        <span class="brand-sub">Facultad de Artes</span>
+      </span>
     </div>
+    <span class="brand-rule" aria-hidden="true"></span>
   </div>
 
-  <!-- Menú de Navegación -->
-  <nav class="sidebar-menu">
+  <!-- ======================= 2. NAVEGACIÓN ======================= -->
+  <nav class="sidebar-menu" aria-label="Navegación principal">
+    <span class="menu-label">Navegación</span>
+
     <a [routerLink]="obtenerRutaDashboard()" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-      <span class="icon">🏠</span>
-      <span>Dashboard</span>
+      <span class="icon-slot" aria-hidden="true">
+        <svg class="icon icon-xs"><use href="#sb-home"></use></svg>
+      </span>
+      <span class="nav-text">Dashboard</span>
     </a>
 
     <a routerLink="/dashboard/projects" routerLinkActive="active">
-      <span class="icon">📁</span>
-      <span>Proyectos</span>
+      <span class="icon-slot" aria-hidden="true">
+        <svg class="icon icon-xs"><use href="#sb-folder"></use></svg>
+      </span>
+      <span class="nav-text">Proyectos</span>
     </a>
 
     <a routerLink="/dashboard/requests" routerLinkActive="active">
-      <span class="icon">🤝</span>
-      <span>Solicitudes</span>
+      <span class="icon-slot" aria-hidden="true">
+        <svg class="icon icon-xs"><use href="#sb-handshake"></use></svg>
+      </span>
+      <span class="nav-text">Solicitudes</span>
     </a>
+
+    @if (auth.esTutor() || auth.esCoordinador()) {
+      <span class="menu-label">Gestión</span>
+    }
 
     @if (auth.esTutor()) {
       <a routerLink="/dashboard/tutor-requests" routerLinkActive="active">
-        <span class="icon">👨‍🏫</span>
-        <span>Solicitudes Tutor</span>
+        <span class="icon-slot" aria-hidden="true">
+          <svg class="icon icon-xs"><use href="#sb-clipboard"></use></svg>
+        </span>
+        <span class="nav-text">Solicitudes Tutor</span>
       </a>
     }
 
     @if (auth.esCoordinador()) {
       <a routerLink="/dashboard/users" routerLinkActive="active">
-        <span class="icon">👥</span>
-        <span>Usuarios</span>
+        <span class="icon-slot" aria-hidden="true">
+          <svg class="icon icon-xs"><use href="#sb-users"></use></svg>
+        </span>
+        <span class="nav-text">Usuarios</span>
+      </a>
+
+      <!-- Moderación de Reseñas (Exclusivo Coordinador) -> Apunta a la ruta virtual del dashboard -->
+      <a routerLink="/dashboard/coordinador-reviews" routerLinkActive="active">
+        <span class="icon-slot" aria-hidden="true">
+          <svg class="icon icon-xs"><use href="#sb-message"></use></svg>
+        </span>
+        <span class="nav-text">Moderación Reseñas</span>
       </a>
     }
 
+    <span class="menu-label">Comunidad</span>
+
     <a routerLink="/dashboard/community" routerLinkActive="active">
-      <span class="icon">🌐</span>
-      <span>Comunidad</span>
+      <span class="icon-slot" aria-hidden="true">
+        <svg class="icon icon-xs"><use href="#sb-globe"></use></svg>
+      </span>
+      <span class="nav-text">Comunidad</span>
     </a>
 
     <a routerLink="/dashboard/tools" routerLinkActive="active">
-      <span class="icon">🛠️</span>
-      <span>Herramientas</span>
+      <span class="icon-slot" aria-hidden="true">
+        <svg class="icon icon-xs"><use href="#sb-tool"></use></svg>
+      </span>
+      <span class="nav-text">Herramientas</span>
     </a>
+
+    <!-- RESEÑAS Y FEEDBACK (SOLO VISIBLE PARA ESTUDIANTES Y TUTORES) -->
+    @if (auth.esEstudiante() || auth.esTutor()) {
+      <a routerLink="/dashboard/feedback" routerLinkActive="active">
+        <span class="icon-slot" aria-hidden="true">
+          <svg class="icon icon-xs"><use href="#sb-message"></use></svg>
+        </span>
+        <span class="nav-text">Feedback</span>
+      </a>
+    }
   </nav>
 
-  <!-- Área de Usuario / Configuración -->
+  <!-- ======================= 3. USUARIO ======================= -->
   <div class="sidebar-user">
     @if (mostrarMenuUsuario) {
       <div class="dropdown-backdrop" (click)="mostrarMenuUsuario = false"></div>
     }
 
-    <button 
+    <button
       type="button"
-      class="user-menu-btn" 
+      class="user-menu-btn"
       [class.active]="mostrarMenuUsuario"
+      [attr.aria-expanded]="mostrarMenuUsuario"
+      aria-haspopup="menu"
       (click)="mostrarMenuUsuario = !mostrarMenuUsuario">
-      <div class="user-avatar">⚙️</div>
+      <span class="user-avatar" aria-hidden="true">
+        <svg class="icon icon-xs"><use href="#sb-user"></use></svg>
+      </span>
       <span class="user-label">Opciones</span>
-      <span class="chevron" [class.open]="mostrarMenuUsuario">▾</span>
+      <span class="chevron" [class.open]="mostrarMenuUsuario" aria-hidden="true">
+        <svg class="icon icon-xxs"><use href="#sb-chevron"></use></svg>
+      </span>
     </button>
 
     @if (mostrarMenuUsuario) {
-      <div class="user-dropdown">
-        <button type="button" (click)="irAMiPerfil(); mostrarMenuUsuario = false">
-          <span class="icon">👤</span> Mi perfil
+      <div class="user-dropdown" role="menu">
+        <button type="button" role="menuitem" (click)="irAMiPerfil(); mostrarMenuUsuario = false">
+          <span class="icon-slot" aria-hidden="true">
+            <svg class="icon icon-xs"><use href="#sb-user"></use></svg>
+          </span>
+          <span class="item-text">Mi perfil</span>
         </button>
 
-        <button type="button" routerLink="/dashboard/profile" (click)="mostrarMenuUsuario = false">
-          <span class="icon">⚙️</span> Configuración
+        <button type="button" role="menuitem" routerLink="/dashboard/profile" (click)="mostrarMenuUsuario = false">
+          <span class="icon-slot" aria-hidden="true">
+            <svg class="icon icon-xs"><use href="#sb-settings"></use></svg>
+          </span>
+          <span class="item-text">Configuración</span>
         </button>
 
-        <div class="dropdown-divider"></div>
+        <div class="dropdown-divider" role="separator"></div>
 
-        <button type="button" class="logout-btn" (click)="logout(); mostrarMenuUsuario = false">
-          <span class="icon">🚪</span> Cerrar sesión
+        <button type="button" role="menuitem" class="logout-btn" (click)="logout(); mostrarMenuUsuario = false">
+          <span class="icon-slot" aria-hidden="true">
+            <svg class="icon icon-xs"><use href="#sb-logout"></use></svg>
+          </span>
+          <span class="item-text">Cerrar sesión</span>
         </button>
       </div>
     }

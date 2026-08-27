@@ -6,60 +6,86 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\ActivityLog;
 use App\Models\User;
-use App\Models\ProjectDelivery; // 👈 Importación agregada
-use App\Models\CalendarEvent;   // 👈 Importación agregada
+use App\Models\ProjectDelivery;
+use App\Models\CalendarEvent;
 use App\Helpers\ActivityLogger;
 use Carbon\Carbon;
 
-
 class ProjectController extends Controller
 {
+    private array $estadosPermitidos = [
+        'Borrador',
+        'Propuesta Inicial',
+        'Anteproyecto',
+        'En Desarrollo',
+        'Sustentación & Finalizado',
+        'Suspendido'
+    ];
+
     public function index(Request $request)
     {
         $user = $request->user();
 
-        // Coordinador
+        // Consulta base cargando relaciones
+        $query = Project::with(['owner', 'tutor', 'collaborators', 'tutorRequests']);
+
+        // Coordinador: Ve todo excepto borradores sin solicitudes
         if ($user->role->nombre === 'Coordinador') {
-            return Project::with(['owner', 'tutor', 'collaborators'])->get();
+            return $query->where(function ($q) {
+                $q->where('estado', '!=', 'Borrador')
+                  ->orWhere(function ($subQ) {
+                      $subQ->where('estado', 'Borrador')
+                           ->whereHas('tutorRequests');
+                  });
+            })->get();
         }
 
-        // Tutor
+        // Tutor: Ve proyectos donde es asignado o creador
         if ($user->role->nombre === 'Tutor') {
-            return Project::with(['owner', 'tutor', 'collaborators'])
-                ->where('owner_id', $user->id)
-                ->orWhere('tutor_id', $user->id)
-                ->get();
+            return $query->where('estado', '!=', 'Borrador')
+                ->where(function ($q) use ($user) {
+                    $q->where('owner_id', $user->id)
+                      ->orWhere('tutor_id', $user->id);
+                })->get();
         }
 
-        // Estudiante
-        return Project::with([
-            'owner',
-            'tutor',
-            'collaborators'
-        ])
-        ->where('owner_id', $user->id)
-        ->orWhereHas('collaborators', function ($query) use ($user) {
-            $query->where('users.id', $user->id);
-        })
-        ->get();
+        // Estudiante / Consulta General:
+        // Muestra proyectos propios (aunque no sean visibles) O proyectos públicos de otros usuarios
+        return $query->where(function ($q) use ($user) {
+            // Mis proyectos o donde colaboro
+            $q->where('owner_id', $user->id)
+              ->orWhereHas('collaborators', function ($subQ) use ($user) {
+                  $subQ->where('users.id', $user->id);
+              })
+              // O proyectos públicos de terceros (visibilidad individual + global activa)
+              ->orWhere(function ($publicQ) {
+                  $publicQ->where('es_visible', true)
+                          ->whereHas('owner', function ($ownerQ) {
+                              $ownerQ->where('mostrar_proyectos', true);
+                          });
+              });
+        })->get();
     }
 
     public function show(Request $request, $id)
     {
         $project = Project::with(['owner', 'tutor', 'collaborators'])->findOrFail($id);
-
         $user = $request->user();
+
+        // Regla estricta para Borrador: Solo el dueño puede ver un Borrador
+        if ($project->estado === 'Borrador' && $project->owner_id !== $user->id) {
+            return response()->json([
+                'message' => 'No autorizado. El proyecto está en borrador.'
+            ], 403);
+        }
 
         // Coordinador
         if ($user->role->nombre === 'Coordinador') {
             return response()->json($project);
         }
 
-        // Tutor
-        if (
-            $user->role->nombre === 'Tutor' &&
-            $project->tutor_id === $user->id
-        ) {
+        // Tutor asignado
+        if ($user->role->nombre === 'Tutor' && $project->tutor_id === $user->id) {
             return response()->json($project);
         }
 
@@ -68,11 +94,17 @@ class ProjectController extends Controller
             return response()->json($project);
         }
 
+        // Colaborador
         $esColaborador = $project->collaborators()
             ->where('users.id', $user->id)
             ->exists();
 
         if ($esColaborador) {
+            return response()->json($project);
+        }
+
+        // Verificación de visibilidad pública para terceros
+        if ($project->es_visible && $project->owner?->mostrar_proyectos) {
             return response()->json($project);
         }
 
@@ -83,18 +115,24 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'titulo' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'tipo_proyecto' => 'required|string',
+        ]);
+
+        $tutorId = $request->tutor_id;
+        $estadoInicial = $tutorId ? 'Propuesta Inicial' : 'Borrador';
+
         $project = Project::create([
             'titulo' => $request->titulo,
             'descripcion' => $request->descripcion,
             'tipo_proyecto' => $request->tipo_proyecto,
-            'estado' => 'Pendiente',
+            'estado' => $estadoInicial,
             'fecha_inicio' => now(),
-
-            // Siempre será el usuario autenticado
             'owner_id' => $request->user()->id,
-
-            // Se podrá asignar desde Coordinador
-            'tutor_id' => $request->tutor_id
+            'tutor_id' => $tutorId,
+            'es_visible' => true
         ]);
 
         return response()->json($project, 201);
@@ -103,37 +141,38 @@ class ProjectController extends Controller
     public function update(Request $request, $id)
     {
         $project = Project::findOrFail($id);
-
         $user = $request->user();
 
         if (
             $user->role->nombre === 'Coordinador' ||
-            (
-                $user->role->nombre === 'Tutor' &&
-                $project->tutor_id === $user->id
-            ) ||
+            ($user->role->nombre === 'Tutor' && $project->tutor_id === $user->id) ||
             $project->owner_id === $user->id
         ) {
+            $nuevoTutorId = $request->has('tutor_id') ? $request->tutor_id : $project->tutor_id;
+            $nuevoEstado = $request->estado ?? $project->estado;
+
+            if ($project->estado === 'Borrador' && $nuevoTutorId !== null) {
+                $nuevoEstado = 'Propuesta Inicial';
+            }
 
             $project->update([
-                'titulo' => $request->titulo,
-                'descripcion' => $request->descripcion,
-                'tipo_proyecto' => $request->tipo_proyecto,
-                'estado' => $request->estado
+                'titulo' => $request->titulo ?? $project->titulo,
+                'descripcion' => $request->descripcion ?? $project->descripcion,
+                'tipo_proyecto' => $request->tipo_proyecto ?? $project->tipo_proyecto,
+                'estado' => $nuevoEstado,
+                'tutor_id' => $nuevoTutorId,
+                'es_visible' => $request->has('es_visible') ? $request->es_visible : $project->es_visible
             ]);
 
             return response()->json($project);
         }
 
-        return response()->json([
-            'message' => 'No autorizado.'
-        ], 403);
+        return response()->json(['message' => 'No autorizado.'], 403);
     }
 
     public function destroy(Request $request, $id)
     {
         $project = Project::findOrFail($id);
-
         $user = $request->user();
 
         if (
@@ -239,17 +278,14 @@ class ProjectController extends Controller
             $warningBannerProjects = [];
             $criticalModalProjects = [];
 
-            // 1. Obtener IDs de proyectos del usuario (Propietario o Colaborador)
             $userProjectIds = Project::where('owner_id', $userId)
                 ->orWhereHas('collaborators', function ($query) use ($userId) {
                     $query->where('users.id', $userId);
                 })
                 ->pluck('id');
 
-            // 2. CONSULTA ENTREGAS (project_deliveries) FILTRADAS
             $deliveriesQuery = ProjectDelivery::query();
             
-            // Si la tabla tiene 'project_id', filtramos por sus proyectos
             if (\Illuminate\Support\Facades\Schema::hasColumn('project_deliveries', 'project_id')) {
                 $deliveriesQuery->whereIn('project_id', $userProjectIds);
             } elseif (\Illuminate\Support\Facades\Schema::hasColumn('project_deliveries', 'user_id')) {
@@ -270,7 +306,7 @@ class ProjectController extends Controller
                 $fechaFin = Carbon::parse($fechaRaw)->startOfDay();
                 $diasRestantes = $today->diffInDays($fechaFin, false);
 
-                if ($diasRestantes < 0) continue; // Ignorar pasadas
+                if ($diasRestantes < 0) continue;
 
                 $item = [
                     'id' => $delivery->project_id ?? $delivery->id,
@@ -286,10 +322,8 @@ class ProjectController extends Controller
                 }
             }
 
-            // 3. CONSULTA CALENDARIO (calendar_events) FILTRADO
             $eventsQuery = CalendarEvent::query();
 
-            // Detectar automáticamente qué columna existe en calendar_events
             $eventsQuery->where(function ($q) use ($userId, $userProjectIds) {
                 $hasFilter = false;
 
@@ -306,7 +340,6 @@ class ProjectController extends Controller
                     $hasFilter = true;
                 }
 
-                // Si no existe ninguna de las columnas anteriores, trae solo si no se encuentra relación
                 if (!$hasFilter) {
                     $q->whereRaw('1 = 1');
                 }
@@ -348,7 +381,6 @@ class ProjectController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            // Retornar detalle del error en desarrollo
             return response()->json([
                 'error' => 'Error SQL o de ejecución: ' . $e->getMessage(),
                 'line' => $e->getLine()

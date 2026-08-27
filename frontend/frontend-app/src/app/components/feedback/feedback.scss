@@ -1,0 +1,321 @@
+// ==========================================================
+//  FEEDBACK & RESEÑAS — Universidad de Nariño
+// ==========================================================
+
+$udenar-verde:        #006633;
+$udenar-verde-soft:   #e6f0eb;
+$udenar-verde-hover:  #004d26;
+
+$udenar-dorado:       #FFCC00;
+$udenar-dorado-dark:  #a37f00;
+
+$bg-card:             #FFFFFF;
+$bg-soft:             #F7F9F8;
+
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
+
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
+$text-danger:         #DC2626;
+
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+$radius-sm:    8px;
+$radius-md:    12px;
+$radius-full:  9999px;
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+:host {
+  display: block;
+  font-family: $font-sans;
+  color: $text-main;
+  padding: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+
+  *, *::before, *::after { box-sizing: border-box; }
+}
+
+.icon-sprite { display: none; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+
+  &.icon-xs { width: 13px; height: 13px; stroke-width: 2.2; }
+  &.icon-sm { width: 15px; height: 15px; }
+}
+
+// ==========================================================
+//  CABECERA DE LA PÁGINA
+// ==========================================================
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+
+  .header-icon-container {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: $radius-md;
+    background: $udenar-verde-soft;
+    color: $udenar-verde;
+    flex-shrink: 0;
+
+    .icon { width: 24px; height: 24px; }
+  }
+
+  .header-copy {
+    .header-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: $udenar-dorado-dark;
+    }
+
+    h2 {
+      margin: 0.2rem 0 0.3rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $text-main;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: $text-muted;
+      line-height: 1.45;
+    }
+  }
+}
+
+// ==========================================================
+//  BANNERS DE ALERTA (MODERACIÓN IA & ÉXITO)
+// ==========================================================
+.alert-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: $radius-sm;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.3s $ease-out;
+
+  .alert-icon .icon { width: 20px; height: 20px; }
+
+  .alert-content {
+    strong { display: block; font-size: 0.88rem; margin-bottom: 0.15rem; }
+    p { margin: 0; font-size: 0.82rem; line-height: 1.4; }
+  }
+
+  &--error {
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    color: #991B1B;
+
+    .alert-icon { color: $text-danger; }
+  }
+
+  &--success {
+    background: #F0FDF4;
+    border: 1px solid #86EFAC;
+    color: #166534;
+
+    .alert-icon { color: $udenar-verde; }
+  }
+}
+
+// ==========================================================
+//  TARJETA Y FORMULARIO
+// ==========================================================
+.feedback-card {
+  position: relative;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  padding: 1.75rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: $udenar-dorado;
+    border-radius: $radius-md $radius-md 0 0;
+  }
+}
+
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: $text-main;
+
+    .icon { color: $udenar-verde; }
+  }
+}
+
+.field-tag {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  &--req {
+    padding: 0.12rem 0.45rem;
+    border-radius: $radius-full;
+    background: rgba(255, 204, 0, 0.18);
+    color: $udenar-dorado-dark;
+  }
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.68rem 0.85rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-sm;
+  background: $bg-soft;
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: $text-main;
+  outline: none;
+  transition: border-color 0.2s $ease-out, background 0.2s $ease-out, box-shadow 0.2s $ease-out;
+
+  &::placeholder { color: $text-faint; }
+
+  &:focus {
+    background: $bg-card;
+    border-color: $udenar-verde;
+    box-shadow: 0 0 0 3px rgba(0, 102, 51, 0.12);
+  }
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+.error-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: $text-danger;
+}
+
+// ==========================================================
+//  ACCIONES Y BOTONES
+// ==========================================================
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid $border-color;
+}
+
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: $radius-sm;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s $ease-out;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  border: none;
+  background: $udenar-verde;
+  color: #FFFFFF;
+
+  &:hover:not(:disabled) {
+    background: $udenar-verde-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 102, 51, 0.3);
+  }
+}
+
+.btn-ghost {
+  border: 1px solid $border-color;
+  background: $bg-card;
+  color: $text-muted;
+
+  &:hover:not(:disabled) {
+    border-color: $border-strong;
+    color: $text-main;
+  }
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

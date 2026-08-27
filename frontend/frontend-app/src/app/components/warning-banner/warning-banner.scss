@@ -1,69 +1,280 @@
+// ==========================================================
+//  WARNING BANNER — Universidad de Nariño
+//  Paleta Institucional: Verde Sinople (#006633) y Dorado (#FFCC00)
+// ==========================================================
+
+// --- Paleta institucional ---
+$udenar-verde:        #006633;
+$udenar-verde-soft:   #e6f0eb;
+
+$udenar-dorado:       #FFCC00;
+$udenar-dorado-dark:  #8A6D00;
+$udenar-dorado-soft:  #FFF9E6;
+$udenar-dorado-border:#F0D060;
+
+// --- Neutros y superficies ---
+$bg-card:             #FFFFFF;
+$border-color:        #E1E8E4;
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+
+// --- Tipografía ---
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// --- Radios y movimiento ---
+$radius-sm:    6px;
+$radius-md:    10px;
+$radius-full:  9999px;
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ==========================================================
+//  HOST Y REGLAS GENERALES
+// ==========================================================
+:host {
+  display: block;
+  font-family: $font-sans;
+  color: $text-main;
+  margin-bottom: 1.5rem;
+  -webkit-font-smoothing: antialiased;
+
+  *, *::before, *::after { box-sizing: border-box; }
+}
+
+.icon-sprite { display: none; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  display: block;
+
+  &.icon-xs { width: 14px; height: 14px; stroke-width: 2.2; }
+}
+
+// ==========================================================
+//  ESTRUCTURA DEL BANNER
+// ==========================================================
 .deadline-banner {
-  background-color: #fff8e6;
-  border-left: 5px solid #f59e0b;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 24px;
+  position: relative;
+  background-color: $udenar-dorado-soft;
+  border: 1px solid $udenar-dorado-border;
+  border-left: 5px solid $udenar-dorado;
+  border-radius: $radius-md;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+
+  &.animate-fade-in {
+    animation: fadeInSlide 0.3s $ease-out both;
+  }
+}
+
+.banner-container {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+}
 
-  .banner-content {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
+// ---------- Icono destacado ----------
+.banner-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: $radius-sm;
+  background-color: rgba(255, 204, 0, 0.25);
+  color: $udenar-dorado-dark;
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// ---------- Cuerpo de la alerta ----------
+.banner-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.banner-header {
+  margin-bottom: 0.65rem;
+
+  .banner-eyebrow {
+    display: block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $udenar-dorado-dark;
   }
 
-  .banner-icon {
-    font-size: 1.5rem;
-  }
-
-  .banner-text {
-    color: #78350f;
+  .banner-title {
+    margin: 0.1rem 0 0;
     font-size: 0.95rem;
+    font-weight: 700;
+    color: $text-main;
+    letter-spacing: -0.01em;
+  }
+}
 
-    strong {
-      color: #92400e;
+// ---------- Lista de proyectos ----------
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.project-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: $bg-card;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: $radius-sm;
+  transition: border-color 0.2s $ease-out, box-shadow 0.2s $ease-out;
+
+  &:hover {
+    border-color: $udenar-dorado-border;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+}
+
+.project-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.project-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $text-main;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 320px;
+}
+
+.deadline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: $radius-full;
+  background-color: rgba(255, 204, 0, 0.2);
+  color: $udenar-dorado-dark;
+  font-size: 0.73rem;
+  font-weight: 600;
+}
+
+// ---------- Enlace / Acción ----------
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.4rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: $udenar-verde;
+  cursor: pointer;
+  border-radius: $radius-sm;
+  transition: color 0.2s $ease-out, background 0.2s $ease-out;
+
+  &:hover {
+    background-color: $udenar-verde-soft;
+    color: darken($udenar-verde, 5%);
+
+    .icon {
+      transform: translateX(2px);
     }
   }
 
-  .projects-list {
-    margin-top: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  &:focus-visible {
+    outline: 2px solid $udenar-verde;
+    outline-offset: 1px;
   }
 
+  .icon {
+    transition: transform 0.2s $ease-out;
+  }
+}
+
+// ---------- Botón Cerrar ----------
+.close-btn {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+  color: $udenar-dorado-dark;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s $ease-out, color 0.2s $ease-out;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: $text-main;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-dorado-dark;
+  }
+}
+
+// ==========================================================
+//  ANIMACIONES & RESPONSIVE
+// ==========================================================
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
   .project-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 
-  .btn-link {
-    background: none;
-    border: none;
-    color: #d97706;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    font-size: 0.875rem;
-    padding: 0;
-
-    &:hover {
-      color: #b45309;
-    }
+  .project-name {
+    max-width: 100%;
+    white-space: normal;
   }
 
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: #92400e;
-    cursor: pointer;
-    line-height: 1;
-    padding: 0 4px;
+  .btn-action {
+    align-self: flex-end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deadline-banner.animate-fade-in {
+    animation: none;
+  }
+  .btn-action .icon {
+    transition: none;
   }
 }

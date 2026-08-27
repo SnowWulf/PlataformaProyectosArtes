@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\ProjectDelivery;
 use App\Models\DeliverySubmission;
-use App\Helpers\ActivityLogger; // 👈 Importar ActivityLogger
+use App\Helpers\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class DeliverySubmissionController extends Controller
 {
@@ -77,5 +78,71 @@ class DeliverySubmissionController extends Controller
             ->submissions()
             ->with('student')
             ->get();
+    }
+
+    /**
+     * Actualiza la revisión (calificación y retroalimentación/comentario) de una entrega.
+     */
+    public function update(
+        Request $request,
+        $id
+    )
+    {
+        // Buscar explícitamente el registro por su ID para garantizar el UPDATE
+        $submission = DeliverySubmission::findOrFail($id);
+
+        $validated = $request->validate([
+            'comentario'    => 'nullable|string',
+            'observaciones' => 'nullable|string',
+            'nota'          => 'nullable|string',
+            'estado'        => 'nullable|in:submitted,reviewed,approved,rejected'
+        ]);
+
+        // Mapear los campos a actualizar
+        $comentarioFinal = $request->input('comentario') 
+            ?? $request->input('observaciones') 
+            ?? $submission->comentario;
+
+        $submission->comentario = $comentarioFinal;
+        
+        if ($request->has('nota')) {
+            $submission->nota = $validated['nota'];
+        }
+
+        $submission->estado = $validated['estado'] ?? 'reviewed';
+
+        // Ejecutar UPDATE en la base de datos
+        $submission->save();
+
+        // Log de actividad protegido
+        try {
+            $user = $request->user();
+            $delivery = ProjectDelivery::find($submission->delivery_id);
+
+            if ($delivery) {
+                $nombreUsuario = $user ? $user->name : 'El tutor';
+                $userId = $user ? $user->id : $submission->student_id;
+
+                ActivityLogger::log(
+                    $delivery->project_id,
+                    $userId,
+                    'delivery_submission_reviewed',
+                    $nombreUsuario . ' revisó la entrega de la tarea "' . $delivery->titulo . '"',
+                    [
+                        'project_id' => $delivery->project_id,
+                        'delivery_id' => $delivery->id,
+                        'submission_id' => $submission->id,
+                        'nota' => $submission->nota
+                    ]
+                );
+            }
+        } catch (\Throwable $e) {
+            Log::error('Error registrando ActivityLogger: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'message' => 'Revisión guardada con éxito.',
+            'data'    => $submission->fresh()->load('student')
+        ], 200);
     }
 }

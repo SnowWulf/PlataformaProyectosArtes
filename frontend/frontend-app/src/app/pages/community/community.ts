@@ -23,6 +23,8 @@ import { RouterLink } from '@angular/router';
 })
 export class Community implements OnInit {
 
+  vistaActiva: string = 'recibidas';
+
   filtroRol = 'todos';
 
   usuarios: User[] = [];

@@ -1,436 +1,777 @@
-// VARIABLES DE TEMA
-$brand-green: #1b3f33;      /* Verde institucional */
-$accent-green: #10b981;
-$accent-hover: #059669;
+// ==========================================================
+//  SOLICITUDES DE COLABORACIÓN — Comunidad
+//  Paleta institucional Universidad de Nariño (UDENAR)
+//  Misma base que tutor-request / users / projects
+// ==========================================================
+@use "sass:color";
 
-$bg-card: #ffffff;
-$bg-subtle: #f8fafc;
-$border-color: #e2e8f0;
+$udenar-verde:        #006633; // Verde Sinople Oficial
+$udenar-verde-hover:  #004d26;
+$udenar-verde-soft:   #e6f0eb;
+$udenar-verde-light:  #cce1d6;
 
-$text-main: #0f172a;
-$text-muted: #64748b;
+$udenar-dorado:       #FFCC00; // Amarillo Gualda Oficial
+$udenar-dorado-dark:  #b38f00;
+$udenar-dorado-soft:  #fff9e6;
 
-$danger-red: #fee2e2;
-$danger-text: #dc2626;
-$danger-hover: #ef4444;
+$udenar-azul:         #1E3A8A; // Azul Institucional
+$udenar-azul-soft:    #eff6ff;
 
-$warning-bg: #fef3c7;
-$warning-text: #b45309;
+$udenar-rojo:         #D32F2F;
+$udenar-rojo-soft:    #fdecec;
+$udenar-rojo-border:  #f3c9c9;
+$udenar-rojo-hover:   #991b1b;
 
-.collaboration-container {
+// Neutros y superficies
+$bg-main:             #F4F7F5;
+$bg-card:             #FFFFFF;
+$bg-subtle:           #EBF0EC;
+$bg-soft:             #F7F9F8;
+
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
+
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
+
+// Tipografía
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// Sombras y radios
+$shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.04);
+$shadow-card:  0 4px 10px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+$shadow-hover: 0 12px 24px -4px rgba(0, 102, 51, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+
+$radius-sm:   8px;
+$radius-md:   12px;
+$radius-lg:   16px;
+$radius-full: 9999px;
+
+// ==========================================================
+//  RESET DEL HOST
+// ==========================================================
+:host {
+  display: block;
   width: 100%;
-  max-width: 1200px; /* Ancho amplio para evitar sensación de espacio vacío */
-  margin: 0 auto;
-  padding: 1.5rem;
-  font-family: system-ui, -apple-system, sans-serif;
-  color: $text-main;
   box-sizing: border-box;
+  font-family: $font-sans;
+  color: $text-main;
+  background-color: $bg-main;
+
+  *, *::before, *::after { box-sizing: border-box; }
 }
 
-// HEADER & METRICAS
-.page-header {
+// ==========================================================
+//  SISTEMA DE ICONOS (SVG SPRITE)
+// ==========================================================
+.icon-sprite { display: none; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+
+  &.icon-xs { width: 14px; height: 14px; }
+  &.icon-sm { width: 16px; height: 16px; }
+  &.icon-md { width: 20px; height: 20px; }
+  &.icon-lg { width: 30px; height: 30px; stroke-width: 1.5; }
+}
+
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes softPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba($udenar-dorado, 0.5); }
+  70%      { box-shadow: 0 0 0 6px rgba($udenar-dorado, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+// ==========================================================
+//  1. CONTENEDOR
+// ==========================================================
+.art-dashboard.collab-requests {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 2px solid $border-color;
+  padding: 1.75rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: 100vh;
 
-  @media (max-width: 850px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .header-text {
-    h2 {
-      font-size: 1.6rem;
-      color: $brand-green;
-      margin: 0 0 0.25rem 0;
-      font-weight: 700;
-    }
-
-    p {
-      margin: 0;
-      color: $text-muted;
-      font-size: 0.92rem;
-    }
-  }
-
-  .metrics-grid {
-    display: flex;
-    gap: 1rem;
-
-    @media (max-width: 850px) {
-      width: 100%;
-    }
-
-    .metric-card {
-      background: $bg-card;
-      border: 1px solid $border-color;
-      border-radius: 10px;
-      padding: 0.6rem 1.1rem;
-      text-align: center;
-      min-width: 100px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-
-      .metric-value {
-        display: block;
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: $brand-green;
-      }
-
-      .metric-label {
-        font-size: 0.75rem;
-        color: $text-muted;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
-      }
-    }
+  @media (max-width: 640px) {
+    padding: 1rem;
+    gap: 1.15rem;
   }
 }
 
-// NAVEGACIÓN POR TABS
+// ==========================================================
+//  2. HERO / CABECERA
+// ==========================================================
+.art-hero {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.75rem 1.9rem;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.35s ease both;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 3px;
+    background-color: $udenar-dorado;
+  }
+
+  @media (max-width: 640px) { padding: 1.4rem 1.25rem; }
+}
+
+.hero-main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.hero-text { max-width: 620px; }
+
+.hero-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $udenar-verde;
+  margin-bottom: 0.6rem;
+}
+
+.hero-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: $text-main;
+  text-wrap: balance;
+
+  @media (max-width: 640px) { font-size: 1.35rem; }
+}
+
+.hero-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: $text-muted;
+  text-wrap: pretty;
+}
+
+.hero-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.85rem 1.4rem;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.summary-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: $udenar-verde;
+
+  &.is-alert { color: $udenar-rojo; }
+}
+
+.summary-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-faint;
+}
+
+.summary-divider {
+  width: 1px;
+  align-self: stretch;
+  background-color: $border-color;
+}
+
+// ==========================================================
+//  3. PESTAÑAS DE NAVEGACIÓN
+// ==========================================================
 .tabs-nav {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
-  border-bottom: 1px solid $border-color;
-  padding-bottom: 0.5rem;
+  gap: 0.4rem;
+  background-color: $bg-card;
+  padding: 0.4rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  overflow-x: auto;
+  animation: fadeIn 0.35s ease 0.05s both;
 
   .tab-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     background: transparent;
-    border: none;
-    padding: 0.65rem 1.2rem;
-    font-size: 0.92rem;
-    font-weight: 600;
+    border: 1px solid transparent;
+    padding: 0.6rem 1.15rem;
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 700;
     color: $text-muted;
-    border-radius: 8px;
+    border-radius: $radius-sm;
     cursor: pointer;
-    transition: all 0.2s ease;
+    white-space: nowrap;
+    transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+
+    .icon { color: $text-faint; transition: color 0.18s ease; }
 
     &:hover {
-      background: $bg-subtle;
-      color: $text-main;
+      background-color: $udenar-verde-soft;
+      color: $udenar-verde;
+      .icon { color: $udenar-verde; }
     }
 
     &.active {
-      background: $brand-green;
+      background-color: $udenar-verde;
       color: #ffffff;
+      box-shadow: 0 2px 8px rgba($udenar-verde, 0.22);
+      .icon { color: #ffffff; }
 
-      .tab-badge {
-        background: #ffffff;
-        color: $brand-green;
-      }
+      .tab-badge { background-color: rgba(255, 255, 255, 0.24); color: #ffffff; }
+    }
+
+    &:focus-visible {
+      outline: 2px solid $udenar-verde;
+      outline-offset: 2px;
     }
 
     .tab-badge {
-      background: $accent-green;
-      color: #ffffff;
-      font-size: 0.75rem;
-      padding: 0.15rem 0.5rem;
-      border-radius: 12px;
-      font-weight: 700;
+      background-color: $udenar-verde-soft;
+      color: $udenar-verde;
+      font-size: 0.72rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: $radius-full;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
 
       &.secondary {
-        background: #e2e8f0;
-        color: $text-main;
+        background-color: $bg-subtle;
+        color: $text-muted;
+        border: 1px solid $border-color;
       }
     }
   }
 }
 
-// CONTENEDOR DE LISTAS CONTINUAS
+// ==========================================================
+//  4. SECCIÓN DE CONTENIDO
+// ==========================================================
+.content-section {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.5rem;
+  box-shadow: $shadow-card;
+  animation: fadeIn 0.3s ease both;
+
+  @media (max-width: 640px) { padding: 1.15rem; }
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid $border-color;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+
+  > .icon { color: $udenar-verde; margin-top: 0.15rem; }
+
+  h2 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $text-main;
+  }
+}
+
+.section-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.79rem;
+  color: $text-muted;
+}
+
+.section-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: $text-faint;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+// ==========================================================
+//  5. LISTA DE SOLICITUDES
+// ==========================================================
 .requests-list {
   display: flex;
   flex-direction: column;
-  background: $bg-card;
-  border: 1px solid $border-color;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  gap: 0.75rem;
 }
 
-.request-item {
+.solicitud-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 1.25rem;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid $border-color;
-  transition: background-color 0.2s ease;
+  padding: 1.25rem 1.4rem;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  animation: slideUp 0.35s ease both;
 
-  &:last-child {
-    border-bottom: none;
+  // acento lateral verde institucional
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: $udenar-verde;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.25s ease;
+  }
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) { animation-delay: #{$i * 0.05}s; }
   }
 
   &:hover {
-    background-color: #f8fafc;
+    transform: translateY(-2px);
+    border-color: $udenar-verde-light;
+    box-shadow: $shadow-hover;
+
+    &::before { transform: scaleY(1); }
+  }
+
+  // variante apilada (enviadas / historial: sin acciones laterales)
+  &.is-stacked {
+    align-items: stretch;
+  }
+
+  // historial usa acento azul de colaboración
+  &.history-item::before {
+    background-color: $udenar-azul;
   }
 
   @media (max-width: 768px) {
     flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
   }
 }
 
-// AVATAR
-.user-avatar-col {
+// --- AVATAR ---
+.avatar-col {
   flex-shrink: 0;
+  align-self: flex-start;
 
   .avatar-img {
     width: 48px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: $radius-full;
     object-fit: cover;
-    border: 2px solid $border-color;
+    border: 1.5px solid $border-color;
+    display: block;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+
+    &.clickable {
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: $udenar-verde;
+      }
+    }
   }
 }
 
-// INFORMACIÓN PRINCIPAL
-.request-main-info {
+// --- INFO PRINCIPAL ---
+.item-main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-
-  .info-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-
-    .user-name, .project-title-heading {
-      margin: 0;
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: $text-main;
-    }
-
-    .type-badge {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 20px;
-      font-weight: 600;
-
-      &.badge-invite {
-        background: #e0f2fe;
-        color: #0369a1;
-      }
-
-      &.badge-request {
-        background: #f3e8ff;
-        color: #6b21a8;
-      }
-    }
-
-    .date-tag {
-      font-size: 0.8rem;
-      color: $text-muted;
-      margin-left: auto;
-
-      @media (max-width: 768px) {
-        margin-left: 0;
-      }
-    }
-  }
-
-  .project-context {
-    margin: 0;
-    font-size: 0.9rem;
-    color: $text-muted;
-
-    .label {
-      font-weight: 500;
-    }
-
-    .project-title {
-      color: $brand-green;
-      font-weight: 600;
-    }
-
-    .project-category {
-      color: $text-muted;
-      font-size: 0.85rem;
-    }
-  }
-
-  .contact-email {
-    margin: 0;
-    font-size: 0.85rem;
-
-    .email-link {
-      color: $accent-green;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .message-quote {
-    background: $bg-subtle;
-    border-left: 3px solid $brand-green;
-    padding: 0.5rem 0.85rem;
-    border-radius: 0 6px 6px 0;
-    margin-top: 0.25rem;
-
-    .quote-title {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: $brand-green;
-      margin-bottom: 0.15rem;
-    }
-
-    p {
-      margin: 0;
-      font-size: 0.88rem;
-      color: $text-main;
-      line-height: 1.4;
-    }
-  }
+  gap: 0.7rem;
+  min-width: 0;
 }
 
-// BADGES DE ESTADO (HISTORIAL Y ENVIADAS)
-.status-badge {
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.25rem 0.65rem;
-  border-radius: 20px;
-
-  &.status-pending {
-    background: $warning-bg;
-    color: $warning-text;
-  }
-
-  &.status-accepted {
-    background: #d1fae5;
-    color: #065f46;
-  }
-
-  &.status-rejected {
-    background: #fee2e2;
-    color: #991b1b;
-  }
-}
-
-// GRID PARA HISTORIAL
-.metadata-row, .metadata-grid {
+.item-header {
   display: flex;
-  gap: 1.5rem;
-  font-size: 0.88rem;
-  color: $text-muted;
+  align-items: center;
+  gap: 0.65rem;
   flex-wrap: wrap;
+
+  .title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: $radius-sm;
+    background-color: $udenar-verde-soft;
+    color: $udenar-verde;
+    flex-shrink: 0;
+  }
+
+  .user-link {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover h3 { color: $udenar-verde; }
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: $text-main;
+    letter-spacing: -0.01em;
+    transition: color 0.15s ease;
+  }
+
+  .date-tag {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    color: $text-faint;
+
+    .icon { color: $text-faint; }
+
+    @media (max-width: 768px) { margin-left: 0; }
+  }
+}
+
+// --- BADGE DE TIPO ---
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  padding: 0.22rem 0.6rem;
+  border-radius: $radius-full;
+  font-weight: 700;
+
+  &.badge-invite {
+    background-color: $udenar-azul-soft;
+    color: $udenar-azul;
+    border: 1px solid rgba($udenar-azul, 0.15);
+  }
+
+  &.badge-request {
+    background-color: $udenar-verde-soft;
+    color: $udenar-verde;
+    border: 1px solid rgba($udenar-verde, 0.15);
+  }
+}
+
+// --- DETALLES EN CHIPS ---
+.item-details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  border-radius: $radius-full;
+  font-size: 0.78rem;
+  color: $text-muted;
+
+  .icon { color: $udenar-verde; }
+
+  strong { color: $text-main; font-weight: 600; }
+
+  .detail-extra { color: $text-faint; }
+
+  .link {
+    color: $udenar-verde;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover { text-decoration: underline; }
+  }
+}
+
+// --- MENSAJE ---
+.mensaje-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.75rem 0.9rem;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  border-left: 3px solid $udenar-dorado;
+  border-radius: 0 $radius-sm $radius-sm 0;
+  margin-top: 0.15rem;
+
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $text-faint;
+    white-space: nowrap;
+    padding-top: 0.1rem;
+
+    .icon { color: $udenar-dorado-dark; }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: $text-main;
+  }
+}
+
+// --- GRID DE METADATOS (HISTORIAL) ---
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
 
   .meta-cell {
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
+    gap: 0.2rem;
+  }
 
-    .label {
-      font-size: 0.75rem;
-      color: $text-muted;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
+  .meta-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: $text-faint;
+  }
 
-    .value {
-      color: $text-main;
-      font-weight: 600;
-    }
+  .meta-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: $text-main;
+
+    .icon { color: $udenar-verde; }
   }
 }
 
-// BOTONES DE ACCIÓN
-.request-actions {
+// ==========================================================
+//  6. ESTADO (PILL)
+// ==========================================================
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: $radius-full;
+  border: 1px solid transparent;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: softPulse 2s infinite;
+}
+
+.status-pending {
+  background-color: $udenar-dorado-soft;
+  color: $udenar-dorado-dark;
+  border-color: rgba($udenar-dorado, 0.35);
+}
+
+.status-accepted {
+  background-color: $udenar-verde-soft;
+  color: $udenar-verde;
+  border-color: rgba($udenar-verde, 0.25);
+}
+
+.status-rejected {
+  background-color: $udenar-rojo-soft;
+  color: $udenar-rojo;
+  border-color: $udenar-rojo-border;
+}
+
+// ==========================================================
+//  7. BOTONES DE ACCIÓN
+// ==========================================================
+.item-actions {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   flex-shrink: 0;
 
-  &.align-center {
-    align-self: center;
-  }
-
   @media (max-width: 768px) {
-    width: 100%;
     justify-content: flex-end;
-    margin-top: 0.5rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid $border-color;
   }
 
-  .action-btn {
+  button {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.55rem 1rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border: none;
+    gap: 0.4rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: $radius-sm;
+    font-family: inherit;
+    font-size: 0.83rem;
+    font-weight: 700;
+    border: 1px solid transparent;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.18s ease, color 0.18s ease,
+                border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 
-    &.btn-accept {
-      background: $accent-green;
-      color: #ffffff;
-
-      &:hover {
-        background: $accent-hover;
-        transform: translateY(-1px);
-      }
+    &:focus-visible {
+      outline: 2px solid $udenar-verde;
+      outline-offset: 2px;
     }
 
-    &.btn-reject {
-      background: $danger-red;
-      color: $danger-text;
-
-      &:hover {
-        background: $danger-hover;
-        color: #ffffff;
-        transform: translateY(-1px);
-      }
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
     }
+  }
 
-    &.btn-cancel {
-      background: #f1f5f9;
-      color: $text-muted;
+  .btn-aceptar {
+    background-color: $udenar-verde;
+    color: #ffffff;
 
-      &:hover {
-        background: #e2e8f0;
-        color: $text-main;
-      }
+    &:hover:not(:disabled) {
+      background-color: $udenar-verde-hover;
+      transform: translateY(-2px);
+      box-shadow: $shadow-hover;
+    }
+  }
+
+  .btn-rechazar {
+    background-color: $bg-card;
+    color: $udenar-rojo;
+    border-color: $udenar-rojo-border;
+
+    &:hover:not(:disabled) {
+      background-color: $udenar-rojo-soft;
+      color: $udenar-rojo-hover;
+      transform: translateY(-2px);
     }
   }
 }
 
-// ESTADO VACÍO
+// ==========================================================
+//  8. ESTADO VACÍO
+// ==========================================================
 .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 3.5rem 1.5rem;
-  background: $bg-card;
-  border: 1px dashed $border-color;
-  border-radius: 12px;
+  padding: 3.25rem 1.5rem;
+  animation: fadeIn 0.35s ease both;
+}
 
-  .empty-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-  }
+.empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background-color: $udenar-verde-soft;
+  color: $udenar-verde;
+}
 
-  h3 {
-    margin: 0 0 0.35rem 0;
-    font-size: 1.2rem;
-    color: $brand-green;
-    font-weight: 700;
-  }
+.empty-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: $text-main;
+}
 
-  p {
-    margin: 0;
-    color: $text-muted;
-    font-size: 0.9rem;
-  }
+.empty-text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: $text-muted;
+  max-width: 340px;
 }

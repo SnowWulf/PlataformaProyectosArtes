@@ -1,121 +1,222 @@
+<!-- Sprite de iconos SVG profesional -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- Icono Check / Tareas -->
+    <symbol id="i-check-circle" viewBox="0 0 24 24">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline points="22 4 12 14.01 9 11.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- Icono Nota / Pin -->
+    <symbol id="i-pin" viewBox="0 0 24 24">
+      <path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6l0.8 1 0.8-1v-6H18v-2l-2-2z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <!-- Icono Más / Agregar -->
+    <symbol id="i-plus" viewBox="0 0 24 24">
+      <line x1="12" y1="5" x2="12" y2="19" stroke-width="2" stroke-linecap="round"/>
+      <line x1="5" y1="12" x2="19" y2="12" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Icono Basura / Eliminar -->
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <polyline points="3 6 5 6 21 6" stroke-width="2" stroke-linecap="round"/>
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Icono Reloj -->
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" stroke-width="2"/>
+      <polyline points="12 6 12 12 16 14" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Icono Completado / Éxito -->
+    <symbol id="i-sparkles" viewBox="0 0 24 24">
+      <path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
 <aside class="sidebar-panel">
-    <!-- Pestañas -->
-    <div class="sidebar-header">
-        <div class="tabs">
-            <button class="tab-btn" [class.active]="activeTab === 'tasks'" (click)="activeTab = 'tasks'">
-                <span>✅ Pendientes</span>
-                @if (pendingTasksCount > 0) {
-                <span class="badge">{{ pendingTasksCount }}</span>
-                }
+  <!-- Pestañas -->
+  <div class="sidebar-header">
+    <div class="tabs">
+      <button class="tab-btn" [class.active]="activeTab === 'tasks'" (click)="activeTab = 'tasks'">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-check-circle" /></svg>
+        <span>Pendientes</span>
+        @if (pendingTasksCount > 0) {
+          <span class="badge">{{ pendingTasksCount }}</span>
+        }
+      </button>
+
+      <button class="tab-btn" [class.active]="activeTab === 'notes'" (click)="activeTab = 'notes'">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#i-pin" /></svg>
+        <span>Notas</span>
+        @if (localNotes.length > 0) {
+          <span class="badge">{{ localNotes.length }}</span>
+        }
+      </button>
+    </div>
+  </div>
+
+  <!-- Pestaña de Pendientes del Día -->
+  @if (activeTab === 'tasks') {
+  <div class="sidebar-body">
+    <div class="tasks-layout">
+      <!-- Columna Izquierda: Métricas, creación y acciones masivas -->
+      <div class="tasks-sidebar-left">
+        <div class="progress-card">
+          <div class="progress-info">
+            <span>Progreso de hoy</span>
+            <strong>{{ completionPercentage }}%</strong>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" [style.width.%]="completionPercentage"></div>
+          </div>
+        </div>
+
+        <div class="quick-add-box">
+          <input
+            #taskInput
+            type="text"
+            placeholder="+ Agrega una tarea para hoy..."
+            (keyup.enter)="quickAddTask(taskInput)"
+          />
+        </div>
+
+        <!-- Acciones globales de tareas -->
+        @if (todayTasks.length > 0) {
+        <div class="tasks-actions-box">
+          <button
+            class="btn-clear-completed"
+            (click)="clearCompletedTasks()"
+            [disabled]="completedTasksCount === 0"
+            title="Borrar solo tareas marcadas como completadas"
+          >
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#i-trash" /></svg>
+            <span>Limpiar completadas ({{ completedTasksCount }})</span>
+          </button>
+          
+          <button
+            class="btn-clear-all"
+            (click)="clearAllTodayTasks()"
+            title="Borrar todas las tareas de hoy"
+          >
+            <span>Borrar todas</span>
+          </button>
+        </div>
+        }
+      </div>
+
+      <!-- Columna Derecha: Rejilla de tareas para hoy -->
+      <div class="tasks-main-right">
+        <div class="tasks-list">
+          @for (task of todayTasks; track task.id) {
+          <div class="task-item" [class.completed]="task.completado">
+            <input type="checkbox" [checked]="task.completado" (change)="toggleTask(task)" />
+
+            <div class="task-info">
+              <span class="task-title">{{ task.titulo }}</span>
+              <span class="task-time">
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#i-clock" /></svg>
+                {{ task.fecha_inicio | date:'HH:mm' }}
+              </span>
+            </div>
+
+            <span class="type-badge" [style.background-color]="task.color || '#6366f1'">
+              {{ task.tipo || 'tarea' }}
+            </span>
+
+            <!-- Botón de borrado individual -->
+            <button
+              class="btn-delete-task"
+              (click)="deleteTask(task.id)"
+              title="Borrar esta tarea"
+            >
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#i-trash" /></svg>
             </button>
+          </div>
+          } @empty {
+          <div class="empty-state">
+            <svg class="icon icon-md" aria-hidden="true"><use href="#i-sparkles" /></svg>
+            <p>¡No tienes tareas pendientes para hoy!</p>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  }
 
-            <button class="tab-btn" [class.active]="activeTab === 'notes'" (click)="activeTab = 'notes'">
-                <span>📌 Notas</span>
-                @if (notes.length > 0) {
-                <span class="badge">{{ notes.length }}</span>
-                }
+  <!-- Pestaña de Notas Adhesivas -->
+  @if (activeTab === 'notes') {
+  <div class="sidebar-body">
+    <div class="quick-notes-widget">
+      <!-- Columna Izquierda: Creador de notas -->
+      <div class="note-creator-card" [style.background-color]="selectedColor">
+        <textarea
+          [(ngModel)]="newNoteContent"
+          placeholder="Escribe una nota rápida aquí... (Presiona Ctrl+Enter para guardar)"
+          rows="3"
+          (keyup.enter)="$any($event).ctrlKey && createNote()"
+        ></textarea>
+
+        <div class="creator-actions">
+          <div class="color-picker">
+            @for (color of availableColors; track color) {
+            <button
+              type="button"
+              class="color-dot"
+              [style.background-color]="color"
+              [class.active]="selectedColor === color"
+              (click)="selectedColor = color"
+              [title]="'Seleccionar color'"
+            ></button>
+            }
+          </div>
+
+          <button
+            class="btn-add-note"
+            (click)="createNote()"
+            [disabled]="!newNoteContent.trim()"
+            title="Guardar nota"
+          >
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#i-plus" /></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Mural de Notas Adhesivas -->
+      <div class="sticky-notes-grid">
+        @for (note of localNotes; track note.id; let i = $index) {
+        <div
+          class="sticky-note-card"
+          [style.background-color]="note.color || '#fef08a'"
+          [style.transform]="'rotate(' + (i % 2 === 0 ? '-1.5deg' : '1.5deg') + ')'"
+        >
+          <div class="pin-icon">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#i-pin" /></svg>
+          </div>
+
+          <p class="note-text">{{ note.contenido }}</p>
+
+          <div class="note-footer">
+            <span class="note-date">
+              {{ (note.updated_at || note.created_at) | date:'HH:mm' }}
+            </span>
+            <button class="btn-delete-note" (click)="deleteNote(note.id)" title="Eliminar nota">
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#i-trash" /></svg>
             </button>
+          </div>
         </div>
-    </div>
-
-    <!-- Pestaña de Pendientes del Día -->
-    @if (activeTab === 'tasks') {
-    <div class="sidebar-body">
-        <div class="tasks-layout">
-            <!-- Columna Izquierda: Métricas y creación -->
-            <div class="tasks-sidebar-left">
-                <div class="progress-card">
-                    <div class="progress-info">
-                        <span>Progreso de hoy</span>
-                        <strong>{{ completionPercentage }}%</strong>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" [style.width.%]="completionPercentage"></div>
-                    </div>
-                </div>
-
-                <div class="quick-add-box">
-                    <input #taskInput type="text" placeholder="+ Agrega una tarea para hoy..."
-                        (keyup.enter)="quickAddTask(taskInput)" />
-                </div>
-            </div>
-
-            <!-- Columna Derecha: Rejilla de tareas para hoy -->
-            <div class="tasks-main-right">
-                <div class="tasks-list">
-                    @for (task of todayTasks; track task.id) {
-                    <div class="task-item" [class.completed]="task.completado">
-                        <input type="checkbox" [checked]="task.completado" (change)="toggleTask(task)" />
-
-                        <div class="task-info">
-                            <span class="task-title">{{ task.titulo }}</span>
-                            <span class="task-time">{{ task.fecha_inicio | date:'HH:mm' }}</span>
-                        </div>
-
-                        <span class="type-badge" [style.background-color]="task.color">
-                            {{ task.tipo }}
-                        </span>
-                    </div>
-                    } @empty {
-                    <div class="empty-state">
-                        🎉 ¡No tienes tareas pendientes para hoy!
-                    </div>
-                    }
-                </div>
-            </div>
+        } @empty {
+        <div class="empty-notes-state">
+          <svg class="icon icon-md" aria-hidden="true"><use href="#i-pin" /></svg>
+          <p>No tienes notas adhesivas activas.</p>
         </div>
+        }
+      </div>
     </div>
-    }
-
-    <!-- Pestaña de Notas Adhesivas -->
-    @if (activeTab === 'notes') {
-    <div class="sidebar-body">
-        <div class="quick-notes-widget">
-            <!-- Columna Izquierda: Creador de notas -->
-            <div class="note-creator-card" [style.background-color]="selectedColor">
-                <textarea [(ngModel)]="newNoteContent"
-                    placeholder="Escribe una nota rápida aquí... (Presiona Ctrl+Enter para guardar)" rows="3"
-                    (keyup.enter)="$any($event).ctrlKey && createNote()"></textarea>
-
-                <div class="creator-actions">
-                    <div class="color-picker">
-                        @for (color of availableColors; track color) {
-                        <button type="button" class="color-dot" [style.background-color]="color"
-                            [class.active]="selectedColor === color" (click)="selectedColor = color">
-                        </button>
-                        }
-                    </div>
-
-                    <button class="btn-add-note" (click)="createNote()" [disabled]="!newNoteContent.trim()">
-                        <span>+</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Columna Derecha: Mural de Notas Adhesivas -->
-            <div class="sticky-notes-grid">
-                @for (note of notes; track note.id; let i = $index) {
-                <div class="sticky-note-card" [style.background-color]="note.color || '#fef08a'"
-                    [style.transform]="'rotate(' + (i % 2 === 0 ? '-1.5deg' : '1.5deg') + ')'">
-                    <div class="pin-icon">📍</div>
-                    <p class="note-text">{{ note.contenido }}</p>
-
-                    <div class="note-footer">
-                        <span class="note-date">
-                            {{ (note.updated_at || note.created_at) | date:'HH:mm' }}
-                        </span>
-                        <button class="btn-delete-note" (click)="deleteNote(note.id)" title="Eliminar nota">
-                            🗑️
-                        </button>
-                    </div>
-                </div>
-                } @empty {
-                <div class="empty-notes-state">
-                    📌 No tienes notas adhesivas activas.
-                </div>
-                }
-            </div>
-        </div>
-    </div>
-    }
+  </div>
+  }
 </aside>

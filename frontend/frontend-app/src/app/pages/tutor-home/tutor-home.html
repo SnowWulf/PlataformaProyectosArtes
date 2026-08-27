@@ -1,312 +1,473 @@
-<div class="art-dashboard">
-  <!-- Hero / Header Principal -->
+<!-- ==========================================================
+     SPRITE DE ICONOS (Feather style, 24x24, stroke)
+     ========================================================== -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="t-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="t-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="t-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="t-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></symbol>
+  <symbol id="t-file-check" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></symbol>
+  <symbol id="t-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></symbol>
+  <symbol id="t-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="t-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+  <symbol id="t-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/></symbol>
+  <symbol id="t-check-circle" viewBox="0 0 24 24"><path d="M21.8 11.1V12a9.8 9.8 0 1 1-5.8-8.9"/><path d="m9 11 3 3 10-10"/></symbol>
+  <symbol id="t-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="t-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="t-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="t-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="t-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="t-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></symbol>
+  <symbol id="t-folder" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></symbol>
+  <symbol id="t-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></symbol>
+  <symbol id="t-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="m8.2 13.9-1.4 7L12 18l5.2 2.9-1.4-7"/></symbol>
+  <symbol id="t-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
+</svg>
+
+<div class="art-dashboard tutor-dashboard">
+
+  <!-- ==========================================================
+       1. HERO / CABECERA
+       ========================================================== -->
   <header class="art-hero">
-    <div class="hero-content">
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        Facultad de Artes • Panel del Tutor
+    <div class="hero-main">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Facultad de Artes &middot; Panel del Tutor</span>
+        <h1 class="hero-title">Espacio de Tutoría y Evaluación</h1>
+        <p class="hero-subtitle">
+          Gestión académica, revisión de portafolios y seguimiento de proyectos creativos.
+        </p>
       </div>
-      <h1 class="hero-title">Espacio de Tutoría & Evaluación</h1>
-      <p class="hero-subtitle">
-        Gestión académica, revisión de portafolios y seguimiento de proyectos creativos.
-      </p>
+
+      <div class="hero-summary" role="group" aria-label="Resumen general">
+        <div class="summary-item">
+          <span class="summary-value">{{ totalProyectos }}</span>
+          <span class="summary-label">Proyectos</span>
+        </div>
+        <span class="summary-divider" aria-hidden="true"></span>
+        <div class="summary-item">
+          <span class="summary-value">{{ estudiantesTutor?.length || 0 }}</span>
+          <span class="summary-label">Estudiantes</span>
+        </div>
+        <span class="summary-divider" aria-hidden="true"></span>
+        <div class="summary-item">
+          <span class="summary-value is-alert">{{ pendientesRevision }}</span>
+          <span class="summary-label">Pendientes</span>
+        </div>
+      </div>
     </div>
   </header>
 
-  <!-- Navegación Moderna (Pills Floating Nav) -->
-  <nav class="nav-pills-container">
-    <div class="nav-pills">
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'inicio'" 
-        (click)="tabActiva = 'inicio'">
-        <span class="pill-icon">⚡</span>
-        <span class="pill-text">Resumen</span>
-      </button>
+  <!-- ==========================================================
+       2. NAVEGACIÓN POR PESTAÑAS
+       ========================================================== -->
+  <nav class="tab-nav" role="tablist" aria-label="Secciones del panel">
+    <button
+      type="button"
+      role="tab"
+      class="tab-btn"
+      [class.active]="tabActiva === 'inicio'"
+      [attr.aria-selected]="tabActiva === 'inicio'"
+      (click)="tabActiva = 'inicio'">
+      <svg class="icon icon-sm"><use href="#t-grid"></use></svg>
+      <span class="tab-text">Resumen</span>
+    </button>
 
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'estudiantes'" 
-        (click)="tabActiva = 'estudiantes'">
-        <span class="pill-icon">🎓</span>
-        <span class="pill-text">Estudiantes</span>
-        <span class="pill-count" *ngIf="estudiantesTutor?.length">{{ estudiantesTutor.length }}</span>
-      </button>
+    <button
+      type="button"
+      role="tab"
+      class="tab-btn"
+      [class.active]="tabActiva === 'estudiantes'"
+      [attr.aria-selected]="tabActiva === 'estudiantes'"
+      (click)="tabActiva = 'estudiantes'">
+      <svg class="icon icon-sm"><use href="#t-users"></use></svg>
+      <span class="tab-text">Estudiantes</span>
+      @if (estudiantesTutor?.length) {
+        <span class="tab-count">{{ estudiantesTutor.length }}</span>
+      }
+    </button>
 
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'proyectos'" 
-        (click)="tabActiva = 'proyectos'">
-        <span class="pill-icon">🎨</span>
-        <span class="pill-text">Proyectos</span>
-        <span class="pill-count" *ngIf="proyectosAsignados?.length">{{ proyectosAsignados.length }}</span>
-      </button>
+    <button
+      type="button"
+      role="tab"
+      class="tab-btn"
+      [class.active]="tabActiva === 'proyectos'"
+      [attr.aria-selected]="tabActiva === 'proyectos'"
+      (click)="tabActiva = 'proyectos'">
+      <svg class="icon icon-sm"><use href="#t-layers"></use></svg>
+      <span class="tab-text">Proyectos</span>
+      @if (proyectosAsignados?.length) {
+        <span class="tab-count">{{ proyectosAsignados.length }}</span>
+      }
+    </button>
 
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'revisiones'" 
-        (click)="tabActiva = 'revisiones'">
-        <span class="pill-icon">📑</span>
-        <span class="pill-text">Revisiones</span>
-      </button>
+    <button
+      type="button"
+      role="tab"
+      class="tab-btn"
+      [class.active]="tabActiva === 'revisiones'"
+      [attr.aria-selected]="tabActiva === 'revisiones'"
+      (click)="tabActiva = 'revisiones'">
+      <svg class="icon icon-sm"><use href="#t-file-check"></use></svg>
+      <span class="tab-text">Revisiones</span>
+    </button>
 
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'actividad'" 
-        (click)="tabActiva = 'actividad'">
-        <span class="pill-icon">📡</span>
-        <span class="pill-text">Bitácora</span>
-      </button>
-    </div>
+    <button
+      type="button"
+      role="tab"
+      class="tab-btn"
+      [class.active]="tabActiva === 'actividad'"
+      [attr.aria-selected]="tabActiva === 'actividad'"
+      (click)="tabActiva = 'actividad'">
+      <svg class="icon icon-sm"><use href="#t-activity"></use></svg>
+      <span class="tab-text">Bitácora</span>
+    </button>
   </nav>
 
-  <!-- TAB: INICIO (RESUMEN EJECUTIVO) -->
+  <!-- ==========================================================
+       3. TAB: RESUMEN
+       ========================================================== -->
   @if (tabActiva === 'inicio') {
-    <section class="tab-pane">
-      <!-- Grid de Métricas Principales -->
+    <section class="tab-pane" role="tabpanel">
       <div class="metrics-grid">
-        <div 
-          class="metric-card" 
-          [class.active]="filtroDocumentos === 'proyectos'" 
+        <button
+          type="button"
+          class="metric-card"
+          [class.active]="filtroDocumentos === 'proyectos'"
           (click)="filtroDocumentos = 'proyectos'">
-          <div class="metric-header">
-            <span class="metric-label">Proyectos Asignados</span>
-            <div class="metric-icon icon-emerald">🎨</div>
-          </div>
-          <div class="metric-value">{{ totalProyectos }}</div>
-          <span class="metric-footer">Proyectos activos a cargo</span>
-        </div>
+          <span class="metric-icon tone-green">
+            <svg class="icon icon-md"><use href="#t-layers"></use></svg>
+          </span>
+          <span class="metric-body">
+            <span class="metric-label">Proyectos asignados</span>
+            <span class="metric-value">{{ totalProyectos }}</span>
+            <span class="metric-footer">Proyectos activos a cargo</span>
+          </span>
+        </button>
 
-        <div 
-          class="metric-card" 
-          [class.active]="filtroDocumentos === 'pendientes'" 
+        <button
+          type="button"
+          class="metric-card"
+          [class.active]="filtroDocumentos === 'pendientes'"
           (click)="filtroDocumentos = 'pendientes'">
-          <div class="metric-header">
-            <span class="metric-label">Pendientes por Revisar</span>
-            <div class="metric-icon icon-rose">⏳</div>
-          </div>
-          <div class="metric-value text-rose">{{ pendientesRevision }}</div>
-          <span class="metric-footer text-rose">Requieren tu atención</span>
-        </div>
+          <span class="metric-icon tone-red">
+            <svg class="icon icon-md"><use href="#t-clock"></use></svg>
+          </span>
+          <span class="metric-body">
+            <span class="metric-label">Pendientes por revisar</span>
+            <span class="metric-value tone-text-red">{{ pendientesRevision }}</span>
+            <span class="metric-footer">Requieren tu atención</span>
+          </span>
+        </button>
 
-        <div 
-          class="metric-card" 
-          [class.active]="filtroDocumentos === 'revisando'" 
+        <button
+          type="button"
+          class="metric-card"
+          [class.active]="filtroDocumentos === 'revisando'"
           (click)="filtroDocumentos = 'revisando'">
-          <div class="metric-header">
-            <span class="metric-label">En Revisión</span>
-            <div class="metric-icon icon-amber">🔍</div>
-          </div>
-          <div class="metric-value text-amber">{{ documentosEnRevision }}</div>
-          <span class="metric-footer">En proceso de evaluación</span>
-        </div>
+          <span class="metric-icon tone-gold">
+            <svg class="icon icon-md"><use href="#t-search"></use></svg>
+          </span>
+          <span class="metric-body">
+            <span class="metric-label">En revisión</span>
+            <span class="metric-value tone-text-gold">{{ documentosEnRevision }}</span>
+            <span class="metric-footer">En proceso de evaluación</span>
+          </span>
+        </button>
 
-        <div 
-          class="metric-card" 
-          [class.active]="filtroDocumentos === 'realizadas'" 
+        <button
+          type="button"
+          class="metric-card"
+          [class.active]="filtroDocumentos === 'realizadas'"
           (click)="filtroDocumentos = 'realizadas'">
-          <div class="metric-header">
-            <span class="metric-label">Evaluaciones Listas</span>
-            <div class="metric-icon icon-emerald">✅</div>
-          </div>
-          <div class="metric-value">{{ revisionesRealizadas }}</div>
-          <span class="metric-footer">Revisiones completadas</span>
-        </div>
+          <span class="metric-icon tone-blue">
+            <svg class="icon icon-md"><use href="#t-check-circle"></use></svg>
+          </span>
+          <span class="metric-body">
+            <span class="metric-label">Evaluaciones listas</span>
+            <span class="metric-value">{{ revisionesRealizadas }}</span>
+            <span class="metric-footer">Revisiones completadas</span>
+          </span>
+        </button>
       </div>
 
-      <!-- Sección de Documentos / Proyectos Filtrados -->
       <div class="content-section">
         <div class="section-header">
-          <h2>
+          <div class="section-heading">
             @if (filtroDocumentos === 'proyectos') {
-              Galería de Proyectos Asignados
+              <svg class="icon icon-md"><use href="#t-grid"></use></svg>
+              <div>
+                <h2>Proyectos asignados</h2>
+                <p class="section-subtitle">Galería de proyectos bajo tu tutoría</p>
+              </div>
             } @else {
-              Explorador de Documentos
+              <svg class="icon icon-md"><use href="#t-file"></use></svg>
+              <div>
+                <h2>Explorador de documentos</h2>
+                <p class="section-subtitle">Entregables filtrados por el estado seleccionado</p>
+              </div>
             }
-          </h2>
+          </div>
+          <span class="section-count">{{ obtenerDocumentosFiltrados().length }} registro(s)</span>
         </div>
 
         @if (obtenerDocumentosFiltrados().length > 0) {
           @if (filtroDocumentos === 'proyectos') {
             <div class="projects-gallery">
               @for (proyecto of obtenerDocumentosFiltrados(); track proyecto.id) {
-                <div class="gallery-card" (click)="abrirProyecto(proyecto.id)">
-                  <div class="gallery-card-banner">
-                    <span class="status-tag">{{ proyecto.estado }}</span>
-                  </div>
+                <article class="gallery-card" (click)="abrirProyecto(proyecto.id)">
+                  <header class="gallery-card-head">
+                    <span class="card-avatar">
+                      <svg class="icon icon-sm"><use href="#t-layers"></use></svg>
+                    </span>
+                    <span class="status-pill status-neutral">{{ proyecto.estado }}</span>
+                  </header>
                   <div class="gallery-card-body">
                     <h3 class="card-title">{{ proyecto.titulo }}</h3>
                     <p class="card-description">{{ proyecto.descripcion }}</p>
                   </div>
-                  <div class="gallery-card-footer">
-                    <span class="btn-link">Ver Proyecto ➔</span>
-                  </div>
-                </div>
+                  <footer class="gallery-card-footer">
+                    <span class="link-action">
+                      Ver proyecto
+                      <svg class="icon icon-xs"><use href="#t-arrow-right"></use></svg>
+                    </span>
+                  </footer>
+                </article>
               }
             </div>
           } @else {
             <div class="document-list">
               @for (document of obtenerDocumentosFiltrados(); track document.id) {
-                <div class="document-row-card" (click)="abrirProyecto(document.proyectoId)">
-                  <div class="doc-icon">📄</div>
+                <div class="document-row" (click)="abrirProyecto(document.proyectoId)">
+                  <span class="doc-icon">
+                    <svg class="icon icon-sm"><use href="#t-file"></use></svg>
+                  </span>
                   <div class="doc-details">
                     <h4 class="doc-title">{{ document.nombre }}</h4>
                     <span class="doc-subtitle">Proyecto: <strong>{{ document.proyectoTitulo }}</strong></span>
                   </div>
-                  <div class="doc-status">
-                    <span class="status-pill" [ngClass]="{
-                      'status-pending': document.estado === 'Pendiente revisión',
-                      'status-reviewing': document.estado === 'En revisión',
-                      'status-approved': document.estado === 'Aprobado',
-                      'status-correction': document.estado === 'Requiere correcciones'
-                    }">
-                      <span class="status-dot"></span>
-                      {{ document.estado }}
-                    </span>
-                  </div>
+                  <span class="status-pill" [ngClass]="{
+                    'status-pending': document.estado === 'Pendiente revisión',
+                    'status-reviewing': document.estado === 'En revisión',
+                    'status-approved': document.estado === 'Aprobado',
+                    'status-correction': document.estado === 'Requiere correcciones'
+                  }">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    {{ document.estado }}
+                  </span>
+                  <svg class="icon icon-xs row-chevron"><use href="#t-arrow-right"></use></svg>
                 </div>
               }
             </div>
           }
         } @else {
           <div class="empty-state">
-            <div class="empty-icon">📂</div>
-            <p>No se encontraron registros para la categoría seleccionada.</p>
+            <span class="empty-icon">
+              <svg class="icon icon-lg"><use href="#t-folder"></use></svg>
+            </span>
+            <p class="empty-title">Sin registros</p>
+            <p class="empty-text">No se encontraron elementos para la categoría seleccionada.</p>
           </div>
         }
       </div>
     </section>
   }
 
-  <!-- TAB: ESTUDIANTES -->
+  <!-- ==========================================================
+       4. TAB: ESTUDIANTES
+       ========================================================== -->
   @if (tabActiva === 'estudiantes') {
-    <section class="tab-pane">
+    <section class="tab-pane" role="tabpanel">
       <div class="content-section">
         <div class="section-header">
-          <h2>Directorio de Estudiantes a Cargo</h2>
+          <div class="section-heading">
+            <svg class="icon icon-md"><use href="#t-users"></use></svg>
+            <div>
+              <h2>Estudiantes a cargo</h2>
+              <p class="section-subtitle">Directorio y proyectos vinculados a cada estudiante</p>
+            </div>
+          </div>
+          <span class="section-count">{{ estudiantesTutor?.length || 0 }} estudiante(s)</span>
         </div>
 
-        <div class="students-grid">
-          @for (estudiante of estudiantesTutor; track estudiante.id) {
-            <div class="student-card" [class.expanded]="estudianteExpandido === estudiante.id">
-              <div class="student-card-header" (click)="toggleEstudiante(estudiante.id)">
-                <div class="student-profile">
-                  <div class="avatar-circle">
-                    {{ estudiante.nombre.charAt(0) }}
-                  </div>
+        @if (estudiantesTutor?.length) {
+          <div class="students-grid">
+            @for (estudiante of estudiantesTutor; track estudiante.id) {
+              <div class="student-card" [class.expanded]="estudianteExpandido === estudiante.id">
+                <div
+                  class="student-card-head"
+                  role="button"
+                  tabindex="0"
+                  (click)="toggleEstudiante(estudiante.id)"
+                  (keydown.enter)="toggleEstudiante(estudiante.id)">
+                  <span class="avatar-circle">{{ estudiante.nombre.charAt(0) }}</span>
                   <div class="student-info">
                     <h3>{{ estudiante.nombre }}</h3>
-                    <span class="project-badge">{{ estudiante.proyectos }} Proyecto(s)</span>
+                    <span class="student-meta">
+                      <svg class="icon icon-xs"><use href="#t-book"></use></svg>
+                      {{ estudiante.proyectos }} proyecto(s)
+                    </span>
                   </div>
+                  <span
+                    class="expand-btn"
+                    [attr.aria-label]="estudianteExpandido === estudiante.id ? 'Contraer' : 'Expandir'">
+                    <svg class="icon icon-sm"><use href="#t-chevron-down"></use></svg>
+                  </span>
                 </div>
-                <button class="expand-btn">
-                  <span>{{ estudianteExpandido === estudiante.id ? '−' : '+' }}</span>
-                </button>
-              </div>
 
-              @if (estudianteExpandido === estudiante.id) {
-                <div class="student-projects-accordion">
-                  <div class="accordion-title">Proyectos Asignados:</div>
-                  <div class="accordion-list">
-                    @for (proyecto of proyectosAsignados; track proyecto.id) {
-                      @if (proyecto.owner?.id === estudiante.id) {
-                        <div class="accordion-item" (click)="abrirProyecto(proyecto.id)">
-                          <div class="item-info">
-                            <h4>{{ proyecto.titulo }}</h4>
-                            <span class="item-status">{{ proyecto.estado }}</span>
+                @if (estudianteExpandido === estudiante.id) {
+                  <div class="student-accordion">
+                    <span class="accordion-title">Proyectos asignados</span>
+                    <div class="accordion-list">
+                      @for (proyecto of proyectosAsignados; track proyecto.id) {
+                        @if (proyecto.owner?.id === estudiante.id) {
+                          <div class="accordion-item" (click)="abrirProyecto(proyecto.id)">
+                            <div class="item-info">
+                              <h4>{{ proyecto.titulo }}</h4>
+                              <span class="item-status">{{ proyecto.estado }}</span>
+                            </div>
+                            <svg class="icon icon-xs"><use href="#t-arrow-right"></use></svg>
                           </div>
-                          <span class="arrow-icon">➔</span>
-                        </div>
+                        }
                       }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <span class="empty-icon">
+              <svg class="icon icon-lg"><use href="#t-users"></use></svg>
+            </span>
+            <p class="empty-title">Sin estudiantes asignados</p>
+            <p class="empty-text">Cuando se te asignen estudiantes aparecerán en este directorio.</p>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- ==========================================================
+       5. TAB: PROYECTOS
+       ========================================================== -->
+  @if (tabActiva === 'proyectos') {
+    <section class="tab-pane" role="tabpanel">
+      <div class="content-section">
+        <div class="section-header">
+          <div class="section-heading">
+            <svg class="icon icon-md"><use href="#t-layers"></use></svg>
+            <div>
+              <h2>Tablero de proyectos</h2>
+              <p class="section-subtitle">Estado de entregables por proyecto</p>
+            </div>
+          </div>
+          <span class="section-count">{{ proyectosAsignados?.length || 0 }} proyecto(s)</span>
+        </div>
+
+        @if (proyectosAsignados?.length) {
+          <div class="projects-master-grid">
+            @for (proyecto of proyectosAsignados; track proyecto.id) {
+              <article class="master-card" (click)="abrirProyecto(proyecto.id)">
+                <header class="master-card-head">
+                  <span class="status-pill status-neutral">{{ proyecto.estado }}</span>
+                  <h3>{{ proyecto.titulo }}</h3>
+                  <span class="owner-tag">
+                    <svg class="icon icon-xs"><use href="#t-user"></use></svg>
+                    {{ proyecto.owner?.name }}
+                  </span>
+                </header>
+
+                <div class="master-card-body">
+                  <div class="alerts-container">
+                    @if (estadisticasProyecto[proyecto.id]?.pendientes > 0) {
+                      <span class="alert-tag tone-red">
+                        <svg class="icon icon-xs"><use href="#t-clock"></use></svg>
+                        <strong>{{ estadisticasProyecto[proyecto.id].pendientes }}</strong> pendiente(s)
+                      </span>
+                    }
+                    @if (estadisticasProyecto[proyecto.id]?.revision > 0) {
+                      <span class="alert-tag tone-gold">
+                        <svg class="icon icon-xs"><use href="#t-search"></use></svg>
+                        <strong>{{ estadisticasProyecto[proyecto.id].revision }}</strong> en revisión
+                      </span>
+                    }
+                    @if (estadisticasProyecto[proyecto.id]?.correcciones > 0) {
+                      <span class="alert-tag tone-orange">
+                        <svg class="icon icon-xs"><use href="#t-alert"></use></svg>
+                        <strong>{{ estadisticasProyecto[proyecto.id].correcciones }}</strong> corrección(es)
+                      </span>
+                    }
+                    @if (
+                      estadisticasProyecto[proyecto.id]?.pendientes === 0 &&
+                      estadisticasProyecto[proyecto.id]?.revision === 0 &&
+                      estadisticasProyecto[proyecto.id]?.correcciones === 0
+                    ) {
+                      <span class="alert-tag tone-green">
+                        <svg class="icon icon-xs"><use href="#t-check-circle"></use></svg>
+                        Entregas al día
+                      </span>
                     }
                   </div>
                 </div>
-              }
-            </div>
-          }
-        </div>
+
+                <footer class="master-card-footer">
+                  <span class="link-action">
+                    Ir al taller del proyecto
+                    <svg class="icon icon-xs"><use href="#t-arrow-right"></use></svg>
+                  </span>
+                </footer>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <span class="empty-icon">
+              <svg class="icon icon-lg"><use href="#t-layers"></use></svg>
+            </span>
+            <p class="empty-title">Sin proyectos asignados</p>
+            <p class="empty-text">Los proyectos que coordines aparecerán en este tablero.</p>
+          </div>
+        }
       </div>
     </section>
   }
 
-  <!-- TAB: PROYECTOS -->
-  @if (tabActiva === 'proyectos') {
-    <section class="tab-pane">
-      <div class="content-section">
-        <div class="section-header">
-          <h2>Tablero de Proyectos y Entregables</h2>
-        </div>
-
-        <div class="projects-master-grid">
-          @for (proyecto of proyectosAsignados; track proyecto.id) {
-            <div class="master-project-card" (click)="abrirProyecto(proyecto.id)">
-              <div class="master-card-header">
-                <span class="status-badge-outline">{{ proyecto.estado }}</span>
-                <h3>{{ proyecto.titulo }}</h3>
-                <div class="student-tag">
-                  <span>👤 {{ proyecto.owner?.name }}</span>
-                </div>
-              </div>
-
-              <div class="master-card-body">
-                <div class="alerts-container">
-                  @if (estadisticasProyecto[proyecto.id]?.pendientes > 0) {
-                    <div class="alert-tag tag-rose">
-                      🔴 <strong>{{ estadisticasProyecto[proyecto.id].pendientes }}</strong> pendiente(s)
-                    </div>
-                  }
-                  @if (estadisticasProyecto[proyecto.id]?.revision > 0) {
-                    <div class="alert-tag tag-amber">
-                      🟡 <strong>{{ estadisticasProyecto[proyecto.id].revision }}</strong> en revisión
-                    </div>
-                  }
-                  @if (estadisticasProyecto[proyecto.id]?.correcciones > 0) {
-                    <div class="alert-tag tag-orange">
-                      ⚠️ <strong>{{ estadisticasProyecto[proyecto.id].correcciones }}</strong> requiere corrección
-                    </div>
-                  }
-                  @if (
-                    estadisticasProyecto[proyecto.id]?.pendientes === 0 &&
-                    estadisticasProyecto[proyecto.id]?.revision === 0 &&
-                    estadisticasProyecto[proyecto.id]?.correcciones === 0
-                  ) {
-                    <div class="alert-tag tag-emerald">
-                      ✅ Entregas al día
-                    </div>
-                  }
-                </div>
-              </div>
-
-              <div class="master-card-footer">
-                <span>Ir al taller del proyecto</span>
-                <span class="icon">➔</span>
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-    </section>
-  }
-
-  <!-- TAB: REVISIONES -->
+  <!-- ==========================================================
+       6. TAB: REVISIONES
+       ========================================================== -->
   @if (tabActiva === 'revisiones') {
-    <section class="tab-pane">
+    <section class="tab-pane" role="tabpanel">
       <div class="content-section">
         <div class="section-header">
-          <h2>Historial de Evaluaciones y Revisiones</h2>
+          <div class="section-heading">
+            <svg class="icon icon-md"><use href="#t-file-check"></use></svg>
+            <div>
+              <h2>Historial de evaluaciones</h2>
+              <p class="section-subtitle">Revisiones registradas sobre los entregables</p>
+            </div>
+          </div>
+          <span class="section-count">{{ historialRevisiones?.length || 0 }} revisión(es)</span>
         </div>
 
         @if (historialRevisiones.length > 0) {
-          <div class="reviews-timeline">
+          <div class="reviews-list">
             @for (revision of historialRevisiones; track $index) {
-              <div class="timeline-review-card" (click)="abrirProyecto(revision.proyectoId)">
-                <div class="review-status-indicator"></div>
+              <div class="review-card" (click)="abrirProyecto(revision.proyectoId)">
+                <span class="review-accent" aria-hidden="true"></span>
                 <div class="review-main">
-                  <div class="review-header">
-                    <span class="project-name-chip">{{ revision.proyecto }}</span>
-                    <span class="review-date">{{ revision.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+                  <div class="review-head">
+                    <span class="chip">
+                      <svg class="icon icon-xs"><use href="#t-layers"></use></svg>
+                      {{ revision.proyecto }}
+                    </span>
+                    <span class="review-date">
+                      <svg class="icon icon-xs"><use href="#t-calendar"></use></svg>
+                      {{ revision.fecha | date:'dd/MM/yyyy HH:mm' }}
+                    </span>
                   </div>
-                  <h3 class="review-doc-title">{{ revision.documento }}</h3>
+                  <h3 class="review-title">{{ revision.documento }}</h3>
                   <div class="review-meta">
                     <span>Estudiante: <strong>{{ revision.estudiante }}</strong></span>
                     <span class="meta-status">{{ revision.estado }}</span>
@@ -317,51 +478,60 @@
           </div>
         } @else {
           <div class="empty-state">
-            <p>No existen revisiones registradas en el historial.</p>
+            <span class="empty-icon">
+              <svg class="icon icon-lg"><use href="#t-file-check"></use></svg>
+            </span>
+            <p class="empty-title">Sin revisiones</p>
+            <p class="empty-text">No existen evaluaciones registradas en el historial.</p>
           </div>
         }
       </div>
     </section>
   }
 
-  <!-- TAB: ACTIVIDAD -->
-  <!-- TAB: ACTIVIDAD / BITÁCORA -->
-@if (tabActiva === 'actividad') {
-  <section class="tab-pane">
-    <div class="content-section">
-      <!-- Encabezado de la Bitácora -->
-      <div class="section-header bitacora-header">
-        <div>
-          <h2>Bitácora de Seguimiento Académico</h2>
-          <p class="section-subtitle">Línea de tiempo cronológica de entregas, cambios de estado y revisiones</p>
+  <!-- ==========================================================
+       7. TAB: BITÁCORA
+       ========================================================== -->
+  @if (tabActiva === 'actividad') {
+    <section class="tab-pane" role="tabpanel">
+      <div class="content-section">
+        <div class="section-header">
+          <div class="section-heading">
+            <svg class="icon icon-md"><use href="#t-activity"></use></svg>
+            <div>
+              <h2>Bitácora de seguimiento</h2>
+              <p class="section-subtitle">Línea de tiempo de entregas, cambios de estado y revisiones</p>
+            </div>
+          </div>
+          <span class="section-count">{{ actividadReciente?.length || 0 }} evento(s)</span>
         </div>
-      </div>
 
-      @if (actividadReciente && actividadReciente.length > 0) {
-        <div class="bitacora-timeline">
-          @for (actividad of actividadReciente; track $index) {
-            <div class="timeline-entry" (click)="abrirProyecto(actividad.proyectoId)">
-              
-              <!-- Nodo visual de la línea de tiempo -->
-              <div class="timeline-node">
-                <div class="node-icon" [ngClass]="{
-                  'node-rose': actividad.estado === 'Pendiente revisión' || actividad.estado === 'submitted' || actividad.estado === 'Rechazado',
-                  'node-amber': actividad.estado === 'En revisión',
-                  'node-orange': actividad.estado === 'Requiere correcciones',
-                  'node-emerald': actividad.estado === 'Aprobado'
-                }">
-                  @if (actividad.estado === 'Aprobado') { ✓ }
-                  @else if (actividad.estado === 'Requiere correcciones') { ⚠️ }
-                  @else if (actividad.estado === 'Rechazado') { ✕ }
-                  @else { 📄 }
+        @if (actividadReciente && actividadReciente.length > 0) {
+          <ol class="timeline">
+            @for (actividad of actividadReciente; track $index) {
+              <li class="timeline-entry" (click)="abrirProyecto(actividad.proyectoId)">
+                <div class="timeline-rail">
+                  <span class="node-icon" [ngClass]="{
+                    'node-red': actividad.estado === 'Pendiente revisión' || actividad.estado === 'submitted' || actividad.estado === 'Rechazado',
+                    'node-gold': actividad.estado === 'En revisión',
+                    'node-orange': actividad.estado === 'Requiere correcciones',
+                    'node-green': actividad.estado === 'Aprobado'
+                  }">
+                    @if (actividad.estado === 'Aprobado') {
+                      <svg class="icon icon-sm"><use href="#t-check"></use></svg>
+                    } @else if (actividad.estado === 'Requiere correcciones') {
+                      <svg class="icon icon-sm"><use href="#t-alert"></use></svg>
+                    } @else if (actividad.estado === 'Rechazado') {
+                      <svg class="icon icon-sm"><use href="#t-x"></use></svg>
+                    } @else {
+                      <svg class="icon icon-sm"><use href="#t-file"></use></svg>
+                    }
+                  </span>
+                  <span class="node-line" aria-hidden="true"></span>
                 </div>
-                <div class="node-line"></div>
-              </div>
 
-              <!-- Tarjeta de contenido de la entrada -->
-              <div class="timeline-card">
-                <div class="card-top-row">
-                  <div class="card-badge-container">
+                <div class="timeline-card">
+                  <div class="timeline-card-head">
                     <span class="status-pill" [ngClass]="{
                       'status-pending': actividad.estado === 'Pendiente revisión' || actividad.estado === 'submitted',
                       'status-reviewing': actividad.estado === 'En revisión',
@@ -369,46 +539,53 @@
                       'status-correction': actividad.estado === 'Requiere correcciones',
                       'status-rejected': actividad.estado === 'Rechazado'
                     }">
-                      <span class="status-dot"></span>
-                      @if (actividad.estado === 'submitted' || actividad.estado === 'Pendiente revisión') { Entrega recibida }
-                      @else { {{ actividad.estado }} }
+                      <span class="status-dot" aria-hidden="true"></span>
+                      @if (actividad.estado === 'submitted' || actividad.estado === 'Pendiente revisión') {
+                        Entrega recibida
+                      } @else {
+                        {{ actividad.estado }}
+                      }
                     </span>
+
+                    <time class="activity-time">
+                      <svg class="icon icon-xs"><use href="#t-calendar"></use></svg>
+                      {{ actividad.fecha | date:'dd MMM yyyy, HH:mm' }}
+                    </time>
                   </div>
 
-                  <time class="activity-time">
-                    <span class="calendar-icon">📅</span>
-                    {{ actividad.fecha | date:'dd MMM yyyy, HH:mm' }}
-                  </time>
-                </div>
+                  <h4 class="timeline-title">{{ actividad.documento }}</h4>
 
-                <div class="card-main-info">
-                  <h4 class="document-title">{{ actividad.documento }}</h4>
-                  
                   <div class="context-pills">
-                    <span class="context-pill project-name">
-                      <span class="pill-label">Proyecto:</span> {{ actividad.proyecto }}
+                    <span class="context-pill">
+                      <span class="pill-label">Proyecto</span>
+                      {{ actividad.proyecto }}
                     </span>
-                    <span class="context-pill student-name">
-                      <span class="pill-label">Estudiante:</span> {{ actividad.estudiante }}
+                    <span class="context-pill">
+                      <span class="pill-label">Estudiante</span>
+                      {{ actividad.estudiante }}
+                    </span>
+                  </div>
+
+                  <div class="timeline-card-footer">
+                    <span class="link-action">
+                      Revisar avances en taller
+                      <svg class="icon icon-xs"><use href="#t-arrow-right"></use></svg>
                     </span>
                   </div>
                 </div>
-
-                <div class="card-action-footer">
-                  <span class="action-text">Revisar avances en taller ➔</span>
-                </div>
-              </div>
-
-            </div>
-          }
-        </div>
-      } @else {
-        <div class="empty-state">
-          <div class="empty-icon">📜</div>
-          <p>No hay eventos ni actividad registrada en la bitácora todavía.</p>
-        </div>
-      }
-    </div>
-  </section>
-}
+              </li>
+            }
+          </ol>
+        } @else {
+          <div class="empty-state">
+            <span class="empty-icon">
+              <svg class="icon icon-lg"><use href="#t-inbox"></use></svg>
+            </span>
+            <p class="empty-title">Bitácora vacía</p>
+            <p class="empty-text">No hay eventos ni actividad registrada todavía.</p>
+          </div>
+        }
+      </div>
+    </section>
+  }
 </div>

@@ -49,4 +49,9 @@ export class NotificationService {
   updatePreferences(preferences: NotificationPreference[]): Observable<any> {
     return this.http.put(`${this.apiUrl}/preferences`, { preferences });
   }
+
+  // Enviar una nueva notificación a un usuario
+  sendNotification(payload: { user_id: number; title: string; message: string; type?: string; link?: string }): Observable<any> {
+    return this.http.post<any>(this.apiUrl, payload);
+  }
 }

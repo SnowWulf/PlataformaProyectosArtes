@@ -1,106 +1,142 @@
-<div class="community-container">
+<!-- ==========================================================
+     SPRITE DE ICONOS (Feather style, 24x24, stroke)
+     ========================================================== -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="s-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="s-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="s-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></symbol>
+  <symbol id="s-cap" viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 2.5 2.5 6 2.5s6-1.5 6-2.5v-5"/></symbol>
+  <symbol id="s-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.5 17 22l-5-3-5 3 1.5-9.5"/></symbol>
+  <symbol id="s-star" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2Z"/></symbol>
+  <symbol id="s-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="s-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="s-empty" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/></symbol>
+</svg>
 
-    <div class="community-header">
+<div class="art-dashboard community">
 
-        <h1>
-
-            🤝 Comunidad Académica
-
-        </h1>
-
-        <p>
-
-            Explora estudiantes, tutores y coordinadores.
-
+  <!-- ==========================================================
+       1. HERO / CABECERA
+       ========================================================== -->
+  <header class="art-hero">
+    <div class="hero-main">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Facultad de Artes &middot; Directorio</span>
+        <h1 class="hero-title">Comunidad Académica</h1>
+        <p class="hero-subtitle">
+          Explora estudiantes, tutores y coordinadores de la Facultad de Artes.
         </p>
+      </div>
 
-    </div>
-
-    <div class="community-filters">
-
-        <input type="text" placeholder="🔍 Buscar por nombre o programa" [(ngModel)]="busqueda">
-
-        <div class="role-filters">
-
-            <button [class.active]="filtroRol === 'todos'" (click)="filtroRol = 'todos'">
-
-                Todos
-
-            </button>
-
-            <button [class.active]="filtroRol === 'Estudiante'" (click)="filtroRol = 'Estudiante'">
-
-                Estudiantes
-
-            </button>
-
-            <button [class.active]="filtroRol === 'Tutor'" (click)="filtroRol = 'Tutor'">
-
-                Tutores
-
-            </button>
-
-            <button [class.active]="filtroRol === 'Coordinador'" (click)="filtroRol = 'Coordinador'">
-
-                Coordinadores
-
-            </button>
-
+      <div class="hero-summary" role="group" aria-label="Resumen de la comunidad">
+        <div class="summary-item">
+          <span class="summary-value">{{ usuariosFiltrados.length }}</span>
+          <span class="summary-label">{{ usuariosFiltrados.length === 1 ? 'Miembro' : 'Miembros' }}</span>
         </div>
-
+      </div>
     </div>
+  </header>
 
-    <div class="community-grid">
-
-        @for (
-        usuario of usuariosFiltrados;
-        track usuario.id
-        ) {
-
-        <div class="profile-card">
-
-<div class="profile-avatar">
-
-    <img
-
-        [src]="usuario.foto_url || '/user.webp'"
-
-        [alt]="usuario.name"
-
-        class="user-avatar"
-
-    >
-
-</div>
-
-            <h3>
-
-                {{ usuario.name }}
-
-            </h3>
-
-            <span class="role-badge">
-
-                {{ usuario.role?.nombre }}
-
-            </span>
-
-            <p>
-
-                {{ usuario.programa ?? 'Programa no especificado' }}
-
-            </p>
-
-            <button [routerLink]="['/dashboard/community/profile',usuario.id]">
-
-                Ver perfil
-
-            </button>
-
+  <!-- ==========================================================
+       2. SECCIÓN / DIRECTORIO
+       ========================================================== -->
+  <section class="content-section">
+    <div class="section-header">
+      <div class="section-heading">
+        <svg class="icon icon-md"><use href="#s-users"></use></svg>
+        <div>
+          <h2>Miembros de la facultad</h2>
+          <p class="section-subtitle">Filtra por rol o busca por nombre y programa</p>
         </div>
-
-        }
-
+      </div>
+      <span class="section-count" *ngIf="usuariosFiltrados.length > 0">
+        {{ usuariosFiltrados.length }} {{ usuariosFiltrados.length === 1 ? 'perfil' : 'perfiles' }}
+      </span>
     </div>
+
+    <!-- Toolbar: búsqueda + filtros -->
+    <div class="section-toolbar">
+      <div class="search-box">
+        <svg class="icon icon-sm search-icon"><use href="#s-search"></use></svg>
+        <input type="text" placeholder="Buscar por nombre o programa..." [(ngModel)]="busqueda">
+      </div>
+
+      <div class="role-filters" role="tablist" aria-label="Filtrar por rol">
+        <button type="button" [class.active]="filtroRol === 'todos'" (click)="filtroRol = 'todos'">
+          <svg class="icon icon-xs"><use href="#s-globe"></use></svg>
+          Todos
+        </button>
+        <button type="button" [class.active]="filtroRol === 'Estudiante'" (click)="filtroRol = 'Estudiante'">
+          <svg class="icon icon-xs"><use href="#s-cap"></use></svg>
+          Estudiantes
+        </button>
+        <button type="button" [class.active]="filtroRol === 'Tutor'" (click)="filtroRol = 'Tutor'">
+          <svg class="icon icon-xs"><use href="#s-star"></use></svg>
+          Tutores
+        </button>
+        <button type="button" [class.active]="filtroRol === 'Coordinador'" (click)="filtroRol = 'Coordinador'">
+          <svg class="icon icon-xs"><use href="#s-award"></use></svg>
+          Coordinadores
+        </button>
+      </div>
+    </div>
+
+    <!-- Meta de resultados -->
+    <div class="results-bar" *ngIf="usuariosFiltrados.length > 0 && filtroRol !== 'todos'">
+      <span class="filter-tag">
+        <span class="tag-dot" aria-hidden="true"></span>
+        {{ filtroRol }}
+      </span>
+    </div>
+
+    <!-- Grilla de perfiles -->
+    <div class="community-grid" *ngIf="usuariosFiltrados.length > 0">
+      @for (usuario of usuariosFiltrados; track usuario.id) {
+        <article class="profile-card">
+          <div class="card-banner" aria-hidden="true"></div>
+
+          <div class="profile-avatar">
+            <img
+              [src]="usuario.foto_url || '/user.png'"
+              (error)="usuario.foto_url = '/user.png'"
+              [alt]="usuario.name"
+              class="user-avatar">
+            <span class="status-dot" title="Miembro activo" aria-hidden="true"></span>
+          </div>
+
+          <h3 class="user-name">{{ usuario.name }}</h3>
+
+          <span
+            class="role-badge"
+            [ngClass]="{
+              'role-estudiante': usuario.role?.nombre === 'Estudiante',
+              'role-tutor': usuario.role?.nombre === 'Tutor',
+              'role-coordinador': usuario.role?.nombre === 'Coordinador'
+            }">
+            {{ usuario.role?.nombre }}
+          </span>
+
+          <p class="program">
+            <svg class="icon icon-xs"><use href="#s-pin"></use></svg>
+            {{ usuario.programa ?? 'Programa no especificado' }}
+          </p>
+
+          <button class="btn-profile" [routerLink]="['/dashboard/community/profile', usuario.id]">
+            <span>Ver perfil</span>
+            <svg class="icon icon-sm arrow-icon"><use href="#s-arrow"></use></svg>
+          </button>
+        </article>
+      }
+    </div>
+
+    <!-- Estado vacío -->
+    <div class="empty-state" *ngIf="usuariosFiltrados.length === 0">
+      <span class="empty-icon">
+        <svg class="icon icon-lg"><use href="#s-empty"></use></svg>
+      </span>
+      <p class="empty-title">Sin resultados de búsqueda</p>
+      <p class="empty-text">No encontramos miembros que coincidan con la búsqueda o filtro seleccionado.</p>
+    </div>
+  </section>
 
 </div>

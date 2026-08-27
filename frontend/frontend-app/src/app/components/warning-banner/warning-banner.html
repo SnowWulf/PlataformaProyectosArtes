@@ -1,15 +1,61 @@
-<div *ngIf="projects.length > 0" class="deadline-banner">
-  <div class="banner-content">
-    <div class="banner-icon">⚠️</div>
-    <div class="banner-text">
-      <strong>Proyectos próximos a vencer:</strong>
+<!-- Sprite de iconos (Vectoriales / Estilo Feather) -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-alert-triangle" viewBox="0 0 24 24">
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+    <line x1="12" y1="9" x2="12" y2="13"></line>
+    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+  </symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24">
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+    <polyline points="12 5 19 12 12 19"></polyline>
+  </symbol>
+  <symbol id="i-close" viewBox="0 0 24 24">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10"></circle>
+    <polyline points="12 6 12 12 16 14"></polyline>
+  </symbol>
+</svg>
+
+<div *ngIf="projects.length > 0" class="deadline-banner animate-fade-in" role="alert">
+  <div class="banner-container">
+    
+    <!-- ICONO DE ADVERTENCIA -->
+    <div class="banner-icon" aria-hidden="true">
+      <svg class="icon"><use href="#i-alert-triangle"></use></svg>
+    </div>
+
+    <!-- CONTENIDO DE LA ALERTA -->
+    <div class="banner-body">
+      <div class="banner-header">
+        <span class="banner-eyebrow">Universidad de Nariño</span>
+        <h4 class="banner-title">Proyectos Próximos a Vencer</h4>
+      </div>
+
       <div class="projects-list">
         <div *ngFor="let p of projects" class="project-item">
-          <span>El proyecto <strong>"{{ p.titulo }}"</strong> vence en {{ p.dias_restantes }} días ({{ p.fecha_fin | date:'dd/MM/yyyy' }}).</span>
-          <button (click)="goToProject(p.id)" class="btn-link">Ver entregables →</button>
+          <div class="project-info">
+            <span class="project-name">"{{ p.titulo }}"</span>
+            <span class="deadline-badge">
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#i-clock"></use></svg>
+              Vence en {{ p.dias_restantes }} días ({{ p.fecha_fin | date:'dd/MM/yyyy' }})
+            </span>
+          </div>
+
+          <button (click)="goToProject(p.id)" class="btn-action">
+            <span>Ver entregables</span>
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- BOTÓN CERRAR -->
+    <button (click)="closeBanner()" class="close-btn" aria-label="Cerrar aviso de vencimientos">
+      <svg class="icon icon-xs" aria-hidden="true"><use href="#i-close"></use></svg>
+    </button>
+
   </div>
-  <button (click)="closeBanner()" class="close-btn" aria-label="Cerrar aviso">&times;</button>
 </div>

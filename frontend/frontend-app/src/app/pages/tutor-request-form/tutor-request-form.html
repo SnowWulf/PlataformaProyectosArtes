@@ -1,82 +1,158 @@
-<div class="request-card">
+<!-- ============================================================
+     SOLICITAR TUTOR (MODAL) — Universidad de Nariño
+     Sistema visual compartido: login / student-home / tools /
+     community-profile / profile / document-review-form
+     Compacto: pensado para vivir dentro de un diálogo.
+     ============================================================ -->
 
-  <div class="request-header">
+<!-- Sprite de iconos -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-mentor" viewBox="0 0 24 24">
+      <circle cx="12" cy="8" r="3.2" />
+      <path d="M5.5 20c0-3.3 2.9-5.4 6.5-5.4s6.5 2.1 6.5 5.4" />
+      <path d="M17.8 4.2 19 5.4l2.2-2.2" />
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24">
+      <circle cx="12" cy="8.5" r="3.4" />
+      <path d="M5.5 20c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5" />
+    </symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24">
+      <path d="m7 10 5 5 5-5" />
+    </symbol>
+    <symbol id="i-comment" viewBox="0 0 24 24">
+      <path d="M4.5 5.5h15v10h-9L6 19.5v-4H4.5Z" />
+      <path d="M8 9.5h8M8 12.5h5" />
+    </symbol>
+    <symbol id="i-send" viewBox="0 0 24 24">
+      <path d="M20.5 3.5 10.8 13.2" />
+      <path d="M20.5 3.5 14.7 20.5l-3.9-7.3-7.3-3.9Z" />
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24">
+      <path d="M6 6l12 12M18 6 6 18" />
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5V12l3 1.8" />
+    </symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24">
+      <path d="M12 3.5l6.5 2.3v5.4c0 4.1-2.7 7.2-6.5 8.8-3.8-1.6-6.5-4.7-6.5-8.8V5.8Z" />
+      <path d="m9.3 12.2 1.9 1.9 3.6-3.8" />
+    </symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24">
+      <path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9Z" />
+    </symbol>
+  </defs>
+</svg>
 
-    <h2>
+<div class="request-modal">
+  <!-- ---------- Rail de contexto ---------- -->
+  <aside class="context-rail">
+    <div class="context-weave" aria-hidden="true"></div>
 
-      👩‍🏫 Solicitar tutor
-
-    </h2>
-
-    <p>
-
-      Selecciona el tutor que deseas para tu proyecto y envíale una solicitud.
-
-    </p>
-
-  </div>
-
-  <form
-    [formGroup]="form"
-    (ngSubmit)="enviarSolicitud()">
-
-    <div class="form-group">
-
-      <label>
-
-        Tutor
-
-      </label>
-
-      <select formControlName="tutor_id">
-
-        <option value="">
-
-          Seleccione un tutor
-
-        </option>
-
-        <option
-          *ngFor="let tutor of tutores"
-          [value]="tutor.id">
-
-          {{ tutor.name }}
-
-        </option>
-
-      </select>
-
+    <div class="context-top">
+      <p class="context-eyebrow">Universidad de Nariño</p>
+      <span class="context-rule" aria-hidden="true"></span>
+      <h2 class="context-title">Solicitar tutor</h2>
+      <p class="context-text">Elige el docente que acompañará tu proyecto y envíale la solicitud.</p>
     </div>
 
-    <div class="form-group">
+    <ul class="context-list">
+      <li>
+        <svg class="icon icon-xs" aria-hidden="true">
+          <use href="#i-clock" />
+        </svg>
+        <span>Respuesta en 3 días hábiles</span>
+      </li>
+      <li>
+        <svg class="icon icon-xs" aria-hidden="true">
+          <use href="#i-shield" />
+        </svg>
+        <span>Una solicitud activa por vez</span>
+      </li>
+      <li>
+        <svg class="icon icon-xs" aria-hidden="true">
+          <use href="#i-spark" />
+        </svg>
+        <span>Un mensaje claro ayuda mucho</span>
+      </li>
+    </ul>
+  </aside>
 
-      <label>
+  <!-- ---------- Panel de formulario ---------- -->
+  <section class="form-panel">
+    <header class="request-header">
+      <span class="header-icon" aria-hidden="true">
+        <svg class="icon icon-sm">
+          <use href="#i-mentor" />
+        </svg>
+      </span>
+      <span class="header-copy">
+        <strong>Nueva solicitud de tutoría</strong>
+        <small>El tutor recibirá una notificación</small>
+      </span>
+    </header>
 
-        Mensaje (opcional)
+    <form [formGroup]="form" (ngSubmit)="enviarSolicitud()" class="request-form" novalidate>
+      <div class="form-body">
+        <!-- ---------- Tutor ---------- -->
+        <div class="field-group">
+          <div class="field-head">
+            <label for="tutor">
+              <svg class="icon icon-xs" aria-hidden="true">
+                <use href="#i-user" />
+              </svg>
+              <span>Tutor</span>
+            </label>
+            <span class="field-tag field-tag--req">Requerido</span>
+          </div>
 
-      </label>
+          <div class="select-shell">
+            <select id="tutor" formControlName="tutor_id">
+              <option value="">Seleccione un tutor</option>
+              <option *ngFor="let tutor of tutores" [value]="tutor.id">{{ tutor.name }}</option>
+            </select>
+            <svg class="icon icon-sm select-arrow" aria-hidden="true">
+              <use href="#i-chevron" />
+            </svg>
+          </div>
+        </div>
 
-      <textarea
-        rows="5"
-        formControlName="mensaje"
-        placeholder="Explique brevemente por qué desea trabajar con este tutor...">
+        <!-- ---------- Mensaje ---------- -->
+        <div class="field-group">
+          <div class="field-head">
+            <label for="mensaje">
+              <svg class="icon icon-xs" aria-hidden="true">
+                <use href="#i-comment" />
+              </svg>
+              <span>Mensaje</span>
+            </label>
+            <span class="field-tag field-tag--count">
+              {{ form.get('mensaje')?.value?.length || 0 }}/500
+            </span>
+          </div>
 
-      </textarea>
+          <textarea id="mensaje" formControlName="mensaje" maxlength="500" rows="3"
+            placeholder="Explica brevemente por qué deseas trabajar con este tutor…"></textarea>
+        </div>
+      </div>
 
-    </div>
-
-    <div class="actions">
-
-      <button
-        type="submit"
-        class="btn-primary">
-
-        📨 Enviar solicitud
-
-      </button>
-
-    </div>
-
-  </form>
-
+      <!-- ---------- Acciones ---------- -->
+      <div class="form-actions">
+        <!-- En tutor-request-form.html -->
+        <button type="button" class="btn-ghost" (click)="cancelado.emit()">
+          <svg class="icon icon-xs" aria-hidden="true">
+            <use href="#i-x" />
+          </svg>
+          <span>Cancelar</span>
+        </button>
+        <button type="submit" class="btn-submit">
+          <svg class="icon icon-xs btn-send" aria-hidden="true">
+            <use href="#i-send" />
+          </svg>
+          <span>Enviar solicitud</span>
+        </button>
+      </div>
+    </form>
+  </section>
 </div>

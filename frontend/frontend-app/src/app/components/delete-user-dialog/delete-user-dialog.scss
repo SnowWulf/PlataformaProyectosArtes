@@ -1,121 +1,389 @@
-.dialog{
+// ==========================================================
+//  DIÁLOGO ELIMINAR USUARIO (MODAL) — Universidad de Nariño
+//  Misma base visual institucional (Paleta Sinople & Gualda)
+// ==========================================================
 
-    width:420px;
+// --- Paleta institucional ---
+$udenar-verde:        #006633;
+$udenar-verde-soft:   #e6f0eb;
 
-    background:white;
+$udenar-dorado:       #FFCC00;
+$udenar-dorado-dark:  #a37f00;
 
-    border-radius:12px;
+// --- Neutros y superficies ---
+$bg-card:             #FFFFFF;
+$bg-soft:             #F7F9F8;
 
-    padding:24px;
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.2);
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
 
+// --- Alertas y peligro ---
+$alert-red:           #DC2626;
+$alert-red-soft:      #FEE2E2;
+$alert-red-hover:     #B91C1C;
+
+// --- Tipografía ---
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// --- Radios y movimiento ---
+$radius-sm:    8px;
+$radius-md:    12px;
+$radius-full:  9999px;
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ==========================================================
+//  HOST & SPRITE DE ICONOS
+// ==========================================================
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: block;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: #1A2521;
+  -webkit-font-smoothing: antialiased;
+
+  *, *::before, *::after { box-sizing: border-box; }
 }
 
-h2{
+.icon-sprite { display: none; }
 
-    margin-top:0;
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  display: block;
 
-    color:#00933f;
-
+  &.icon-xs { width: 13px; height: 13px; stroke-width: 2.2; }
+  &.icon-sm { width: 15px; height: 15px; }
 }
 
-.warning{
-
-    color:#b71c1c;
-
-    font-weight:600;
-
-    margin:18px 0;
-
+// ==========================================================
+//  TELÓN DE FONDO & CONTENEDOR MODAL
+// ==========================================================
+.modal-backdrop {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 33, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-label{
+.dialog {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border: 1px solid #E1E8E4;
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15),
+              0 10px 12px -5px rgba(0, 0, 0, 0.04);
+  animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 
-    display:block;
-
-    margin-bottom:6px;
-
-    font-weight:600;
-
+  // Franja dorada institucional
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: #FFCC00;
+  }
 }
 
-input{
-
-    width:100%;
-
-    padding:10px;
-
-    border:1px solid #ccc;
-
-    border-radius:6px;
-
-    box-sizing:border-box;
-
+// ---------- Cabecera ----------
+.dialog-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1.35rem 1.4rem 1rem;
+  border-bottom: 1px solid $border-color;
 }
 
-input:focus{
-
-    outline:none;
-
-    border-color:#00933f;
-
+.header-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: $radius-sm;
+  background: $alert-red-soft;
+  color: $alert-red;
 }
 
-.error{
+.header-copy {
+  min-width: 0;
 
-    display:block;
+  .header-eyebrow {
+    margin: 0;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $udenar-dorado-dark;
+  }
 
-    color:#d32f2f;
+  h2 {
+    margin: 0.15rem 0 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: $text-main;
+  }
 
-    margin-top:6px;
-
-    font-size:12px;
-
+  small {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.78rem;
+    color: $text-muted;
+  }
 }
 
-.buttons{
-
-    display:flex;
-
-    justify-content:flex-end;
-
-    gap:12px;
-
-    margin-top:25px;
-
+// ==========================================================
+//  CUERPO DEL DIÁLOGO
+// ==========================================================
+.dialog-body {
+  padding: 1.15rem 1.4rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-button{
+// Tarjeta con información del usuario
+.user-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 0.9rem;
+  background: $bg-soft;
+  border: 1px solid $border-color;
+  border-radius: $radius-sm;
 
-    padding:10px 18px;
+  .user-label {
+    font-size: 0.72rem;
+    color: $text-muted;
+    font-weight: 500;
+  }
 
-    border:none;
-
-    border-radius:6px;
-
-    cursor:pointer;
-
-    font-weight:600;
-
+  .user-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: $text-main;
+    word-break: break-word;
+  }
 }
 
-.cancel{
+// Banner de advertencia
+.warning-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: $radius-sm;
+  background-color: rgba($alert-red, 0.08);
+  border: 1px solid rgba($alert-red, 0.2);
+  color: $alert-red;
+  font-size: 0.78rem;
+  font-weight: 600;
 
-    background:#eeeeee;
-
+  .icon { flex-shrink: 0; }
 }
 
-.delete{
-
-    background:#c62828;
-
-    color:white;
-
+// Formulario
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.delete:hover{
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
 
-    background:#b71c1c;
+.field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $text-main;
+    cursor: pointer;
+
+    .icon { color: $udenar-verde; }
+  }
+}
+
+.field-tag {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  &--req {
+    padding: 0.12rem 0.4rem;
+    border-radius: $radius-full;
+    background: rgba(255, 204, 0, 0.18);
+    color: $udenar-dorado-dark;
+  }
+}
+
+input[type="password"] {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-sm;
+  background: $bg-soft;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: $text-main;
+  outline: none;
+  transition: border-color 0.2s $ease-out, background 0.2s $ease-out, box-shadow 0.2s $ease-out;
+
+  &::placeholder { color: $text-faint; }
+  &:hover { border-color: $border-strong; }
+
+  &:focus {
+    background: $bg-card;
+    border-color: $udenar-verde;
+    box-shadow: 0 0 0 3px rgba(0, 102, 51, 0.12);
+  }
+}
+
+.error-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: $alert-red;
+  margin-top: 0.2rem;
+}
+
+// ==========================================================
+//  ACCIONES DEL DIÁLOGO
+// ==========================================================
+.dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid $border-color;
+}
+
+.btn-danger,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.58rem 1rem;
+  border-radius: $radius-sm;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s $ease-out, color 0.2s $ease-out,
+              border-color 0.2s $ease-out, transform 0.2s $ease-out,
+              box-shadow 0.2s $ease-out;
+
+  &:focus-visible {
+    outline: 2px solid $udenar-dorado-dark;
+    outline-offset: 2px;
+  }
+}
+
+.btn-danger {
+  border: none;
+  background: $alert-red;
+  color: #FFFFFF;
+
+  &:hover:not(:disabled) {
+    background: $alert-red-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px -4px rgba(220, 38, 38, 0.4);
+  }
+
+  &:active:not(:disabled) { transform: translateY(0); }
+
+  &:disabled {
+    background: $border-strong;
+    color: $text-faint;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.btn-ghost {
+  border: 1px solid $border-color;
+  background: $bg-card;
+  color: $text-muted;
+
+  &:hover {
+    border-color: $border-strong;
+    color: $text-main;
+  }
+
+  &:active { transform: translateY(1px); }
+}
+
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// ==========================================================
+//  RESPONSIVE Y ACCESIBILIDAD
+// ==========================================================
+@media (max-width: 480px) {
+  .dialog-header { padding: 1.15rem 1rem 0.9rem; }
+  .dialog-body { padding: 1rem; }
+  .dialog-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .btn-danger,
+  .btn-ghost { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

@@ -47,7 +47,7 @@ class NotificationController extends Controller
         ]);
     }
 
-    /**
+    /**fs
      * Marca TODAS las notificaciones del usuario como leídas.
      */
     public function markAllAsRead(Request $request): JsonResponse
@@ -60,5 +60,31 @@ class NotificationController extends Controller
         return response()->json([
             'message' => 'Todas las notificaciones fueron marcadas como leídas'
         ]);
+    }
+
+
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'title'   => 'required|string|max:255',
+            'message' => 'required|string',
+            'type'    => 'nullable|string',
+            'link'    => 'nullable|string',
+        ]);
+
+        $notification = Notification::create([
+            'user_id' => $validated['user_id'],
+            'title'   => $validated['title'],
+            'message' => $validated['message'],
+            'type'    => $validated['type'] ?? 'RECORDATORIO',
+            'link'    => $validated['link'] ?? null,
+            'is_read' => false,
+        ]);
+
+        return response()->json([
+            'message' => 'Notificación creada con éxito',
+            'data'    => $notification
+        ], 201);
     }
 }

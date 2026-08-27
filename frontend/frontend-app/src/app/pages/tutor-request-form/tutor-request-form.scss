@@ -1,109 +1,572 @@
-.request-card {
+@use "sass:color";
 
-  background: white;
+// ==========================================================
+//  SOLICITAR TUTOR (MODAL) — Universidad de Nariño
+//  Misma base visual que login / student-home / tools /
+//  community-profile / profile / document-review-form
+//  Optimizado para caber dentro de un diálogo sin desbordar.
+// ==========================================================
 
-  border-radius: 16px;
+// --- Paleta institucional ---
+$udenar-verde:        #006633; // Verde Sinople Oficial
+$udenar-verde-hover:  #004d26;
+$udenar-verde-soft:   #e6f0eb;
 
-  padding: 24px;
+$udenar-dorado:       #FFCC00; // Amarillo Gualda Oficial
+$udenar-dorado-dark:  #a37f00;
 
-  max-width: 700px;
+// --- Neutros y superficies ---
+$bg-card:             #FFFFFF;
+$bg-soft:             #F7F9F8;
 
-  margin: 20px auto;
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
 
-  box-shadow:
-    0 10px 30px
-    rgba(0, 0, 0, 0.08);
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
 
+// --- Neutros sobre verde ---
+$on-verde:            #FFFFFF;
+$on-verde-soft:       rgba(255, 255, 255, 0.74);
+$on-verde-border:     rgba(255, 255, 255, 0.14);
+$on-verde-panel:      rgba(255, 255, 255, 0.08);
+
+// --- Tipografía ---
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// --- Radios y movimiento ---
+$radius-sm:    8px;
+$radius-md:    12px;
+$radius-full:  9999px;
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ==========================================================
+//  HOST — el modal manda el tamaño; aquí nunca hay 100vh
+// ==========================================================
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  container-type: inline-size;
+  font-family: $font-sans;
+  color: $text-main;
+  -webkit-font-smoothing: antialiased;
+
+  *, *::before, *::after { box-sizing: border-box; }
+}
+
+// ==========================================================
+//  ICONOS
+// ==========================================================
+.icon-sprite { display: none; }
+
+.icon {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  display: block;
+
+  &.icon-xs { width: 13px; height: 13px; stroke-width: 2.3; }
+  &.icon-sm { width: 16px; height: 16px; }
+}
+
+// ==========================================================
+//  ESTRUCTURA DEL MODAL
+// ==========================================================
+.request-modal {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: $radius-md;
+  background: $bg-card;
+  animation: modalIn 0.4s $ease-out both;
+}
+
+// ---------- Rail de contexto ----------
+.context-rail {
+  position: relative;
+  flex: 0 0 40%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem 1.15rem;
+  background: $udenar-verde;
+  color: $on-verde;
+  overflow: hidden;
+
+  // Franja dorada de continuidad
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 3px;
+    background: $udenar-dorado;
+  }
+}
+
+// Trama artesanal muy discreta, dentro del rail
+.context-weave {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.12'%3E%3Cpath d='M28 4 L52 28 L28 52 L4 28 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+.context-top {
+  position: relative;
+  animation: fadeUp 0.4s $ease-out 0.06s both;
+}
+
+.context-eyebrow {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: $udenar-dorado;
+}
+
+.context-rule {
+  display: block;
+  width: 40px;
+  height: 2px;
+  margin: 0.55rem 0 0.7rem;
+  background: $udenar-dorado;
+  transform-origin: left;
+  animation: growLine 0.5s $ease-out 0.2s both;
+}
+
+.context-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.context-text {
+  margin: 0.4rem 0 0;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: $on-verde-soft;
+  text-wrap: pretty;
+}
+
+// ---------- Detalles del proceso ----------
+.context-list {
+  position: relative;
+  list-style: none;
+  margin: auto 0 0;
+  padding: 0.85rem 0 0;
+  border-top: 1px solid $on-verde-border;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    font-size: 0.72rem;
+    color: $on-verde-soft;
+    animation: fadeUp 0.4s $ease-out both;
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &:nth-child(1) { animation-delay: 0.20s; }
+    &:nth-child(2) { animation-delay: 0.26s; }
+    &:nth-child(3) { animation-delay: 0.32s; }
+
+    .icon { color: $udenar-dorado; }
+  }
+}
+
+// ==========================================================
+//  PANEL DE FORMULARIO
+// ==========================================================
+.form-panel {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: $bg-card;
 }
 
 .request-header {
-
-  margin-bottom: 24px;
-
-}
-
-.request-header h2 {
-
-  margin: 0 0 8px 0;
-
-}
-
-.request-header p {
-
-  color: #64748b;
-
-  margin: 0;
-
-}
-
-.form-group {
-
   display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  padding: 1.15rem 1.25rem 0.9rem;
+  border-bottom: 1px solid $border-color;
+  animation: fadeUp 0.4s $ease-out 0.08s both;
+}
 
+.header-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: $radius-sm;
+  background: $udenar-verde-soft;
+  color: $udenar-verde;
+}
+
+.header-copy {
+  display: flex;
   flex-direction: column;
+  min-width: 0;
 
-  margin-bottom: 20px;
+  strong {
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $text-main;
+  }
 
+  small {
+    margin-top: 0.1rem;
+    font-size: 0.72rem;
+    color: $text-muted;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
-.form-group label {
-
-  font-weight: 600;
-
-  margin-bottom: 8px;
-
-}
-
-.form-group select,
-.form-group textarea {
-
-  padding: 12px;
-
-  border: 1px solid #d1d5db;
-
-  border-radius: 10px;
-
-  font-size: 14px;
-
-}
-
-.form-group select:focus,
-.form-group textarea:focus {
-
-  outline: none;
-
-  border-color: #2563eb;
-
-}
-
-.actions {
-
+// ---------- Formulario: cuerpo scrolleable + acciones fijas ----------
+.request-form {
   display: flex;
-
-  justify-content: flex-end;
-
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
-.btn-primary {
+.form-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem 1.25rem 1.1rem;
+  scrollbar-width: thin;
+  scrollbar-color: $border-strong transparent;
 
-  background: #2563eb;
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-thumb {
+    border-radius: $radius-full;
+    background: $border-strong;
+  }
+}
 
-  color: white;
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  animation: fadeUp 0.4s $ease-out both;
 
-  border: none;
+  &:nth-of-type(1) { animation-delay: 0.14s; }
+  &:nth-of-type(2) { animation-delay: 0.20s; }
+}
 
-  border-radius: 10px;
+.field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 
-  padding: 12px 20px;
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: $text-main;
 
-  cursor: pointer;
+    .icon { color: $udenar-verde; }
+  }
+}
 
+.field-tag {
+  flex-shrink: 0;
+  font-size: 0.62rem;
   font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $text-faint;
 
+  &--req {
+    padding: 0.12rem 0.4rem;
+    border-radius: $radius-full;
+    background: rgba(255, 204, 0, 0.18);
+    color: $udenar-dorado-dark;
+  }
+
+  &--count {
+    letter-spacing: 0.02em;
+    text-transform: none;
+    font-variant-numeric: tabular-nums;
+  }
 }
 
-.btn-primary:hover {
+// ---------- Select ----------
+.select-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
 
-  background: #1d4ed8;
+  select {
+    width: 100%;
+    padding: 0.55rem 2.1rem 0.55rem 0.7rem;
+    border: 1px solid $border-color;
+    border-radius: $radius-sm;
+    background: $bg-soft;
+    font-family: inherit;
+    font-size: 0.83rem;
+    font-weight: 500;
+    color: $text-main;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    text-overflow: ellipsis;
+    transition: border-color 0.2s $ease-out, background 0.2s $ease-out,
+                box-shadow 0.2s $ease-out;
 
+    &:hover { border-color: $border-strong; }
+
+    &:focus {
+      background: $bg-card;
+      border-color: $udenar-verde;
+      box-shadow: 0 0 0 3px rgba(0, 102, 51, 0.12);
+    }
+  }
+
+  .select-arrow {
+    position: absolute;
+    right: 0.6rem;
+    color: $text-faint;
+    pointer-events: none;
+    transition: color 0.2s $ease-out, transform 0.2s $ease-out;
+  }
+
+  &:focus-within .select-arrow {
+    color: $udenar-verde;
+    transform: translateY(1px);
+  }
+}
+
+// ---------- Textarea ----------
+textarea {
+  width: 100%;
+  min-height: 74px;
+  max-height: 160px;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-sm;
+  background: $bg-soft;
+  font-family: inherit;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: $text-main;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s $ease-out, background 0.2s $ease-out,
+              box-shadow 0.2s $ease-out;
+
+  &::placeholder { color: $text-faint; }
+
+  &:hover { border-color: $border-strong; }
+
+  &:focus {
+    background: $bg-card;
+    border-color: $udenar-verde;
+    box-shadow: 0 0 0 3px rgba(0, 102, 51, 0.12);
+  }
+}
+
+// ==========================================================
+//  ACCIONES (fijas al pie del modal)
+// ==========================================================
+.form-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.8rem 1.25rem;
+  border-top: 1px solid $border-color;
+  background: $bg-card;
+  animation: fadeUp 0.4s $ease-out 0.28s both;
+}
+
+.btn-submit,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: $radius-sm;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s $ease-out, color 0.2s $ease-out,
+              border-color 0.2s $ease-out, transform 0.2s $ease-out,
+              box-shadow 0.2s $ease-out;
+
+  &:focus-visible {
+    outline: 2px solid $udenar-dorado-dark;
+    outline-offset: 2px;
+  }
+}
+
+.btn-submit {
+  border: none;
+  background: $udenar-verde;
+  color: $on-verde;
+
+  &:hover {
+    background: $udenar-verde-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px -8px rgba(0, 102, 51, 0.4);
+
+    .btn-send { transform: translate(2px, -2px); }
+  }
+
+  &:active { transform: translateY(0); }
+
+  &:disabled {
+    background: $border-strong;
+    color: $text-faint;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.btn-send { transition: transform 0.2s $ease-out; }
+
+.btn-ghost {
+  border: 1px solid $border-color;
+  background: transparent;
+  color: $text-muted;
+
+  &:hover {
+    border-color: $border-strong;
+    background: $bg-soft;
+    color: $text-main;
+  }
+
+  &:active { transform: translateY(1px); }
+}
+
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.995); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes growLine {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+// ==========================================================
+//  ADAPTACIÓN AL ANCHO DEL MODAL (container queries)
+// ==========================================================
+
+// Modales anchos: el rail se limita para no comer el formulario
+@container (min-width: 720px) {
+  .context-rail { flex: 0 0 270px; }
+  .context-title { font-size: 1.15rem; }
+}
+
+// Modales estrechos: el rail pasa a ser una cabecera compacta
+@container (max-width: 600px) {
+  .request-modal { flex-direction: column; }
+
+  .context-rail {
+    flex: 0 0 auto;
+    gap: 0.8rem;
+    padding: 1.1rem 1.15rem;
+
+    &::after {
+      inset: auto 0 0 0;
+      width: auto;
+      height: 3px;
+    }
+  }
+
+  .context-list {
+    margin: 0;
+    padding: 0.7rem 0 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.45rem 1rem;
+  }
+}
+
+@container (max-width: 420px) {
+  .context-text { display: none; }
+  .context-list { display: none; }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .btn-submit,
+  .btn-ghost { width: 100%; }
+}
+
+// Respaldo por viewport si el navegador no aplica container queries
+@media (max-width: 600px) {
+  .context-rail { flex: 0 0 auto; }
+}
+
+// ==========================================================
+//  ACCESIBILIDAD
+// ==========================================================
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

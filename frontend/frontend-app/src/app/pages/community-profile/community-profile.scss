@@ -1,366 +1,888 @@
-// VARIABLES Y PALETA DE COLORES
-$bg-card: #ffffff;
-$bg-main: #f8fafc;
-$border-color: #e2e8f0;
+// ==========================================================
+//  PALETA INSTITUCIONAL UNIVERSIDAD DE NARIÑO (UDENAR)
+//  Misma base que student-home / tools / tutor-home
+// ==========================================================
+$udenar-verde:        #006633; // Verde Sinople Oficial
+$udenar-verde-hover:  #004d26;
+$udenar-verde-soft:   #e6f0eb;
+$udenar-verde-light:  #cce1d6;
 
-$accent-green: #059669;    /* Verde títulos */
-$primary-green: #10b981;   /* Verde botones */
-$primary-hover: #059669;
-$text-main: #0f172a;       /* Texto oscuro */
-$text-muted: #64748b;      /* Texto secundario */
+$udenar-dorado:       #FFCC00; // Amarillo Gualda Oficial
+$udenar-dorado-dark:  #b38f00;
+$udenar-dorado-soft:  #fff9e6;
 
-.profile-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-width: 950px;
-  margin: 0 auto;
-  padding: 1.5rem;
+$udenar-azul:         #1E3A8A;
+$udenar-azul-soft:    #eff6ff;
+$udenar-rojo:         #D32F2F;
+$udenar-rojo-soft:    #fdecec;
+
+// Neutros y superficies
+$bg-main:             #F4F7F5;
+$bg-card:             #FFFFFF;
+$bg-subtle:           #EBF0EC;
+$bg-soft:             #F7F9F8;
+
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
+
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
+
+// Tipografía
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// Sombras y radios
+$shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.04);
+$shadow-card:  0 4px 10px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+$shadow-hover: 0 12px 24px -4px rgba(0, 102, 51, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+$shadow-modal: 0 24px 48px -12px rgba(26, 37, 33, 0.22);
+
+$radius-sm:   8px;
+$radius-md:   12px;
+$radius-lg:   16px;
+$radius-full: 9999px;
+
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ==========================================================
+//  RESET DEL HOST
+// ==========================================================
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: $font-sans;
   color: $text-main;
   background-color: $bg-main;
-  font-family: system-ui, -apple-system, sans-serif;
+
+  *, *::before, *::after { box-sizing: border-box; }
 }
 
-// HEADER DEL PERFIL
-.profile-header {
-  background: $bg-card;
-  border: 1px solid $border-color;
-  border-radius: 16px;
-  padding: 2rem;
+// ==========================================================
+//  SISTEMA DE ICONOS (SVG SPRITE)
+// ==========================================================
+.icon-sprite { display: none; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+
+  &.icon-xs { width: 13px; height: 13px; }
+  &.icon-sm { width: 15px; height: 15px; }
+  &.icon-md { width: 20px; height: 20px; }
+  &.icon-lg { width: 26px; height: 26px; stroke-width: 1.5; }
+}
+
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes dialogIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes presencePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 102, 51, 0.35); }
+  70%      { box-shadow: 0 0 0 6px rgba(0, 102, 51, 0); }
+}
+
+// ==========================================================
+//  1. CONTENEDOR
+// ==========================================================
+.art-dashboard.profile-dashboard {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 1.75rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow-x: hidden;
 
-  @media (min-width: 640px) {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .avatar-container {
-    flex-shrink: 0;
-
-    .profile-photo {
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid #f1f5f9;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-    }
-  }
-
-  .header-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    flex: 1;
-
-    .title-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-
-      h1 {
-        margin: 0;
-        font-size: 1.75rem;
-        color: $text-main;
-        font-weight: 700;
-      }
-
-      .role-badge {
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        background: #e0e7ff;
-        color: #4338ca;
-      }
-    }
-
-    .program-info {
-      margin: 0;
-      color: $text-muted;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-weight: 500;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 0.5rem;
-      flex-wrap: wrap;
-    }
+  @media (max-width: 640px) {
+    padding: 1rem;
+    gap: 1.15rem;
   }
 }
 
-// DESPLEGABLE INLINE PARA INVITACIÓN
-.inline-invite-box {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  background: #f8fafc;
-  padding: 0.75rem;
-  border-radius: 10px;
+// ==========================================================
+//  2. HERO / CABECERA DEL PERFIL
+// ==========================================================
+.art-hero {
+  background-color: $bg-card;
   border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.75rem 1.9rem;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.35s $ease-out both;
+
+  // Línea dorada institucional
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 3px;
+    background-color: $udenar-dorado;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1.4rem 1.25rem;
+  }
+}
+
+.hero-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.15rem;
+  min-width: 0;
+  flex: 1;
+
+  @media (max-width: 520px) {
+    gap: 0.9rem;
+  }
+}
+
+.avatar-frame {
+  position: relative;
+  flex-shrink: 0;
+
+  .avatar-img {
+    width: 84px;
+    height: 84px;
+    border-radius: $radius-md;
+    object-fit: cover;
+    border: 1px solid $border-color;
+    background-color: $bg-subtle;
+    display: block;
+
+    @media (max-width: 520px) {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  .presence-dot {
+    position: absolute;
+    right: -3px;
+    bottom: -3px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background-color: $udenar-verde;
+    border: 2.5px solid $bg-card;
+    animation: presencePulse 2.4s ease-out infinite;
+  }
+}
+
+.identity-text {
+  min-width: 0;
+}
+
+.hero-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $udenar-verde;
+  margin-bottom: 0.5rem;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: $text-main;
+  text-wrap: balance;
+
+  @media (max-width: 640px) { font-size: 1.35rem; }
+}
+
+// Distintivo de rol
+.role-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.6rem;
+  border-radius: $radius-full;
+  border: 1px solid $border-strong;
+  background-color: $bg-subtle;
+  color: $text-muted;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &.is-estudiante {
+    background-color: $udenar-verde-soft;
+    border-color: $udenar-verde-light;
+    color: $udenar-verde-hover;
+  }
+
+  &.is-tutor {
+    background-color: $udenar-dorado-soft;
+    border-color: rgba($udenar-dorado, 0.45);
+    color: $udenar-dorado-dark;
+  }
+
+  &.is-coordinador {
+    background-color: $udenar-azul-soft;
+    border-color: rgba($udenar-azul, 0.22);
+    color: $udenar-azul;
+  }
+}
+
+// Chips de metadatos
+.meta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.7rem;
+  border-radius: $radius-full;
+  border: 1px solid $border-color;
+  background-color: $bg-soft;
+  color: $text-muted;
+  font-size: 0.78rem;
+  font-weight: 500;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  .icon { color: $text-faint; }
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+// ==========================================================
+//  3. BARRA DE INVITACIÓN
+// ==========================================================
+.invite-bar {
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid $border-color;
+  animation: slideUp 0.28s $ease-out both;
+}
+
+.invite-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $text-faint;
+  margin-bottom: 0.5rem;
+}
+
+.invite-controls {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 
   select {
     flex: 1;
-    background: #ffffff;
-    border: 1px solid $border-color;
-    border-radius: 6px;
-    padding: 0.4rem 0.6rem;
-    font-size: 0.85rem;
+    min-width: 200px;
+    appearance: none;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid $border-strong;
+    border-radius: $radius-sm;
+    background-color: $bg-card;
     color: $text-main;
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
 
-    &:focus {
+    &:hover { border-color: $udenar-verde-light; }
+
+    &:focus-visible {
       outline: none;
-      border-color: $primary-green;
+      border-color: $udenar-verde;
+      box-shadow: 0 0 0 3px rgba($udenar-verde, 0.14);
     }
   }
 }
 
-// SECCIONES GENERALES
-.profile-section {
-  background: $bg-card;
+// ==========================================================
+//  4. SECCIONES DE CONTENIDO
+// ==========================================================
+.content-section {
+  background-color: $bg-card;
   border: 1px solid $border-color;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: $radius-lg;
+  padding: 1.5rem 1.6rem;
+  box-shadow: $shadow-card;
+  animation: slideUp 0.4s $ease-out both;
 
-  h2 {
-    font-size: 1.2rem;
-    color: $accent-green;
-    margin: 0 0 1rem 0;
-    font-weight: 600;
-  }
+  &.delay-1 { animation-delay: 0.06s; }
+  &.delay-2 { animation-delay: 0.12s; }
 
-  .bio-text {
-    margin: 0;
-    line-height: 1.6;
-    color: #334155;
-    font-size: 0.95rem;
-  }
-
-  .contact-card {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #f8fafc;
-    border: 1px solid $border-color;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    color: $text-muted;
-
-    a {
-      color: $accent-green;
-      text-decoration: none;
-      font-weight: 600;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
+  @media (max-width: 640px) {
+    padding: 1.2rem 1.15rem;
   }
 }
 
-// GRILLA DE PROYECTOS
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid $border-color;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: $text-main;
+
+  .icon { color: $udenar-verde; }
+}
+
+.count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 0.5rem;
+  border-radius: $radius-full;
+  background-color: $udenar-verde-soft;
+  border: 1px solid $udenar-verde-light;
+  color: $udenar-verde-hover;
+  font-size: 0.74rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.bio-text {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: $text-muted;
+  text-wrap: pretty;
+  max-width: 68ch;
+}
+
+// ==========================================================
+//  5. CONTACTO
+// ==========================================================
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  background-color: $bg-soft;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s $ease-out;
+
+  > .icon { color: $udenar-verde; }
+
+  .contact-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .contact-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $text-faint;
+  }
+
+  .contact-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $text-main;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-arrow {
+    margin-left: auto;
+    color: $text-faint;
+    transition: transform 0.22s $ease-out, color 0.2s ease;
+  }
+
+  &:hover {
+    border-color: $udenar-verde-light;
+    background-color: $udenar-verde-soft;
+    transform: translateY(-1px);
+
+    .contact-arrow {
+      transform: translateX(4px);
+      color: $udenar-verde;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-verde;
+    outline-offset: 2px;
+  }
+}
+
+// ==========================================================
+//  6. GRILLA DE PROYECTOS
+// ==========================================================
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0.9rem;
+}
+
+.stagger {
+  animation: slideUp 0.42s $ease-out both;
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) { animation-delay: #{0.035 * $i}s; }
+  }
 }
 
 .project-card {
-  background: #ffffff;
-  border: 1px solid $border-color;
-  border-radius: 12px;
-  padding: 1.25rem;
+  position: relative;
   display: flex;
   flex-direction: column;
+  gap: 0.7rem;
+  padding: 1.15rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+  background-color: $bg-card;
+  overflow: hidden;
+  transition: border-color 0.22s ease, box-shadow 0.25s $ease-out, transform 0.25s $ease-out;
+
+  // Acento dorado revelado al hover
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: $udenar-dorado;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.32s $ease-out;
+  }
+
+  &:hover {
+    border-color: $border-strong;
+    box-shadow: $shadow-hover;
+    transform: translateY(-3px);
+
+    &::after { transform: scaleX(1); }
+  }
+}
+
+.project-top {
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 0.75rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  gap: 0.6rem;
+}
 
-  .project-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.5rem;
+.project-title {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: $text-main;
+  text-wrap: balance;
+}
 
-    h3 {
-      margin: 0;
-      font-size: 1.05rem;
-      color: $text-main;
-      font-weight: 600;
+.project-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.8rem;
+  color: $text-muted;
+
+  .icon { color: $text-faint; }
+}
+
+// ==========================================================
+//  7. ESTADOS
+// ==========================================================
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.58rem;
+  border-radius: $radius-full;
+  border: 1px solid $border-strong;
+  background-color: $bg-subtle;
+  color: $text-muted;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &.aprobado, &.activo, &.finalizado {
+    background-color: $udenar-verde-soft;
+    border-color: $udenar-verde-light;
+    color: $udenar-verde-hover;
+  }
+
+  &.pendiente, &.en, &.progreso, &.revision {
+    background-color: $udenar-dorado-soft;
+    border-color: rgba($udenar-dorado, 0.45);
+    color: $udenar-dorado-dark;
+  }
+
+  &.suspendido, &.rechazado {
+    background-color: $udenar-rojo-soft;
+    border-color: rgba($udenar-rojo, 0.24);
+    color: $udenar-rojo;
+  }
+}
+
+// ==========================================================
+//  8. BOTONES
+// ==========================================================
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid $border-strong;
+  border-radius: $radius-sm;
+  background-color: $bg-card;
+  color: $text-main;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s $ease-out;
+
+  .icon { color: $text-muted; transition: color 0.2s ease, transform 0.22s $ease-out; }
+
+  &:hover:not(:disabled) {
+    background-color: $bg-subtle;
+    border-color: $udenar-verde-light;
+    color: $udenar-verde-hover;
+    transform: translateY(-1px);
+
+    .icon { color: $udenar-verde; }
+    .btn-arrow { transform: translateX(3px); }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-verde;
+    outline-offset: 2px;
+  }
+
+  &.is-open {
+    background-color: $udenar-verde-soft;
+    border-color: $udenar-verde-light;
+    color: $udenar-verde-hover;
+
+    .icon { color: $udenar-verde; }
+  }
+
+  &.is-primary {
+    background-color: $udenar-verde;
+    border-color: $udenar-verde;
+    color: #fff;
+
+    .icon { color: rgba(255, 255, 255, 0.85); }
+
+    &:hover:not(:disabled) {
+      background-color: $udenar-verde-hover;
+      border-color: $udenar-verde-hover;
+      color: #fff;
+
+      .icon { color: #fff; }
     }
   }
 
-  .project-type {
-    margin: 0;
-    font-size: 0.85rem;
-    color: $text-muted;
-  }
-
-  button {
-    margin-top: 0.5rem;
-  }
-}
-
-// BADGES / ESTADOS
-.status-tag {
-  padding: 0.2rem 0.6rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: capitalize;
-  background: #f1f5f9;
-  color: $text-main;
-
-  &.aprobado, &.activo {
-    background: #d1fae5;
-    color: #047857;
-  }
-
-  &.pendiente {
-    background: #fef3c7;
-    color: #b45309;
-  }
-}
-
-// BOTONES
-.btn-primary-sm {
-  background: $primary-green;
-  color: #ffffff;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background: $primary-hover;
+  &.is-block {
+    width: 100%;
+    margin-top: auto;
   }
 
   &:disabled {
-    background: #cbd5e1;
+    opacity: 0.55;
     cursor: not-allowed;
+    transform: none;
   }
 }
 
-.btn-secondary-sm {
-  background: #ffffff;
-  color: $text-main;
-  border: 1px solid $border-color;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-  }
-}
-
-// ESTADO VACÍO
+// ==========================================================
+//  9. ESTADO VACÍO
+// ==========================================================
 .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 2.5rem 1.5rem;
+  border: 1px dashed $border-strong;
+  border-radius: $radius-md;
+  background-color: $bg-soft;
   text-align: center;
-  color: $text-muted;
-  padding: 2rem;
-  background: #f8fafc;
-  border: 1px dashed $border-color;
-  border-radius: 12px;
-  margin: 0;
-  font-size: 0.9rem;
+
+  .icon { color: $text-faint; }
+
+  p {
+    margin: 0;
+    max-width: 42ch;
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: $text-muted;
+  }
 }
 
-// MODAL
+// ==========================================================
+//  10. MODAL
+// ==========================================================
 .modal-backdrop {
   position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(4px);
-  display: flex; justify-content: center; align-items: center;
+  inset: 0;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background-color: rgba(26, 37, 33, 0.5);
+  backdrop-filter: blur(3px);
+  animation: backdropIn 0.2s ease both;
+}
 
-  .modal {
-    background: #ffffff;
-    border: 1px solid $border-color;
-    border-radius: 16px;
-    padding: 1.5rem;
-    width: 90%;
-    max-width: 440px;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+.modal-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 460px;
+  max-height: 88vh;
+  overflow: hidden;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-modal;
+  animation: dialogIn 0.26s $ease-out both;
+}
 
-    h3 {
-      margin: 0;
-      color: $text-main;
-    }
+.modal-header {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.4rem;
+  border-bottom: 1px solid $border-color;
 
-    .modal-subtitle {
-      margin: -0.5rem 0 0.5rem 0;
-      font-size: 0.85rem;
-      color: $text-muted;
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background-color: $udenar-dorado;
+  }
+}
 
-    .modal-project-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      max-height: 250px;
-      overflow-y: auto;
+.modal-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
 
-      .modal-item-btn {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem 1rem;
-        background: #f8fafc;
-        border: 1px solid $border-color;
-        border-radius: 8px;
-        color: $text-main;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
+  > .icon { color: $udenar-verde; margin-top: 0.15rem; }
 
-        &:hover {
-          background: #d1fae5;
-          border-color: #a7f3d0;
-          color: #047857;
-        }
-      }
-    }
+  h3 {
+    margin: 0 0 0.2rem;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $text-main;
+  }
 
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: $text-muted;
+  }
+}
 
-      .btn-cancel {
-        background: #f1f5f9;
-        color: $text-muted;
-        border: 1px solid $border-color;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
+.btn-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+  background-color: transparent;
+  color: $text-faint;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 
-        &:hover {
-          background: #e2e8f0;
-        }
-      }
-    }
+  &:hover {
+    background-color: $udenar-rojo-soft;
+    border-color: rgba($udenar-rojo, 0.2);
+    color: $udenar-rojo;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-verde;
+    outline-offset: 2px;
+  }
+}
+
+.modal-body {
+  padding: 1.25rem 1.4rem;
+  overflow-y: auto;
+}
+
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 0.95rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-sm;
+  background-color: $bg-soft;
+  color: $text-main;
+  font-family: inherit;
+  font-size: 0.87rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.2s $ease-out;
+
+  .option-text { min-width: 0; overflow-wrap: anywhere; }
+
+  .option-arrow {
+    color: $text-faint;
+    transition: transform 0.22s $ease-out, color 0.2s ease;
+  }
+
+  &:hover {
+    background-color: $udenar-verde-soft;
+    border-color: $udenar-verde-light;
+    transform: translateX(3px);
+
+    .option-arrow { transform: translateX(3px); color: $udenar-verde; }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-verde;
+    outline-offset: 2px;
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 1rem 1.4rem;
+  border-top: 1px solid $border-color;
+  background-color: $bg-soft;
+}
+
+// ==========================================================
+//  11. RESPONSIVE
+// ==========================================================
+@media (max-width: 720px) {
+  .hero-main { flex-direction: column; align-items: stretch; gap: 1.15rem; }
+  .hero-actions .btn-action { flex: 1; }
+}
+
+@media (max-width: 520px) {
+  .identity { flex-direction: column; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .invite-controls select { min-width: 0; flex-basis: 100%; }
+  .invite-controls .btn-action { width: 100%; }
+}
+
+// ==========================================================
+//  12. ACCESIBILIDAD — MOVIMIENTO REDUCIDO
+// ==========================================================
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

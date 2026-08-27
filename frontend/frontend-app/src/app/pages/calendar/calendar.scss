@@ -1,372 +1,708 @@
-// VARIABLES Y PALETA DE COLORES (Consistencia con el Tema Claro)
-$bg-card: #ffffff;
-$bg-main: #f8fafc;
-$border-color: #e2e8f0;
+/* =========================================================
+   CALENDARIO — Sistema visual Universidad de Nariño
+   Verde sinople #006633 · Gualda #FFCC00 · Inter
+   ========================================================= */
 
-$accent-green: #059669;    /* Verde para títulos */
-$primary-green: #10b981;   /* Verde principal */
-$primary-hover: #059669;
-$text-main: #0f172a;       /* Texto oscuro */
-$text-muted: #64748b;      /* Texto secundario */
+// ---- Paleta institucional ----
+$sinople:        #006633;
+$sinople-dark:   #00522a;
+$sinople-soft:   #e6f0ea;
+$sinople-tint:   #f3f8f5;
+$gualda:         #ffcc00;
 
-// CONTENEDOR PRINCIPAL
+$surface:        #ffffff;
+$surface-alt:    #f7f9f8;
+$border:         #e3e8e5;
+$border-strong:  #cfd8d3;
+
+$text:           #14211b;
+$text-muted:     #64756c;
+$text-faint:     #94a39a;
+
+$danger:         #b42318;
+$danger-soft:    #fdf1f0;
+$danger-border:  #f4c9c5;
+
+$radius-sm: 6px;
+$radius:    8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+
+// ---- Sprite oculto ----
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+// ---- Icono base ----
+.icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+:host {
+  display: block;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: $text;
+}
+
+// ---- Animaciones ----
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes cellIn {
+  from { opacity: 0; transform: scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes todayPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba($sinople, .28); }
+  50%      { box-shadow: 0 0 0 5px rgba($sinople, 0); }
+}
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
 .calendar-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+  animation: fadeUp .4s ease both;
 
   .view-toggle {
     display: flex;
-    gap: 0.35rem;
-    background: #f1f5f9;
-    padding: 0.35rem;
-    border-radius: 12px;
-    border: 1px solid $border-color;
+    gap: .25rem;
+    background: $surface-alt;
+    padding: .25rem;
+    border-radius: $radius-lg;
+    border: 1px solid $border;
 
     button {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
       background: transparent;
       border: none;
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
+      padding: .5rem .85rem;
+      border-radius: $radius;
+      font: inherit;
+      font-size: .82rem;
       font-weight: 600;
       color: $text-muted;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: color .18s ease, background .18s ease, box-shadow .18s ease;
 
-      &:hover {
-        color: $text-main;
-        background: rgba(255, 255, 255, 0.5);
-      }
+      &:hover { color: $text; }
 
       &.active {
-        background: $bg-card;
-        color: $accent-green;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        background: $surface;
+        color: $sinople;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $sinople;
+        outline-offset: 1px;
       }
     }
   }
 }
 
+/* =========================================================
+   CONTENEDOR
+   ========================================================= */
 .calendar-container {
-  background: $bg-card;
-  border: 1px solid $border-color;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  font-family: system-ui, -apple-system, sans-serif;
+  position: relative;
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $radius-xl;
+  padding: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(20, 33, 27, .04), 0 12px 28px -22px rgba(20, 33, 27, .35);
+  animation: fadeUp .45s ease both .05s;
+
+  // Franja institucional superior
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, $sinople 0 55%, $gualda 55% 100%);
+  }
 }
 
-// NAVEGACIÓN Y CABECERA DEL MES
+/* =========================================================
+   CABECERA DEL MES
+   ========================================================= */
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: 1.1rem;
 
   .month-navigation {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: .6rem;
+    min-width: 0;
 
     h2 {
       margin: 0;
-      font-size: 1.3rem;
-      color: $accent-green;
-      text-transform: capitalize;
+      min-width: 0;
+      font-size: 1.15rem;
+      line-height: 1.2;
       font-weight: 700;
+      letter-spacing: -.01em;
+      color: $sinople;
+      text-transform: capitalize;
+      white-space: nowrap;
     }
 
     .nav-button {
-      background: #f8fafc;
-      border: 1px solid $border-color;
-      border-radius: 8px;
-      padding: 0.4rem 0.75rem;
-      color: $text-main;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: $surface-alt;
+      border: 1px solid $border;
+      border-radius: $radius;
+      color: $text;
       cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s;
+      transition: background .18s ease, border-color .18s ease, color .18s ease;
 
       &:hover {
-        background: #e2e8f0;
+        background: $sinople;
+        border-color: $sinople;
+        color: $surface;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $sinople;
+        outline-offset: 2px;
       }
     }
   }
 
   .btn-today {
-    background: #f1f5f9;
-    border: 1px solid $border-color;
-    border-radius: 8px;
-    padding: 0.45rem 0.9rem;
-    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: $surface;
+    border: 1px solid $border-strong;
+    border-radius: $radius;
+    padding: .45rem .8rem;
+    font: inherit;
+    font-size: .8rem;
     font-weight: 600;
-    color: $text-main;
+    color: $text;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background .18s ease, color .18s ease, border-color .18s ease;
 
     &:hover {
-      background: $primary-green;
-      color: #ffffff;
-      border-color: $primary-green;
+      background: $sinople;
+      color: $surface;
+      border-color: $sinople;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $sinople;
+      outline-offset: 2px;
     }
   }
 }
 
-// DÍAS DE LA SEMANA
+/* =========================================================
+   DÍAS DE LA SEMANA
+   ========================================================= */
 .weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
+  font-size: .68rem;
   font-weight: 700;
-  font-size: 0.8rem;
-  color: $text-muted;
+  color: $text-faint;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid $border-color;
-  margin-bottom: 0.5rem;
+  letter-spacing: .08em;
+  padding-bottom: .6rem;
+  border-bottom: 1px solid $border;
+  margin-bottom: .55rem;
 }
 
-// GRILLA DEL CALENDARIO
+/* =========================================================
+   GRILLA
+   ========================================================= */
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: .4rem;
 
   .calendar-cell {
-    background: #ffffff;
-    border: 1px solid $border-color;
-    border-radius: 10px;
-    min-height: 105px;
-    padding: 0.5rem;
+    position: relative;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    min-height: 96px;
+    padding: .4rem;
+    background: $surface;
+    border: 1px solid $border;
+    border-radius: $radius-lg;
     cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    animation: cellIn .3s ease both;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 
     &:hover {
-      border-color: $primary-green;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      border-color: $sinople;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px -10px rgba($sinople, .5);
     }
 
     &.other-month {
-      background: #f8fafc;
-      opacity: 0.5;
+      background: $surface-alt;
+
+      .day-number { color: $text-faint; }
+      .calendar-event { opacity: .55; }
     }
 
     &.is-today {
-      background: #ecfdf5;
-      border-color: #a7f3d0;
+      background: $sinople-tint;
+      border-color: rgba($sinople, .35);
 
       .day-number {
-        background: $primary-green;
-        color: #ffffff;
-        border-radius: 50%;
         width: 22px;
         height: 22px;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
+        border-radius: 50%;
+        background: $sinople;
+        color: $surface;
+        animation: todayPulse 2.4s ease-in-out infinite;
       }
     }
 
     .cell-header {
       display: flex;
-      justify-content: flex-end;
-      margin-bottom: 0.35rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: .25rem;
+      margin-bottom: .3rem;
 
       .day-number {
-        font-size: 0.85rem;
+        order: 2;
+        margin-left: auto;
+        font-size: .8rem;
         font-weight: 600;
-        color: $text-main;
+        color: $text;
+      }
+
+      .cell-count {
+        order: 1;
+        font-size: .6rem;
+        font-weight: 700;
+        line-height: 1;
+        padding: .2rem .35rem;
+        border-radius: 999px;
+        background: $gualda;
+        color: $sinople-dark;
       }
     }
 
     .events-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
+      gap: .2rem;
+      min-width: 0;
     }
 
     .calendar-event {
-      background: #f1f5f9;
-      border-left: 3px solid $primary-green;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
+      --event-color: #{$sinople};
+
       display: flex;
-      gap: 0.3rem;
       align-items: center;
-      white-space: nowrap;
+      gap: .3rem;
+      width: 100%;
+      min-width: 0;
+      padding: .2rem .35rem;
+      background: $surface-alt;
+      border: none;
+      border-left: 3px solid var(--event-color);
+      border-radius: $radius-sm;
+      font: inherit;
+      font-size: .72rem;
+      text-align: left;
+      cursor: pointer;
       overflow: hidden;
+      transition: background .16s ease, transform .16s ease;
 
       &:hover {
-        background: #e2e8f0;
+        background: $sinople-soft;
+        transform: translateX(2px);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $sinople;
+        outline-offset: 1px;
       }
 
       .event-time {
+        flex: none;
+        font-size: .66rem;
         font-weight: 700;
         color: $text-muted;
-        font-size: 0.7rem;
+        font-variant-numeric: tabular-nums;
       }
 
       .event-title {
-        color: $text-main;
-        text-overflow: ellipsis;
-        overflow: hidden;
+        min-width: 0;
         font-weight: 500;
+        color: $text;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
 
     .more-events {
+      align-self: flex-start;
       background: transparent;
       border: none;
-      color: $accent-green;
-      font-size: 0.72rem;
+      padding: .1rem 0 0;
+      font: inherit;
+      font-size: .68rem;
       font-weight: 700;
-      text-align: left;
-      padding: 0;
-      margin-top: 0.1rem;
+      color: $sinople;
       cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
-      }
+      &:hover { text-decoration: underline; }
     }
   }
 }
 
-// VISTA 2: LISTA DE EVENTOS
+/* =========================================================
+   VISTA LISTA
+   ========================================================= */
 .list-header {
-  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding-bottom: .85rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid $border;
 
-  h2 {
-    margin: 0;
-    font-size: 1.3rem;
-    color: $accent-green;
+  .list-title {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    color: $sinople;
+
+    .icon { width: 18px; height: 18px; }
+
+    h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -.01em;
+    }
+  }
+
+  .list-count {
+    font-size: .74rem;
+    font-weight: 600;
+    color: $text-muted;
+    padding: .25rem .55rem;
+    border-radius: 999px;
+    background: $surface-alt;
+    border: 1px solid $border;
   }
 }
 
 .events-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: .6rem;
 
   .event-card {
-    background: #ffffff;
-    border: 1px solid $border-color;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
+    --event-color: #{$sinople};
+
     display: flex;
     align-items: center;
-    gap: 1rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    gap: .9rem;
+    padding: .85rem 1rem;
+    background: $surface;
+    border: 1px solid $border;
+    border-radius: $radius-lg;
+    animation: fadeUp .35s ease both;
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+
+    &:hover {
+      border-color: rgba($sinople, .4);
+      transform: translateX(2px);
+      box-shadow: 0 8px 20px -16px rgba(20, 33, 27, .5);
+    }
 
     .color-indicator {
-      width: 6px;
-      height: 48px;
-      border-radius: 4px;
-      flex-shrink: 0;
+      flex: none;
+      width: 4px;
+      align-self: stretch;
+      min-height: 44px;
+      border-radius: 999px;
+      background: var(--event-color);
     }
 
     .event-info {
       flex: 1;
+      min-width: 0;
 
       .event-type-badge {
-        font-size: 0.72rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        font-size: .66rem;
         font-weight: 700;
-        background: #f1f5f9;
-        color: $text-muted;
-        padding: 0.2rem 0.5rem;
-        border-radius: 4px;
+        letter-spacing: .06em;
         text-transform: uppercase;
+        color: $sinople;
+        background: $sinople-soft;
+        padding: .2rem .45rem;
+        border-radius: $radius-sm;
+
+        .icon { width: 12px; height: 12px; }
       }
 
       h3 {
-        margin: 0.25rem 0;
-        font-size: 1.05rem;
-        color: $text-main;
+        margin: .35rem 0 0;
+        font-size: .98rem;
         font-weight: 600;
+        color: $text;
+        overflow-wrap: anywhere;
       }
 
       .event-desc {
-        margin: 0.2rem 0 0.5rem 0;
-        font-size: 0.85rem;
+        margin: .2rem 0 0;
+        font-size: .82rem;
+        line-height: 1.5;
         color: $text-muted;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       .event-dates {
-        font-size: 0.8rem;
-        color: $text-muted;
-        font-weight: 500;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: .35rem;
+        margin-top: .5rem;
+
+        .date-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: .3rem;
+          font-size: .74rem;
+          font-weight: 600;
+          color: $text-muted;
+          font-variant-numeric: tabular-nums;
+
+          .icon { width: 13px; height: 13px; color: $sinople; }
+        }
+
+        .date-arrow {
+          width: 13px;
+          height: 13px;
+          color: $text-faint;
+        }
       }
     }
 
     .event-actions {
       display: flex;
-      gap: 0.5rem;
+      flex-wrap: wrap;
+      gap: .4rem;
+      flex: none;
     }
   }
 }
 
-// BOTONES GLOBALES
+/* =========================================================
+   BOTONES
+   ========================================================= */
 .btn-primary {
-  background: $primary-green;
-  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: $sinople;
+  color: $surface;
   border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
+  padding: .55rem 1rem;
+  border-radius: $radius;
+  font: inherit;
+  font-size: .85rem;
   font-weight: 600;
-  font-size: 0.9rem;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-  transition: background 0.2s;
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
 
   &:hover {
-    background: $primary-hover;
+    background: $sinople-dark;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px -10px rgba($sinople, .7);
+  }
+
+  &:active { transform: none; }
+
+  &:focus-visible {
+    outline: 2px solid $gualda;
+    outline-offset: 2px;
+  }
+}
+
+.btn-secondary-sm,
+.btn-danger-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .4rem .7rem;
+  border-radius: $radius-sm;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+
+  .icon { width: 14px; height: 14px; }
+
+  &:focus-visible {
+    outline: 2px solid $sinople;
+    outline-offset: 2px;
   }
 }
 
 .btn-secondary-sm {
-  background: #f1f5f9;
-  color: $text-main;
-  border: 1px solid $border-color;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
+  background: $surface;
+  color: $text;
+  border: 1px solid $border-strong;
 
   &:hover {
-    background: #e2e8f0;
+    background: $sinople;
+    border-color: $sinople;
+    color: $surface;
   }
 }
 
 .btn-danger-sm {
-  background: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #fca5a5;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
+  background: $danger-soft;
+  color: $danger;
+  border: 1px solid $danger-border;
 
   &:hover {
-    background: #fca5a5;
+    background: $danger;
+    border-color: $danger;
+    color: $surface;
   }
 }
 
+/* =========================================================
+   ESTADO VACÍO
+   ========================================================= */
 .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;
   text-align: center;
-  color: $text-muted;
-  padding: 3rem 1.5rem;
-  background: #f8fafc;
-  border: 1px dashed $border-color;
-  border-radius: 12px;
-  font-size: 0.95rem;
+  padding: 2.25rem 1.25rem;
+  background: $surface-alt;
+  border: 1px dashed $border-strong;
+  border-radius: $radius-lg;
+  animation: fadeUp .35s ease both;
+
+  .icon {
+    width: 28px;
+    height: 28px;
+    color: $sinople;
+    stroke-width: 1.4;
+  }
+
+  p {
+    margin: 0;
+    font-size: .88rem;
+    color: $text-muted;
+  }
+
+  .btn-primary { margin-top: .25rem; }
 }
 
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 860px) {
+  .calendar-container { padding: 1rem; }
+
+  .calendar-grid .calendar-cell {
+    min-height: 82px;
+
+    .calendar-event .event-time { display: none; }
+  }
+}
+
+@media (max-width: 640px) {
+  .calendar-toolbar {
+    .view-toggle { flex: 1; button { flex: 1; justify-content: center; } }
+    .btn-primary { flex: 1; justify-content: center; }
+  }
+
+  .calendar-grid {
+    gap: .25rem;
+
+    .calendar-cell {
+      min-height: 68px;
+      padding: .3rem;
+
+      .cell-count { display: none; }
+
+      .calendar-event {
+        padding: .15rem .25rem;
+        font-size: .65rem;
+      }
+    }
+  }
+
+  .weekdays { font-size: .6rem; letter-spacing: .04em; }
+
+  .events-list .event-card {
+    flex-wrap: wrap;
+
+    .event-actions {
+      width: 100%;
+
+      button { flex: 1; justify-content: center; }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,8 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap');
 
+// Sprite e Iconografía SVG
+.icon-sprite {
+  display: none;
+}
+
+.icon {
+  fill: none;
+  stroke: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+
+  &.icon-xs {
+    width: 14px;
+    height: 14px;
+  }
+  &.icon-sm {
+    width: 16px;
+    height: 16px;
+  }
+  &.icon-md {
+    width: 22px;
+    height: 22px;
+  }
+}
+
 .sidebar-panel {
   width: 100%;
-  max-width: 1000px; /* Ancho amplio para desplegar las notas a la derecha */
+  max-width: 1000px;
   height: 100%;
   background-color: #ffffff;
   border-left: 1px solid #e2e8f0;
@@ -43,6 +69,10 @@
           color: #4f46e5;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
           font-weight: 600;
+
+          .icon {
+            stroke: #4f46e5;
+          }
         }
 
         .badge {
@@ -73,7 +103,7 @@
      ========================================================================== */
   .tasks-layout {
     display: grid;
-    grid-template-columns: 280px 1fr; /* Izq: Progreso/Crear | Der: Tareas pegadas */
+    grid-template-columns: 280px 1fr;
     gap: 24px;
     align-items: start;
 
@@ -144,6 +174,60 @@
     }
   }
 
+  /* Acciones de Limpieza Masiva */
+  .tasks-actions-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .btn-clear-completed,
+    .btn-clear-all {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-clear-completed {
+      background-color: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+
+      &:hover:not(:disabled) {
+        background-color: #fee2e2;
+        color: #dc2626;
+        border-color: #fca5a5;
+
+        .icon {
+          stroke: #dc2626;
+        }
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .btn-clear-all {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 11.5px;
+
+      &:hover {
+        color: #dc2626;
+        text-decoration: underline;
+      }
+    }
+  }
+
   /* Lista / Rejilla de Tareas */
   .tasks-list {
     display: grid;
@@ -151,6 +235,7 @@
     gap: 12px;
 
     .task-item {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -171,6 +256,10 @@
         border-color: #cbd5e1;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
         transform: translateY(-1px);
+
+        .btn-delete-task {
+          opacity: 1;
+        }
       }
 
       &.completed {
@@ -188,14 +277,21 @@
         display: flex;
         flex-direction: column;
         gap: 2px;
+        min-width: 0; // Previene desbordamiento de texto
 
         .task-title {
           font-size: 13.5px;
           color: #1e293b;
           font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .task-time {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
           font-size: 11px;
           color: #94a3b8;
         }
@@ -208,11 +304,33 @@
         color: #ffffff;
         font-weight: 600;
         text-transform: capitalize;
+        flex-shrink: 0;
+      }
+
+      /* Botón de borrado de tarea individual */
+      .btn-delete-task {
+        background: none;
+        border: none;
+        padding: 4px;
+        cursor: pointer;
+        color: #94a3b8;
+        opacity: 0; // Oculto por defecto, se revela al hacer hover en el ítem
+        transition: all 0.15s ease;
+        border-radius: 4px;
+
+        &:hover {
+          color: #ef4444;
+          background-color: #fee2e2;
+        }
       }
     }
 
     .empty-state {
       grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
       text-align: center;
       padding: 30px 16px;
       font-size: 13.5px;
@@ -220,19 +338,22 @@
       background-color: #f8fafc;
       border: 1px dashed #e2e8f0;
       border-radius: 12px;
+
+      p {
+        margin: 0;
+      }
     }
   }
 
   /* ==========================================================================
-     📌 PESTAÑA: NOTAS ADHESIVAS (Layout 2 Columnas - Mural a la Derecha)
+     📌 PESTAÑA: NOTAS ADHESIVAS (Layout 2 Columnas)
      ========================================================================== */
   .quick-notes-widget {
     display: grid;
-    grid-template-columns: 280px 1fr; /* Izquierda: Creador | Derecha: Rejilla de Post-its */
+    grid-template-columns: 280px 1fr;
     gap: 24px;
     align-items: start;
 
-    /* Creador de notas (Fijo a la izquierda) */
     .note-creator-card {
       position: sticky;
       top: 0;
@@ -294,43 +415,39 @@
           }
         }
 
-        /* Dentro de .quick-notes-widget .note-creator-card .creator-actions */
+        .btn-add-note {
+          background-color: #1e293b;
+          color: #ffffff;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 11px;
+          font-weight: 600;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          line-height: 1;
+          transition: all 0.2s ease;
 
-.btn-add-note {
-  background-color: #1e293b;
-  color: #ffffff;
-  border: none;
-  padding: 4px 10px;        /* Reducido para que sea más compacto */
-  border-radius: 6px;       /* Bordes ligeramente suaves */
-  font-size: 11px;          /* Tipografía más pequeña y fina */
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  line-height: 1;
-  transition: all 0.2s ease;
+          .icon {
+            stroke: #ffffff;
+          }
 
-  span {
-    font-size: 12px;
-    font-weight: 700;
-  }
+          &:hover:not(:disabled) {
+            background-color: #0f172a;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+          }
 
-  &:hover:not(:disabled) {
-    background-color: #0f172a;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  }
-
-  &:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-  }
-}
+          &:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+          }
+        }
       }
     }
 
-    /* Rejilla de notas pegadas en el espacio de la Derecha */
     .sticky-notes-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -339,7 +456,7 @@
 
       .sticky-note-card {
         position: relative;
-        padding: 18px 14px 12px 14px;
+        padding: 22px 14px 12px 14px;
         border-radius: 2px 2px 12px 2px;
         min-height: 120px;
         display: flex;
@@ -356,18 +473,17 @@
           z-index: 10;
 
           .btn-delete-note {
-            opacity: 1;
+            opacity: 0.8;
           }
         }
 
         .pin-icon {
           position: absolute;
-          top: -10px;
+          top: 4px;
           left: 50%;
           transform: translateX(-50%);
-          font-size: 15px;
-          filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
-          line-height: 1;
+          color: #dc2626;
+          filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
           user-select: none;
         }
 
@@ -399,13 +515,14 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 12px;
             padding: 2px;
-            opacity: 0.4;
+            opacity: 0.3;
+            color: #ef4444;
             transition: opacity 0.15s ease, transform 0.15s ease;
 
             &:hover {
-              transform: scale(1.2);
+              opacity: 1;
+              transform: scale(1.15);
             }
           }
         }
@@ -413,6 +530,10 @@
 
       .empty-notes-state {
         grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
         text-align: center;
         padding: 36px 16px;
         font-size: 13px;
@@ -420,6 +541,10 @@
         background-color: #f8fafc;
         border: 1px dashed #e2e8f0;
         border-radius: 12px;
+
+        p {
+          margin: 0;
+        }
       }
     }
   }

@@ -17,7 +17,8 @@ class Project extends Model
         'fecha_inicio',
         'fecha_fin',
         'owner_id',
-        'tutor_id'
+        'tutor_id',
+        'es_visible' // <-- Agregado para permitir la asignación masiva
     ];
 
     public function owner(): BelongsTo
@@ -27,32 +28,29 @@ class Project extends Model
 
     public function tutor(): BelongsTo
     {
-	    return $this->belongsTo(User::class, 'tutor_id');
+        return $this->belongsTo(User::class, 'tutor_id');
     }
 
     public function tutorRequests()
     {
-        return $this->hasMany(TutorRequest::class);
+        return $this->hasMany(TutorRequest::class, 'project_id');
     }
 
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
     }
+
     public function collaborators()
     {
         return $this->belongsToMany(
-
             User::class,
-
             'project_collaborators',
-
             'project_id',
-
             'user_id'
-
         );
     }
+
     public function messages()
     {
         return $this->hasMany(
@@ -73,5 +71,4 @@ class Project extends Model
             ProjectDelivery::class
         );
     }
-    
 }

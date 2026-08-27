@@ -6,12 +6,13 @@ import { DatePipe } from '@angular/common';
 import { DocumentReviewService } from '../../services/document-review';
 import { Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-student-home',
   standalone: true,
   imports: [
-    DatePipe
+    DatePipe,CommonModule
   ],
   templateUrl: './student-home.html',
   styleUrl: './student-home.scss'

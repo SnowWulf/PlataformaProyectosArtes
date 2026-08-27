@@ -4,18 +4,21 @@ import {
   afterNextRender,
   ChangeDetectorRef,
   ElementRef,
-  ViewChild
+  ViewChild,
+  OnInit,
+  OnDestroy
 } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 import { DatePipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 // Models
 import { Project } from '../../models/project';
 import { Document } from '../../models/document';
 import { ProjectDelivery } from '../../models/project-delivery';
-import { DeliverySubmission } from '../../models/delivery-submission';
+import { DeliverySubmission as BaseDeliverySubmission } from '../../models/delivery-submission';
 
 // Services
 import { ProjectService } from '../../services/project-service';
@@ -31,6 +34,18 @@ import { DocumentReviewForm } from '../../components/document-review-form/docume
 import { DeliverySubmissionModal } from '../../components/delivery-submission-modal/delivery-submission-modal';
 import { ProjectAiChatbotComponent } from '../../components/project-ai-chatbot/project-ai-chatbot';
 
+// Interfaz extendida para soportar notas, revisiones y campos de formulario dinámicos
+export interface ExtendedSubmission extends Omit<BaseDeliverySubmission, 'estado'> {
+  nota?: string | number | null;
+  estado?: 'submitted' | 'reviewed' | 'approved' | 'rejected' | string;
+  nuevaObservacion?: string;
+  nuevaNota?: string | number | null;
+  estudiante?: any;
+  archivo_url?: string;
+  observaciones?: string | null;
+  [key: string]: any;
+}
+
 @Component({
   selector: 'app-project-detail',
   standalone: true,
@@ -41,19 +56,29 @@ import { ProjectAiChatbotComponent } from '../../components/project-ai-chatbot/p
     DatePipe,
     FormsModule,
     DeliverySubmissionModal,
-    ProjectAiChatbotComponent
+    ProjectAiChatbotComponent,
+  
   ],
   templateUrl: './project-detail.html',
   styleUrl: './project-detail.scss'
 })
-export class ProjectDetail {
-  ultimaLecturaChat: Date = new Date(0);
+export class ProjectDetail implements OnInit, OnDestroy {
 
-  deliveries: ProjectDelivery[] = [];
+  private readonly API_BASE_URL = 'http://localhost:8000';
+
+  ultimaLecturaChat: Date = new Date(0);
+  private http = inject(HttpClient);
+
+  miEntrega: ExtendedSubmission | null = null;
+  usuarioActualId: number | null = null;
+
+  deliveries: (ProjectDelivery & { respuestas_count?: number; respuesta?: ExtendedSubmission })[] = [];
+  respuestasEntrega: ExtendedSubmission[] = [];
+
   mostrarFormularioDocumento = false;
   documents: Document[] = [];
   documentoSeleccionado: Document | null = null;
-  
+
   private route = inject(ActivatedRoute);
   private intervalId: any;
   projectId: number | null = null;
@@ -71,13 +96,14 @@ export class ProjectDetail {
   mensajes: any[] = [];
   nuevoMensaje = '';
   chatAbierto = false;
+  mensajesNoLeidos = 0;
 
   // CHATBOT IA
-  iaChatOpen: boolean = false;
+  iaChatOpen = false;
 
   actividadProyecto: any[] = [];
 
-  // ENTREGAS
+  // ENTREGAS (TAREAS)
   mostrarModalEntrega = false;
   modoEdicionEntrega = false;
   entregaActual: any = {
@@ -91,25 +117,12 @@ export class ProjectDetail {
   mostrarModalRespuesta = false;
   entregaResponder: ProjectDelivery | null = null;
 
+  // REVISIÓN Y RETROALIMENTACIÓN DE ENTREGAS (TUTOR / COORDINADOR)
+  entregaParaRevisar: (ProjectDelivery & { respuestas_count?: number }) | null = null;
+  guardandoRetroalimentacion = false;
   revisionesAbiertas: Record<number, boolean> = {};
 
   @ViewChild('chatMessages') chatMessages!: ElementRef;
-
-  ngOnInit(): void {
-  // Polling para refrescar chat cada 5 segundos si estás en la pantalla
-  this.intervalId = setInterval(() => {
-    if (this.projectId) {
-      this.cargarMensajes();
-    }
-  }, 5000);
-}
-
-ngOnDestroy(): void {
-  // Limpiar el intervalo al salir del componente
-  if (this.intervalId) {
-    clearInterval(this.intervalId);
-  }
-}
 
   constructor(
     private projectService: ProjectService,
@@ -118,11 +131,8 @@ ngOnDestroy(): void {
     private cdr: ChangeDetectorRef,
     public auth: Auth,
     private deliveryService: ProjectDeliveryService,
-    private submissionService: DeliverySubmissionService,
-    
+    private submissionService: DeliverySubmissionService
   ) {
-    
-
     this.projectId = Number(this.route.snapshot.paramMap.get('id'));
 
     afterNextRender(() => {
@@ -131,20 +141,35 @@ ngOnDestroy(): void {
     });
   }
 
+  ngOnInit(): void {
+    this.intervalId = setInterval(() => {
+      if (this.projectId) {
+        this.cargarMensajes();
+      }
+    }, 5000);
+
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.usuarioActualId = user?.id || null;
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
   // ==========================================
   // CARGA DE PROYECTO Y ACTIVIDAD
   // ==========================================
 
-    obtenerUltimaLectura(): Date {
-  if (!this.projectId) return new Date(0);
-  const guardado = localStorage.getItem(`chat_last_read_project_${this.projectId}`);
-  return guardado ? new Date(guardado) : new Date(0); // Si es la primera vez, evaluará mensajes previos no leídos
-}
+  obtenerUltimaLectura(): Date {
+    if (!this.projectId) return new Date(0);
+    const guardado = localStorage.getItem(`chat_last_read_project_${this.projectId}`);
+    return guardado ? new Date(guardado) : new Date(0);
+  }
 
   cargarProyecto(): void {
     if (!this.projectId) return;
-
-
 
     this.projectService.getProject(this.projectId).subscribe({
       next: (project) => {
@@ -154,10 +179,8 @@ ngOnDestroy(): void {
         this.cargarMensajes();
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Error al cargar proyecto:', error)
+      error: (error: any) => console.error('Error al cargar proyecto:', error)
     });
-
-
   }
 
   cargarActividad(): void {
@@ -167,7 +190,7 @@ ngOnDestroy(): void {
       next: (data) => {
         this.actividadProyecto = data;
       },
-      error: (err) => console.error('Error cargando actividad:', err)
+      error: (err: any) => console.error('Error cargando actividad:', err)
     });
   }
 
@@ -180,16 +203,13 @@ ngOnDestroy(): void {
 
     this.documentService.getByProject(this.projectId).subscribe({
       next: (documents: any) => {
-        console.log('Documentos:', documents);
         this.documents = documents;
-
         this.documents.forEach((document: any) => {
           this.cargarRevisiones(document);
         });
-
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Error al cargar documentos:', error)
+      error: (error: any) => console.error('Error al cargar documentos:', error)
     });
   }
 
@@ -219,10 +239,8 @@ ngOnDestroy(): void {
     if (!confirmar) return;
 
     this.documentService.delete(document.id).subscribe({
-      next: () => {
-        this.cargarDocumentos();
-      },
-      error: (error) => console.error('Error al eliminar documento:', error)
+      next: () => this.cargarDocumentos(),
+      error: (error: any) => console.error('Error al eliminar documento:', error)
     });
   }
 
@@ -247,7 +265,7 @@ ngOnDestroy(): void {
         document.reviews = reviews;
         this.cdr.detectChanges();
       },
-      error: (error) => console.error('Error al cargar revisiones:', error)
+      error: (error: any) => console.error('Error al cargar revisiones:', error)
     });
   }
 
@@ -320,11 +338,16 @@ ngOnDestroy(): void {
       });
   }
 
-  abrirModalEstado(project: Project): void {
-    this.proyectoEstado = project;
-    this.estadoSeleccionado = project.estado;
+abrirModalEstado(project?: Project): void {
+  // Si le pasas un proyecto lo usa, si no, usa this.project de la vista
+  const targetProject = project || this.project;
+
+  if (targetProject) {
+    this.proyectoEstado = targetProject;
+    this.estadoSeleccionado = targetProject.estado;
     this.mostrarModalEstado = true;
   }
+}
 
   cerrarModalEstado(): void {
     this.mostrarModalEstado = false;
@@ -341,68 +364,60 @@ ngOnDestroy(): void {
         }
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error eliminando colaborador:', err)
+      error: (err: any) => console.error('Error eliminando colaborador:', err)
     });
   }
 
   // ==========================================
-  // CHAT DEL PROYECTO (HUMANO) - OPTIMISTA (0ms)
+  // CHAT DEL PROYECTO (HUMANO)
   // ==========================================
-mensajesNoLeidos = 0;
-cargarMensajes(): void {
-  if (!this.project?.id) return;
 
-  this.projectService.getMessages(this.project.id).subscribe({
-    next: (data) => {
-      this.mensajes = data || [];
+  cargarMensajes(): void {
+    if (!this.project?.id) return;
 
-      // Si el chat está CERRADO al cargar la vista
-      if (!this.chatAbierto) {
-        const usuarioActual = this.auth.obtenerUsuario();
-        const fechaUltimaLectura = this.obtenerUltimaLectura();
+    this.projectService.getMessages(this.project.id).subscribe({
+      next: (data) => {
+        this.mensajes = data || [];
 
-        // Contamos solo mensajes de OTROS usuarios creados DESPUÉS de la última vez que se abrió el chat
-        this.mensajesNoLeidos = this.mensajes.filter((m) => {
-          const esDeOtro = m.user?.id !== usuarioActual?.id;
-          const fechaMensaje = new Date(m.created_at);
-          return esDeOtro && fechaMensaje > fechaUltimaLectura;
-        }).length;
-      }
+        if (!this.chatAbierto) {
+          const usuarioActual = this.auth.obtenerUsuario();
+          const fechaUltimaLectura = this.obtenerUltimaLectura();
 
-      this.scrollAlFinal();
-      this.cdr.detectChanges();
-    },
-    error: (err) => console.error('Error cargando mensajes:', err)
-  });
-}
+          this.mensajesNoLeidos = this.mensajes.filter((m) => {
+            const esDeOtro = m.user?.id !== usuarioActual?.id;
+            const fechaMensaje = new Date(m.created_at);
+            return esDeOtro && fechaMensaje > fechaUltimaLectura;
+          }).length;
+        }
 
-  /**
-   * Envía el mensaje con respuesta optimista (aparece al instante en pantalla)
-   */
+        this.scrollAlFinal();
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => console.error('Error cargando mensajes:', err)
+    });
+  }
+
   enviarMensaje(): void {
     const texto = this.nuevoMensaje?.trim();
     if (!texto || !this.project?.id) return;
 
     const usuarioActual = this.auth.obtenerUsuario();
 
-    // 1. Crear el objeto de mensaje temporal para renderizar de inmediato
     const mensajeTemp: any = {
       id: 'temp-' + Date.now(),
       mensaje: texto,
       created_at: new Date().toISOString(),
       user: usuarioActual ? { id: usuarioActual.id, name: usuarioActual.name || 'Tú' } : { id: 0, name: 'Tú' },
-      enviando: true // Indicador visual opcional
+      enviando: true
     };
 
-    // 2. Insertar en pantalla inmediatamente (0ms)
     this.mensajes = [...this.mensajes, mensajeTemp];
     this.nuevoMensaje = '';
     this.scrollAlFinal();
     this.cdr.detectChanges();
-    
-    // 3. Petición HTTP al Backend en segundo plano
+
     this.projectService.sendMessage(this.project.id, texto).subscribe({
-      next: (mensajeReal: any) => { // <-- Agrega `: any` aquí
+      next: (mensajeReal: any) => {
         mensajeTemp.id = mensajeReal.id || mensajeTemp.id;
         mensajeTemp.created_at = mensajeReal.created_at || mensajeTemp.created_at;
         mensajeTemp.enviando = false;
@@ -417,46 +432,39 @@ cargarMensajes(): void {
     });
   }
 
+  toggleChat(): void {
+    this.chatAbierto = !this.chatAbierto;
 
-toggleChat(): void {
-  this.chatAbierto = !this.chatAbierto;
+    if (this.chatAbierto) {
+      this.mensajesNoLeidos = 0;
 
-  if (this.chatAbierto) {
-    this.mensajesNoLeidos = 0; // Reiniciamos contador
+      if (this.projectId) {
+        localStorage.setItem(
+          `chat_last_read_project_${this.projectId}`,
+          new Date().toISOString()
+        );
+      }
 
-    // Guardamos la fecha/hora actual como la última lectura de este proyecto
-    if (this.projectId) {
-      localStorage.setItem(
-        `chat_last_read_project_${this.projectId}`,
-        new Date().toISOString()
-      );
-    }
-
-    this.scrollAlFinal();
-  }
-
-  this.cdr.detectChanges();
-}
-
-
-// Llama a este método cada vez que llegue un mensaje NUEVO en tiempo real
-recibirNuevoMensaje(mensajeNuevo: any): void {
-  const usuarioActual = this.auth.obtenerUsuario();
-
-  // Verificar que el mensaje sea de OTRO usuario
-  if (mensajeNuevo.user?.id !== usuarioActual?.id) {
-    if (!this.chatAbierto) {
-      // Si el chat está CERRADO, sumamos 1 a los mensajes del chat
-      this.mensajesNoLeidos++;
-    } else {
-      // Si está abierto, simplemente hacemos scroll
       this.scrollAlFinal();
     }
+
+    this.cdr.detectChanges();
   }
 
-  this.mensajes.push(mensajeNuevo);
-  this.cdr.detectChanges();
-}
+  recibirNuevoMensaje(mensajeNuevo: any): void {
+    const usuarioActual = this.auth.obtenerUsuario();
+
+    if (mensajeNuevo.user?.id !== usuarioActual?.id) {
+      if (!this.chatAbierto) {
+        this.mensajesNoLeidos++;
+      } else {
+        this.scrollAlFinal();
+      }
+    }
+
+    this.mensajes.push(mensajeNuevo);
+    this.cdr.detectChanges();
+  }
 
   esMismoAutor(index: number): boolean {
     if (index === 0 || !this.mensajes[index] || !this.mensajes[index - 1]) return false;
@@ -497,15 +505,24 @@ recibirNuevoMensaje(mensajeNuevo: any): void {
   // ENTREGAS Y RESPUESTAS (TAREAS)
   // ==========================================
 
+  esVencida(fechaLimite: string | Date | null | undefined): boolean {
+    if (!fechaLimite) return false;
+    return new Date(fechaLimite) < new Date();
+  }
+
   cargarEntregas(): void {
     if (!this.project?.id) return;
 
     this.deliveryService.getDeliveries(this.project.id).subscribe({
       next: (data: any) => {
-        this.deliveries = Array.isArray(data) ? data : (data.deliveries || data.data || []);
+        const rawDeliveries = Array.isArray(data) ? data : (data.deliveries || data.data || []);
+        this.deliveries = rawDeliveries.map((item: any) => ({
+          ...item,
+          respuestas_count: item.respuestas_count ?? item.submissions_count ?? item.submissions?.length ?? 0
+        }));
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error al cargar entregas:', err)
+      error: (err: any) => console.error('Error al cargar entregas:', err)
     });
   }
 
@@ -542,13 +559,12 @@ recibirNuevoMensaje(mensajeNuevo: any): void {
       : this.deliveryService.createDelivery(this.project.id, this.entregaActual);
 
     request.subscribe({
-      next: (respuesta) => {
-        console.log('✅ Entrega guardada exitosamente', respuesta);
+      next: () => {
         this.cargarEntregas();
         this.cerrarModalEntrega();
       },
-      error: (err) => {
-        console.error('❌ Error guardando entrega', err);
+      error: (err: any) => {
+        console.error('Error guardando entrega:', err);
         this.guardandoEntrega = false;
         this.cdr.detectChanges();
       }
@@ -563,7 +579,7 @@ recibirNuevoMensaje(mensajeNuevo: any): void {
         this.cargarEntregas();
         this.cerrarModalEntrega();
       },
-      error: (err) => console.error('Error al eliminar entrega:', err)
+      error: (err: any) => console.error('Error al eliminar entrega:', err)
     });
   }
 
@@ -584,7 +600,6 @@ recibirNuevoMensaje(mensajeNuevo: any): void {
 
     this.submissionService.submitDelivery(idEntregaActual, formData).subscribe({
       next: (res: any) => {
-        console.log('🔍 Respuesta enviada al backend:', res);
         alert('Entrega enviada correctamente.');
 
         this.deliveries = this.deliveries.map((entrega) => {
@@ -594,7 +609,7 @@ recibirNuevoMensaje(mensajeNuevo: any): void {
               respuesta: res || {
                 id: Date.now(),
                 delivery_id: idEntregaActual,
-                student_id: 0,
+                student_id: this.usuarioActualId || 0,
                 file_path: '',
                 estado: 'submitted',
                 created_at: new Date().toISOString()
@@ -605,14 +620,138 @@ recibirNuevoMensaje(mensajeNuevo: any): void {
         });
 
         this.cerrarRespuesta();
+        this.cargarEntregas();
         this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error al enviar entrega:', err);
         alert(err.error?.message ?? 'Error al enviar la respuesta.');
       }
     });
   }
 
-  
+  // ==========================================
+  // REVISIÓN Y CALIFICACIÓN DE ENTREGAS (TUTORES/COORDINADORES)
+  // ==========================================
+
+  verRespuestasTutor(entrega: ProjectDelivery & { respuestas_count?: number }): void {
+    this.entregaParaRevisar = entrega;
+    this.cargarRespuestas(entrega.id);
+  }
+
+  cerrarModalRevision(): void {
+    this.entregaParaRevisar = null;
+    this.respuestasEntrega = [];
+  }
+
+  private normalizarUrlArchivo(rawUrl: string): string {
+    if (!rawUrl) return '';
+    if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
+      return rawUrl;
+    }
+    let cleaned = rawUrl.startsWith('/') ? rawUrl.substring(1) : rawUrl;
+    if (!cleaned.startsWith('storage/')) {
+      cleaned = `storage/${cleaned}`;
+    }
+    return `${this.API_BASE_URL}/${cleaned}`;
+  }
+
+  cargarRespuestas(entregaId: number): void {
+    const serviceAny = this.submissionService as any;
+    const request$ = typeof serviceAny.getSubmissionsByDelivery === 'function'
+      ? serviceAny.getSubmissionsByDelivery(entregaId)
+      : (typeof serviceAny.getSubmissions === 'function'
+        ? serviceAny.getSubmissions(entregaId)
+        : serviceAny.getSubmissionByDelivery(entregaId));
+
+    if (request$) {
+      request$.subscribe({
+        next: (data: any) => {
+          const lista = Array.isArray(data) ? data : (data.data || []);
+
+          this.respuestasEntrega = lista.map((sub: any) => {
+            const rawUrl = sub.archivo_url || sub.file_url || sub.file_path || '';
+            const observacionExistente = sub.comentario || sub.observaciones || sub.comentario_tutor || sub.feedback || '';
+            const notaExistente = sub.nota || sub.calificacion || sub.grade || '';
+
+            return {
+              ...sub,
+              estudiante: sub.estudiante || sub.student || sub.user || { name: 'Estudiante' },
+              archivo_url: this.normalizarUrlArchivo(rawUrl),
+              comentario: observacionExistente,
+              observaciones: observacionExistente,
+              nota: notaExistente,
+              nuevaObservacion: observacionExistente,
+              nuevaNota: notaExistente,
+              estado: sub.estado || 'submitted'
+            };
+          });
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => console.error('Error al obtener respuestas de entrega:', err)
+      });
+    }
+  }
+
+  guardarRetroalimentacion(respuesta: ExtendedSubmission): void {
+    if (!respuesta?.id) return;
+
+    this.guardandoRetroalimentacion = true;
+
+    const payload = {
+      comentario: respuesta.nuevaObservacion,
+      nota: respuesta.nuevaNota,
+      estado: 'reviewed'
+    };
+
+    const url = `${this.API_BASE_URL}/api/delivery-submissions/${respuesta.id}`;
+
+    this.http.put(url, payload).subscribe({
+      next: () => {
+        respuesta.comentario = respuesta.nuevaObservacion;
+        respuesta.observaciones = respuesta.nuevaObservacion;
+        respuesta.nota = respuesta.nuevaNota;
+        respuesta.estado = 'reviewed';
+
+        this.guardandoRetroalimentacion = false;
+        alert('Calificación guardada con éxito.');
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Error al guardar retroalimentación:', err);
+        this.guardandoRetroalimentacion = false;
+        alert('Ocurrió un error al guardar la calificación.');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  cargarEntregaEstudiante(entregaId: number): void {
+    const serviceAny = this.submissionService as any;
+
+    if (typeof serviceAny.getSubmissionsByDelivery === 'function') {
+      serviceAny.getSubmissionsByDelivery(entregaId).subscribe({
+        next: (res: any) => {
+          const lista = Array.isArray(res) ? res : (res.data || []);
+
+          if (lista.length > 0) {
+            const miEntregaObj = lista.find((sub: any) => sub.student_id === this.usuarioActualId) || lista[0];
+            const rawUrl = miEntregaObj.archivo_url || miEntregaObj.file_url || miEntregaObj.file_path || '';
+
+            this.miEntrega = {
+              ...miEntregaObj,
+              archivo_url: this.normalizarUrlArchivo(rawUrl),
+              comentario: miEntregaObj.comentario || '',
+              nota: miEntregaObj.nota || null,
+              estado: miEntregaObj.estado || 'submitted'
+            };
+          } else {
+            this.miEntrega = null;
+          }
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => console.error('Error al cargar la entrega del estudiante:', err)
+      });
+    }
+  }
 }

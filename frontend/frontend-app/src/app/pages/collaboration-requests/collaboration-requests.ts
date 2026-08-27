@@ -19,11 +19,14 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 
+import { RouterLink } from '@angular/router';
+
 @Component({
   selector: 'app-collaboration-requests',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    RouterLink,
   ],
   templateUrl: './collaboration-requests.html',
   styleUrl: './collaboration-requests.scss'
@@ -83,9 +86,7 @@ export class CollaborationRequests implements OnInit {
       });
   }
 
-  // AGREGADO: Soluciona el error TS2551
   cancelarSolicitud(id: number): void {
-    // Si tu servicio tiene el endpoint para rechazar/cancelar la enviada:
     if ((this.communityService as any).cancelRequest) {
       (this.communityService as any).cancelRequest(id).subscribe(() => {
         this.ngOnInit();
@@ -111,9 +112,15 @@ export class CollaborationRequests implements OnInit {
     return [
       ...this.recibidas,
       ...this.enviadas
-    ].filter(
+    ]
+    .filter(
       solicitud => solicitud.estado !== 'Pendiente'
-    );
+    )
+    .sort((a, b) => {
+      const fechaA = new Date(a.updated_at || a.created_at || 0).getTime();
+      const fechaB = new Date(b.updated_at || b.created_at || 0).getTime();
+      return fechaB - fechaA; // Orden descendente: más recientes primero
+    });
   }
 
 }

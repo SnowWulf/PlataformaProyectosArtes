@@ -1,62 +1,122 @@
-<h3>Subir documento</h3>
+<!-- Sprite de iconos (sin emojis) -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-upload" viewBox="0 0 24 24">
+    <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/>
+    <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+  </symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24">
+    <path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 2.8 12V5a2 2 0 0 1 2-2h7a2 2 0 0 1 1.4.6l7.4 7.4a2 2 0 0 1 0 2.8Z"/>
+    <path d="M7.5 7.5h.01"/>
+  </symbol>
+  <symbol id="i-text" viewBox="0 0 24 24">
+    <path d="M4 6h16M4 11h16M4 16h10"/>
+  </symbol>
+  <symbol id="i-pdf" viewBox="0 0 24 24">
+    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/>
+    <path d="M14 3v5h5"/>
+    <path d="M9 14h6M9 17h4"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24">
+    <path d="M5 12.5 10 17.5 19 7"/>
+  </symbol>
+  <symbol id="i-close" viewBox="0 0 24 24">
+    <path d="M6 6l12 12M18 6 6 18"/>
+  </symbol>
+</svg>
 
-<form [formGroup]="form">
+<!-- CONTENEDOR MODAL FLOTANTE -->
+<div class="modal-backdrop" (click)="cancelar()">
+  <section class="upload-card" (click)="$event.stopPropagation()">
 
-  <div>
+    <header class="upload-header">
+      <span class="header-icon" aria-hidden="true">
+        <svg class="icon"><use href="#i-upload"></use></svg>
+      </span>
+      <div class="header-copy">
+        <p class="header-eyebrow">Universidad de Nariño</p>
+        <h3>Subir documento</h3>
+        <small>Adjunta el archivo en PDF y describe brevemente su contenido.</small>
+      </div>
+      <!-- Botón X superior derecho opcional -->
+      <button type="button" class="btn-close-modal" (click)="cancelar()" aria-label="Cerrar modal">
+        <svg class="icon"><use href="#i-close"></use></svg>
+      </button>
+    </header>
 
-    <label>
-      Nombre
-    </label>
+    <form [formGroup]="form" class="upload-form">
 
-    <input
-      type="text"
-      formControlName="nombre">
+      <div class="form-body">
 
-  </div>
+        <div class="field-group">
+          <div class="field-head">
+            <label for="doc-nombre">
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-tag"></use></svg>
+              Nombre
+            </label>
+            <span class="field-tag field-tag--req">Requerido</span>
+          </div>
+          <input
+            id="doc-nombre"
+            type="text"
+            placeholder="Ej. Proyecto cultural — informe final"
+            formControlName="nombre">
+        </div>
 
-  <br>
+        <div class="field-group">
+          <div class="field-head">
+            <label for="doc-descripcion">
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-text"></use></svg>
+              Descripción
+            </label>
+            <span class="field-tag">Opcional</span>
+          </div>
+          <textarea
+            id="doc-descripcion"
+            rows="3"
+            placeholder="Resume el propósito del documento…"
+            formControlName="descripcion">
+          </textarea>
+        </div>
 
-  <div>
+        <div class="field-group">
+          <div class="field-head">
+            <label for="doc-archivo">
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-pdf"></use></svg>
+              Archivo PDF
+            </label>
+            <span class="field-tag field-tag--req">Requerido</span>
+          </div>
 
-    <label>
-      Descripción
-    </label>
+          <label class="file-drop" for="doc-archivo">
+            <span class="file-drop__icon" aria-hidden="true">
+              <svg class="icon"><use href="#i-pdf"></use></svg>
+            </span>
+            <span class="file-drop__copy">
+              <strong>Selecciona un archivo</strong>
+              <small>Solo PDF · hasta 10 MB</small>
+            </span>
+            <input
+              id="doc-archivo"
+              type="file"
+              accept=".pdf"
+              (change)="onFileSelected($event)">
+          </label>
+        </div>
 
-    <textarea
-      formControlName="descripcion">
-    </textarea>
+      </div>
 
-  </div>
+      <div class="form-actions">
+        <button type="button" class="btn-ghost" (click)="cancelar()">
+          <svg class="icon icon-xs" aria-hidden="true"><use href="#i-close"></use></svg>
+          Cancelar
+        </button>
+        <button type="button" class="btn-primary" (click)="guardar()">
+          <svg class="icon icon-xs" aria-hidden="true"><use href="#i-check"></use></svg>
+          Guardar
+        </button>
+      </div>
 
-  <br>
+    </form>
 
-  <div>
-
-    <label>
-      Archivo PDF
-    </label>
-
-    <input
-      type="file"
-      accept=".pdf"
-      (change)="onFileSelected($event)">
-
-  </div>
-
-  <br>
-
-  <button
-  type="button"
-  (click)="guardar()">
-    Guardar
-  </button>
-
-  <button
-  type="button"
-  (click)="cancelar()">
-
-  Cancelar
-
-</button>
-
-</form>
+  </section>
+</div>

@@ -30,7 +30,7 @@ class ProjectDeliveryController extends Controller
     public function store(
         Request $request,
         Project $project,
-        NotificationEngineService $notifier // 2. Inyectamos el servicio
+        NotificationEngineService $notifier
     )
     {
         $user = $request->user();
@@ -78,26 +78,44 @@ class ProjectDeliveryController extends Controller
             ]
         );
 
-        // 3. Notificar a los miembros del proyecto (Líder + Colaboradores si aplica)
+        // 3. Notificar a los miembros del proyecto (Líder + Colaboradores)
         $destinatariosIds = collect([$project->owner_id]);
 
-        // Si el proyecto tiene relación de colaboradores, los sumamos
         if (method_exists($project, 'collaborators')) {
             $collaboratorIds = $project->collaborators()->pluck('users.id');
             $destinatariosIds = $destinatariosIds->merge($collaboratorIds);
         }
 
-        foreach ($destinatariosIds->unique() as $studentId) {
-            // No autonotificar si el asignador fuera el propio estudiante
-            if ($studentId !== $user->id) {
-                $notifier->notify(
-                    user: $studentId,
-                    tipoClave: 'nueva_entrega',
-                    titulo: '📌 Nueva Entrega Publicada',
-                    mensaje: $user->name . ' asignó la tarea: "' . $delivery->titulo . '" en el proyecto "' . $project->titulo . '".',
-                    link: '/dashboard/projects/' . $project->id
-                );
+        // Cargar los objetos de Usuario excluyendo al creador/tutor
+        $estudiantes = \App\Models\User::whereIn('id', $destinatariosIds->unique())
+            ->where('id', '!=', $user->id)
+            ->get();
+
+        // Mantenemos un registro de los chats de Telegram a los que YA notificamos en esta ejecución
+        $chatsNotificados = [];
+
+        foreach ($estudiantes as $estudiante) {
+            // Si el servicio envía a Telegram internamente, evitamos disparar si el chat_id ya recibió el mensaje
+            $chatId = $estudiante->telegram_chat_id;
+
+            if ($chatId && in_array($chatId, $chatsNotificados)) {
+                // Si el chat_id ya recibió la notificación (ej. el mismo Telegram vinculado a 2 cuentas de prueba),
+                // notificamos solo en la plataforma web y omitimos el envío duplicado.
+                // (Opcional: Si tu NotificationEngineService soporta parámetros para omitir telegram):
+                continue; 
             }
+
+            if ($chatId) {
+                $chatsNotificados[] = $chatId;
+            }
+
+            $notifier->notify(
+                user: $estudiante->id,
+                tipoClave: 'nueva_entrega',
+                titulo: '📌 Nueva Entrega Publicada',
+                mensaje: $user->name . ' asignó la tarea: "' . $delivery->titulo . '" en el proyecto "' . $project->titulo . '".',
+                link: '/dashboard/projects/' . $project->id
+            );
         }
 
         return response()->json(

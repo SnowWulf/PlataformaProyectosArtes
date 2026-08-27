@@ -16,12 +16,20 @@ class UserController extends Controller
     }
 
     public function show($id)
-    {
-	$user = User::with('role')
-    ->findOrFail($id);
+{
+    // Cargamos el usuario con su rol y sus proyectos filtrados por visibilidad
+    $user = User::with(['role', 'projects' => function ($query) {
+        $query->where('es_visible', true);
+    }])->findOrFail($id);
+
+    // Si el usuario desactivo la casilla global de proyectos, vaciamos el listado
+    if (!$user->mostrar_proyectos) {
+        $user->unsetRelation('projects');
+        $user->projects = [];
+    }
 
     return response()->json($user);
-    }
+}
 
     public function store(Request $request)
     {
@@ -138,73 +146,57 @@ class UserController extends Controller
 
 
     public function updateProfile(Request $request)
-{
-    $user = $request->user();
+    {
+        $user = $request->user();
 
-    $validated = $request->validate([
+        $validated = $request->validate([
+            'bio' => 'nullable|string|max:500',
+            'mostrar_proyectos' => 'boolean',
+            'mostrar_correo' => 'boolean',
+            'foto' => 'nullable|image|max:2048',
+            'proyectos_visibilidad' => 'nullable|json'
+        ]);
 
-        'bio' => 'nullable|string|max:500',
+        if ($request->hasFile('foto')) {
+            if ($user->foto) {
+                Storage::disk('public')->delete($user->foto);
+            }
 
-        'mostrar_proyectos' => 'boolean',
+            $path = $request->file('foto')->store('profile_photos', 'public');
+            $user->foto = $path;
+        }
 
-        'mostrar_correo' => 'boolean',
+        $user->bio = $validated['bio'] ?? $user->bio;
+        $user->mostrar_proyectos = $validated['mostrar_proyectos'] ?? $user->mostrar_proyectos;
+        $user->mostrar_correo = $validated['mostrar_correo'] ?? $user->mostrar_correo;
 
-        'foto' => 'nullable|image|max:2048'
+        $user->save();
 
-    ]);
+        // Actualización de visibilidad individual
+        if ($request->has('proyectos_visibilidad')) {
+            $proyectosVisibilidad = json_decode($request->input('proyectos_visibilidad'), true);
 
-    if ($request->hasFile('foto')) {
+            if (is_array($proyectosVisibilidad)) {
+                foreach ($proyectosVisibilidad as $item) {
+                    $user->projects()
+                        ->where('id', $item['id'])
+                        ->update(['es_visible' => $item['es_visible']]);
+                }
+            }
+        }
 
-    if ($user->foto) {
-
-        Storage::disk('public')
-            ->delete($user->foto);
-
+        return response()->json([
+            'message' => 'Perfil actualizado.',
+            'user' => $user->load(['role', 'projects'])
+        ]);
     }
 
-    $path = $request->file('foto')->store(
+    public function myProfile(Request $request)
+    {
+        return response()->json(
+            $request->user()->load(['role', 'projects'])
+        );
+    }
 
-        'profile_photos',
 
-        'public'
-
-    );
-
-    $user->foto = $path;
-}
-
-    $user->bio =
-        $validated['bio'] ?? $user->bio;
-
-    $user->mostrar_proyectos =
-        $validated['mostrar_proyectos']
-        ?? $user->mostrar_proyectos;
-
-    $user->mostrar_correo =
-        $validated['mostrar_correo']
-        ?? $user->mostrar_correo;
-
-    $user->save();
-
-    return response()->json([
-
-    'message' =>
-        'Perfil actualizado.',
-
-    'user' =>
-        $user->load('role')
-
-]);
-    
-}
-
-public function myProfile(Request $request)
-{
-    return response()->json(
-
-        $request->user()
-            ->load('role')
-
-    );
-}
 }

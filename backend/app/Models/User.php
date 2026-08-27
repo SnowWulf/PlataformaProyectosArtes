@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 
-
 #[Fillable([
     'name',
     'email',
@@ -26,10 +25,18 @@ use Laravel\Sanctum\HasApiTokens;
     'foto',
     'mostrar_proyectos',
     'mostrar_correo',
-    'require_password_change'
+    'require_password_change',
+    // --- Campos para 2FA ---
+    'two_factor_enabled',
+    'two_factor_code',
+    'two_factor_expires_at'
 ])]
 
-#[Hidden(['password', 'remember_token'])]
+#[Hidden([
+    'password', 
+    'remember_token', 
+    'two_factor_code' // Oculto por seguridad
+])]
 
 class User extends Authenticatable
 {
@@ -44,39 +51,37 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-
-            'email_verified_at' =>
-                'datetime',
-
-            'password' =>
-                'hashed',
-
-            'mostrar_proyectos' =>
-                'boolean',
-
-            'mostrar_correo' =>
-                'boolean',
-
-            'require_password_change' =>
-                'boolean'
-
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'mostrar_proyectos' => 'boolean',
+            'mostrar_correo' => 'boolean',
+            'require_password_change' => 'boolean',
+            // --- Casts para 2FA ---
+            'two_factor_enabled' => 'boolean',
+            'two_factor_expires_at' => 'datetime'
         ];
     }
 
     protected $appends = [
-
         'foto_url'
-
     ];
     
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
     }
+
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class, 'owner_id');
     }
+
+    // Alias 'proyectos' apuntando a 'projects' para compatibilidad con el controlador
+    public function proyectos(): HasMany
+    {
+        return $this->projects();
+    }
+
     public function tutoredProjects(): HasMany
     {
         return $this->hasMany(Project::class, 'tutor_id');
@@ -84,18 +89,12 @@ class User extends Authenticatable
 
     public function tutorRequestsSent()
     {
-        return $this->hasMany(
-            TutorRequest::class,
-            'student_id'
-        );
+        return $this->hasMany(TutorRequest::class, 'student_id');
     }
 
     public function tutorRequestsReceived()
     {
-        return $this->hasMany(
-            TutorRequest::class,
-            'tutor_id'
-        );
+        return $this->hasMany(TutorRequest::class, 'tutor_id');
     }
 
     public function documents(): HasMany
@@ -105,17 +104,12 @@ class User extends Authenticatable
 
     public function documentReviews()
     {
-        return $this->hasMany(
-            DocumentReview::class,
-            'tutor_id'
-        );
+        return $this->hasMany(DocumentReview::class, 'tutor_id');
     }
     
     public function activityLogs()
     {
-        return $this->hasMany(
-            ActivityLog::class
-        );
+        return $this->hasMany(ActivityLog::class);
     }
 
     public function getFotoUrlAttribute()
@@ -123,17 +117,12 @@ class User extends Authenticatable
         if (!$this->foto) {
             return null;
         }
-        return asset(
-            'storage/' . $this->foto
-        );
+        return asset('storage/' . $this->foto);
     }
 
     public function deliveries()
     {
-        return $this->hasMany(
-            ProjectDelivery::class,
-            'tutor_id'
-        );
+        return $this->hasMany(ProjectDelivery::class, 'tutor_id');
     }
 
     public function calendarEvents()
@@ -154,5 +143,31 @@ class User extends Authenticatable
     public function notifications(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Notification::class);
+    }
+
+    // ==========================================
+    // MÉTODOS PARA VERIFICACIÓN EN 2 PASOS (2FA)
+    // ==========================================
+
+    /**
+     * Genera un código de 6 dígitos que expira en exactamente 2 minutos.
+     */
+    public function generateTwoFactorCode(): void
+    {
+        $this->timestamps = false; // Evita actualizar el campo updated_at general
+        $this->two_factor_code = (string) rand(100000, 999999);
+        $this->two_factor_expires_at = now()->addMinutes(2);
+        $this->save();
+    }
+
+    /**
+     * Limpia el código una vez se verifique con éxito o se deshabilite el 2FA.
+     */
+    public function resetTwoFactorCode(): void
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = null;
+        $this->two_factor_expires_at = null;
+        $this->save();
     }
 }

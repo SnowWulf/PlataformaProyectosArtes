@@ -1,274 +1,513 @@
-<div class="users-container">
+<!-- ==========================================================
+     SPRITE DE ICONOS (Feather style, 24x24, stroke)
+     ========================================================== -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="s-users" viewBox="0 0 24 24">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </symbol>
+  <symbol id="s-user" viewBox="0 0 24 24">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </symbol>
+  <symbol id="s-plus" viewBox="0 0 24 24">
+    <path d="M12 5v14M5 12h14" />
+  </symbol>
+  <symbol id="s-inbox" viewBox="0 0 24 24">
+    <path d="M22 12h-6l-2 3h-4l-2-3H2" />
+    <path
+      d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z" />
+  </symbol>
+  <symbol id="s-cap" viewBox="0 0 24 24">
+    <path d="M22 10 12 5 2 10l10 5 10-5Z" />
+    <path d="M6 12v5c0 1 2.5 2.5 6 2.5s6-1.5 6-2.5v-5" />
+  </symbol>
+  <symbol id="s-book" viewBox="0 0 24 24">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+  </symbol>
+  <symbol id="s-shield" viewBox="0 0 24 24">
+    <path d="M12 2 3 7v6c0 5 3.8 8.5 9 9 5.2-.5 9-4 9-9V7Z" />
+    <path d="m9 12 2 2 4-4" />
+  </symbol>
+  <symbol id="s-search" viewBox="0 0 24 24">
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </symbol>
+  <symbol id="s-filter" viewBox="0 0 24 24">
+    <path d="M22 3H2l8 9.46V19l4 2v-8.54Z" />
+  </symbol>
+  <symbol id="s-edit" viewBox="0 0 24 24">
+    <path d="M12 20h9" />
+    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+  </symbol>
+  <symbol id="s-trash" viewBox="0 0 24 24">
+    <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+  </symbol>
+  <symbol id="s-eye" viewBox="0 0 24 24">
+    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+    <circle cx="12" cy="12" r="3" />
+  </symbol>
+  <symbol id="s-check" viewBox="0 0 24 24">
+    <path d="M20 6 9 17l-5-5" />
+  </symbol>
+  <symbol id="s-x" viewBox="0 0 24 24">
+    <path d="M18 6 6 18M6 6l12 12" />
+  </symbol>
+  <symbol id="s-mail" viewBox="0 0 24 24">
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+  </symbol>
+  <symbol id="s-file" viewBox="0 0 24 24">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+    <path d="M14 2v6h6M9 13h6M9 17h4" />
+  </symbol>
+  <symbol id="s-message" viewBox="0 0 24 24">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z" />
+  </symbol>
+  <symbol id="s-check-circle" viewBox="0 0 24 24">
+    <path d="M21.8 11.1V12a9.8 9.8 0 1 1-5.8-8.9" />
+    <path d="m9 11 3 3 10-10" />
+  </symbol>
+</svg>
 
-    <div class="users-header">
+<div class="art-dashboard users-page">
+
+  <!-- ==========================================================
+       1. HERO / CABECERA
+       ========================================================== -->
+  <header class="art-hero">
+    <div class="hero-main">
+      <div class="hero-text">
+        <span class="hero-eyebrow">Facultad de Artes &middot; Administración</span>
+        <h1 class="hero-title">Gestión de Usuarios</h1>
+        <p class="hero-subtitle">
+          Administra estudiantes, tutores, coordinadores y solicitudes de registro desde un solo lugar.
+        </p>
+      </div>
+
+      <div class="hero-actions">
+        <div class="hero-summary" role="group" aria-label="Resumen">
+          <div class="summary-item">
+            <span class="summary-value">{{ users.length }}</span>
+            <span class="summary-label">Usuarios</span>
+          </div>
+          <div class="summary-divider" aria-hidden="true"></div>
+          <div class="summary-item">
+            <span class="summary-value" [class.is-alert]="solicitudes.length > 0">{{ solicitudes.length }}</span>
+            <span class="summary-label">Solicitudes</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn-primary" (click)="nuevoUsuario()">
+          <svg class="icon icon-sm">
+            <use href="#s-plus"></use>
+          </svg>
+          Nuevo Usuario
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================
+       2. PESTAÑAS NAVEGABLES
+       ========================================================== -->
+  <nav class="tabs-bar" role="tablist" aria-label="Secciones de usuarios">
+    <button class="tab-btn" role="tab" [attr.aria-selected]="pestanaActiva === 'usuarios'"
+      [class.active]="pestanaActiva === 'usuarios'" (click)="pestanaActiva = 'usuarios'">
+      <svg class="icon icon-sm">
+        <use href="#s-user"></use>
+      </svg>
+      Usuarios Activos
+      <span class="tab-count">{{ users.length }}</span>
+    </button>
+
+    <button class="tab-btn" role="tab" [attr.aria-selected]="pestanaActiva === 'solicitudes'"
+      [class.active]="pestanaActiva === 'solicitudes'" (click)="pestanaActiva = 'solicitudes'">
+      <svg class="icon icon-sm">
+        <use href="#s-inbox"></use>
+      </svg>
+      Solicitudes de Registro
+      @if (solicitudes.length > 0) {
+      <span class="badge-pending">{{ solicitudes.length }}</span>
+      }
+    </button>
+  </nav>
+
+  <!-- ==========================================================
+       PESTAÑA 1: USUARIOS ACTIVOS
+       ========================================================== -->
+  @if (pestanaActiva === 'usuarios') {
+
+  <div class="stats-grid">
+    <button type="button" class="stat-card" [class.activa]="filtroRol === 'todos'" (click)="filtroRol = 'todos'">
+      <span class="stat-icon"><svg class="icon icon-md">
+          <use href="#s-users"></use>
+        </svg></span>
+      <span class="stat-body">
+        <span class="stat-value">{{ users.length }}</span>
+        <span class="stat-label">Usuarios Totales</span>
+      </span>
+    </button>
+
+    <button type="button" class="stat-card" [class.activa]="filtroRol === 'Estudiante'"
+      (click)="filtroRol = 'Estudiante'">
+      <span class="stat-icon"><svg class="icon icon-md">
+          <use href="#s-cap"></use>
+        </svg></span>
+      <span class="stat-body">
+        <span class="stat-value">{{ users.filter(u => u.role?.nombre === 'Estudiante').length }}</span>
+        <span class="stat-label">Estudiantes</span>
+      </span>
+    </button>
+
+    <button type="button" class="stat-card" [class.activa]="filtroRol === 'Tutor'" (click)="filtroRol = 'Tutor'">
+      <span class="stat-icon"><svg class="icon icon-md">
+          <use href="#s-book"></use>
+        </svg></span>
+      <span class="stat-body">
+        <span class="stat-value">{{ users.filter(u => u.role?.nombre === 'Tutor').length }}</span>
+        <span class="stat-label">Tutores</span>
+      </span>
+    </button>
+
+    <button type="button" class="stat-card" [class.activa]="filtroRol === 'Coordinador'"
+      (click)="filtroRol = 'Coordinador'">
+      <span class="stat-icon"><svg class="icon icon-md">
+          <use href="#s-shield"></use>
+        </svg></span>
+      <span class="stat-body">
+        <span class="stat-value">{{ users.filter(u => u.role?.nombre === 'Coordinador').length }}</span>
+        <span class="stat-label">Coordinadores</span>
+      </span>
+    </button>
+  </div>
+
+  <section class="content-section">
+    <div class="section-header">
+      <div class="section-heading">
+        <svg class="icon icon-md">
+          <use href="#s-users"></use>
+        </svg>
         <div>
-            <h1>👥 Gestión de Usuarios</h1>
-            <p>Administra estudiantes, tutores, coordinadores y solicitudes pendientes.</p>
+          <h2>Usuarios registrados</h2>
+          <p class="section-subtitle">Consulta, edita o elimina las cuentas activas</p>
         </div>
+      </div>
 
-        <button class="btn-primary" (click)="nuevoUsuario()">
-            ➕ Nuevo Usuario
-        </button>
-    </div>
-
-    <!-- PESTAÑAS NAVEGABLES -->
-    <div class="tabs-bar">
-        <button class="tab-btn" [class.active]="pestanaActiva === 'usuarios'" (click)="pestanaActiva = 'usuarios'">
-            👤 Usuarios Activos ({{ users.length }})
-        </button>
-
-        <button class="tab-btn" [class.active]="pestanaActiva === 'solicitudes'"
-            (click)="pestanaActiva = 'solicitudes'">
-            📩 Solicitudes de Registro
-            @if (solicitudes.length > 0) {
-            <span class="badge-pending">{{ solicitudes.length }}</span>
-            }
-        </button>
-    </div>
-
-    <!-- PESTAÑA 1: USUARIOS ACTIVOS -->
-    @if (pestanaActiva === 'usuarios') {
-    <div class="stats-grid">
-        <div class="stat-card" [class.activa]="filtroRol === 'todos'" (click)="filtroRol = 'todos'">
-            <h3>{{ users.length }}</h3>
-            <p>Usuarios Totales</p>
-        </div>
-
-        <div class="stat-card" [class.activa]="filtroRol === 'Estudiante'" (click)="filtroRol = 'Estudiante'">
-            <h3>{{ users.filter(u => u.role?.nombre === 'Estudiante').length }}</h3>
-            <p>Estudiantes</p>
-        </div>
-
-        <div class="stat-card" [class.activa]="filtroRol === 'Tutor'" (click)="filtroRol = 'Tutor'">
-            <h3>{{ users.filter(u => u.role?.nombre === 'Tutor').length }}</h3>
-            <p>Tutores</p>
-        </div>
-
-        <div class="stat-card" [class.activa]="filtroRol === 'Coordinador'" (click)="filtroRol = 'Coordinador'">
-            <h3>{{ users.filter(u => u.role?.nombre === 'Coordinador').length }}</h3>
-            <p>Coordinadores</p>
-        </div>
-    </div>
-
-    <div class="search-area">
+      <div class="toolbar">
         <div class="search-box">
-            <input type="text" placeholder="🔍 Buscar usuario por nombre o correo..." [(ngModel)]="busqueda">
+          <svg class="icon icon-sm search-icon">
+            <use href="#s-search"></use>
+          </svg>
+          <input type="text" placeholder="Buscar por nombre o correo..." [(ngModel)]="busqueda"
+            aria-label="Buscar usuario">
         </div>
 
         <div class="program-filter">
-            <button class="btn-filter" (click)="toggleFiltroPrograma()">⬇️</button>
-            @if (mostrarFiltroPrograma) {
-            <div class="program-list">
-                <button class="program-item" [class.active]="filtroPrograma === 'todos'"
-                    (click)="seleccionarPrograma('todos')">
-                    Todos
-                </button>
-
-                @for(programa of programasDisponibles; track programa) {
-                <button class="program-item" [class.active]="filtroPrograma === programa"
-                    (click)="seleccionarPrograma(programa)">
-                    {{ programa }}
-                </button>
-                }
-            </div>
+          <button type="button" class="btn-filter" [class.active]="filtroPrograma !== 'todos'"
+            (click)="toggleFiltroPrograma()">
+            <svg class="icon icon-sm">
+              <use href="#s-filter"></use>
+            </svg>
+            {{ filtroPrograma === 'todos' ? 'Programa' : filtroPrograma }}
+          </button>
+          @if (mostrarFiltroPrograma) {
+          <div class="program-list">
+            <button class="program-item" [class.active]="filtroPrograma === 'todos'"
+              (click)="seleccionarPrograma('todos')">
+              Todos los programas
+            </button>
+            @for (programa of programasDisponibles; track programa) {
+            <button class="program-item" [class.active]="filtroPrograma === programa"
+              (click)="seleccionarPrograma(programa)">
+              {{ programa }}
+            </button>
             }
+          </div>
+          }
         </div>
+      </div>
     </div>
 
     <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Rol</th>
-                    <th>Programa</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (usuario of usuariosFiltrados; track usuario.id) {
-                <tr>
-                    <td><strong>{{ usuario.name }}</strong></td>
-                    <td>{{ usuario.email }}</td>
-                    <td>
-                        <span class="role-badge" [class.role-estudiante]="usuario.role?.nombre === 'Estudiante'"
-                            [class.role-tutor]="usuario.role?.nombre === 'Tutor'"
-                            [class.role-coordinador]="usuario.role?.nombre === 'Coordinador'">
-                            {{ usuario.role?.nombre }}
-                        </span>
-                    </td>
-                    <td>{{ usuario.programa ?? 'N/A' }}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" (click)="editarUsuario(usuario)">✏️ Editar</button>
-                            <button class="btn-delete" (click)="abrirEliminar(usuario)">🗑️ Eliminar</button>
-                        </div>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol</th>
+            <th>Programa</th>
+            <th class="col-actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (usuario of usuariosFiltrados; track usuario.id) {
+          <tr>
+            <td>
+              <div class="user-cell">
+                <span class="avatar">{{ usuario.name?.charAt(0)?.toUpperCase() }}</span>
+                <span class="user-name">{{ usuario.name }}</span>
+              </div>
+            </td>
+            <td class="text-muted">{{ usuario.email }}</td>
+            <td>
+              <span class="role-badge" [class.role-estudiante]="usuario.role?.nombre === 'Estudiante'"
+                [class.role-tutor]="usuario.role?.nombre === 'Tutor'"
+                [class.role-coordinador]="usuario.role?.nombre === 'Coordinador'">
+                <span class="role-dot" aria-hidden="true"></span>
+                {{ usuario.role?.nombre }}
+              </span>
+            </td>
+            <td class="text-muted">{{ usuario.programa ?? 'N/A' }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon btn-edit" (click)="editarUsuario(usuario)">
+                  <svg class="icon icon-sm">
+                    <use href="#s-edit"></use>
+                  </svg>
+                  Editar
+                </button>
+                <button class="btn-icon btn-delete" (click)="abrirEliminar(usuario)">
+                  <svg class="icon icon-sm">
+                    <use href="#s-trash"></use>
+                  </svg>
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <span class="empty-icon"><svg class="icon icon-lg">
+                    <use href="#s-search"></use>
+                  </svg></span>
+                <p class="empty-title">No se encontraron usuarios</p>
+                <p class="empty-text">Prueba con otro término de búsqueda o filtro.</p>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
-    }
+  </section>
+  }
 
-    <!-- PESTAÑA 2: SOLICITUDES DE REGISTRO -->
-    @if (pestanaActiva === 'solicitudes') {
-    <div class="search-area">
+  <!-- ==========================================================
+       PESTAÑA 2: SOLICITUDES DE REGISTRO
+       ========================================================== -->
+  @if (pestanaActiva === 'solicitudes') {
+  <section class="content-section">
+    <div class="section-header">
+      <div class="section-heading">
+        <svg class="icon icon-md">
+          <use href="#s-inbox"></use>
+        </svg>
+        <div>
+          <h2>Solicitudes pendientes</h2>
+          <p class="section-subtitle">Revisa y aprueba o rechaza los registros entrantes</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
         <div class="search-box">
-            <input type="text" placeholder="🔍 Buscar en solicitudes pendientes..." [(ngModel)]="busqueda">
+          <svg class="icon icon-sm search-icon">
+            <use href="#s-search"></use>
+          </svg>
+          <input type="text" placeholder="Buscar en solicitudes..." [(ngModel)]="busqueda"
+            aria-label="Buscar solicitud">
         </div>
+      </div>
     </div>
 
     <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Rol Solicitado</th>
-                    <th>Programa</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (solicitud of solicitudesFiltradas; track solicitud.id) {
-                <tr>
-                    <td>
-                        <strong style="cursor: pointer; color: #2563eb;" (click)="abrirDetalleSolicitud(solicitud)">
-                            {{ solicitud.name }}
-                        </strong>
-                    </td>
-                    <td>{{ solicitud.email }}</td>
-                    <td>
-                        <span class="role-badge role-pending">
-                            {{ solicitud.role_solicitado ?? 'Estudiante' }}
-                        </span>
-                    </td>
-                    <td>{{ solicitud.programa ?? 'N/A' }}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" (click)="abrirDetalleSolicitud(solicitud)">
-                                👁️ Detalle
-                            </button>
-                            <button class="btn-approve" (click)="abrirConfirmacionSolicitud(solicitud, 'aprobar')">
-                                ✅ Admitir
-                            </button>
-                            <button class="btn-reject" (click)="abrirConfirmacionSolicitud(solicitud, 'rechazar')">
-                                ❌ Rechazar
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                } @empty {
-                <tr>
-                    <td colspan="5" style="text-align: center; padding: 2rem; color: #666;">
-                        🎉 No hay solicitudes de registro pendientes.
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Rol Solicitado</th>
+            <th>Programa</th>
+            <th class="col-actions">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (solicitud of solicitudesFiltradas; track solicitud.id) {
+          <tr>
+            <td>
+              <div class="user-cell">
+                <span class="avatar">{{ solicitud.name?.charAt(0)?.toUpperCase() }}</span>
+                <button class="link-name" (click)="abrirDetalleSolicitud(solicitud)">{{ solicitud.name }}</button>
+              </div>
+            </td>
+            <td class="text-muted">{{ solicitud.email }}</td>
+            <td>
+              <span class="role-badge role-pending">
+                <span class="role-dot" aria-hidden="true"></span>
+                {{ solicitud.role_solicitado ?? 'Estudiante' }}
+              </span>
+            </td>
+            <td class="text-muted">{{ solicitud.programa ?? 'N/A' }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon btn-detail" (click)="abrirDetalleSolicitud(solicitud)">
+                  <svg class="icon icon-sm">
+                    <use href="#s-eye"></use>
+                  </svg>
+                  Detalle
+                </button>
+                <button class="btn-icon btn-approve" (click)="abrirConfirmacionSolicitud(solicitud, 'aprobar')">
+                  <svg class="icon icon-sm">
+                    <use href="#s-check"></use>
+                  </svg>
+                  Admitir
+                </button>
+                <button class="btn-icon btn-reject" (click)="abrirConfirmacionSolicitud(solicitud, 'rechazar')">
+                  <svg class="icon icon-sm">
+                    <use href="#s-x"></use>
+                  </svg>
+                  Rechazar
+                </button>
+              </div>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <span class="empty-icon"><svg class="icon icon-lg">
+                    <use href="#s-check-circle"></use>
+                  </svg></span>
+                <p class="empty-title">No hay solicitudes pendientes</p>
+                <p class="empty-text">Todas las solicitudes han sido procesadas.</p>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
     </div>
-    }
+  </section>
+  }
 
 </div>
 
+<!-- ==========================================================
+     MODAL: FORMULARIO
+     ========================================================== -->
 @if (mostrarFormulario) {
 <div class="modal-backdrop">
-    <div class="modal">
-        <app-user-form [usuario]="usuarioSeleccionado" (cerrar)="cerrarFormulario()" (guardado)="usuarioGuardado()">
-        </app-user-form>
-    </div>
+  <div class="modal">
+    <app-user-form [usuario]="usuarioSeleccionado" (cerrar)="cerrarFormulario()" (guardado)="usuarioGuardado()">
+    </app-user-form>
+  </div>
 </div>
 }
 
+<!-- ==========================================================
+     MODAL: ELIMINAR
+     ========================================================== -->
 @if (mostrarDialogoEliminar && usuarioAEliminar) {
-<div class="modal-backdrop">
-    <div class="modal">
-        <app-delete-user-dialog [usuario]="usuarioAEliminar" (cancelar)="cerrarEliminar()"
-            (confirmar)="confirmarEliminar($event)">
-        </app-delete-user-dialog>
-    </div>
-</div>
+  <app-delete-user-dialog
+    [usuario]="usuarioAEliminar"
+    (cancelar)="cerrarEliminar()"
+    (confirmar)="confirmarEliminar($event)">
+  </app-delete-user-dialog>
 }
 
-<!-- MODAL VER DETALLE DE SOLICITUD COMPLETA -->
+<!-- ==========================================================
+     MODAL: DETALLE DE SOLICITUD
+     ========================================================== -->
 @if (solicitudVerDetalle) {
 <div class="modal-backdrop">
-    <div class="modal" style="max-width: 550px;">
-        <h2>📋 Detalle de Solicitud</h2>
+  <div class="modal modal-md">
+    <h2 class="modal-title">
+      <svg class="icon icon-md">
+        <use href="#s-file"></use>
+      </svg>
+      Detalle de Solicitud
+    </h2>
 
-        <div style="display: flex; flex-direction: column; gap: 0.8rem; margin: 1rem 0; text-align: left;">
-            <div>
-                <strong>Solicitante:</strong> {{ solicitudVerDetalle.name }}
-            </div>
-            <div>
-                <strong>Correo Electrónico:</strong> {{ solicitudVerDetalle.email }}
-            </div>
-            <div>
-                <strong>Programa Académico:</strong> {{ solicitudVerDetalle.programa }}
-            </div>
-            <div>
-                <strong>Rol Solicitado:</strong> {{ solicitudVerDetalle.role_solicitado ?? 'Estudiante' }}
-            </div>
-            <div>
-                <strong>Fecha de Envío:</strong> {{ solicitudVerDetalle.created_at | date:'dd/MM/yyyy - hh:mm a' }}
-            </div>
-            <div>
-                <strong>Motivo ingresado:</strong>
-                <div
-                    style="background: #f1f5f9; padding: 0.8rem; border-radius: 6px; margin-top: 0.3rem; border: 1px solid #cbd5e1; white-space: pre-wrap;">
-                    {{ solicitudVerDetalle.reason }}
-                </div>
-            </div>
-        </div>
-
-        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
-            <button class="btn-filter" (click)="cerrarDetalleSolicitud()">
-                Cerrar
-            </button>
-            <button class="btn-reject" (click)="abrirConfirmacionSolicitud(solicitudVerDetalle, 'rechazar')">
-                ❌ Rechazar
-            </button>
-            <button class="btn-approve" (click)="abrirConfirmacionSolicitud(solicitudVerDetalle, 'aprobar')">
-                ✅ Admitir
-            </button>
-        </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <span class="field-label">Solicitante</span>
+        <span class="field-value">{{ solicitudVerDetalle.name }}</span>
+      </div>
+      <div class="modal-field">
+        <span class="field-label">Correo Electrónico</span>
+        <span class="field-value">{{ solicitudVerDetalle.email }}</span>
+      </div>
+      <div class="modal-field">
+        <span class="field-label">Programa Académico</span>
+        <span class="field-value">{{ solicitudVerDetalle.programa }}</span>
+      </div>
+      <div class="modal-field">
+        <span class="field-label">Rol Solicitado</span>
+        <span class="field-value">{{ solicitudVerDetalle.role_solicitado ?? 'Estudiante' }}</span>
+      </div>
+      <div class="modal-field">
+        <span class="field-label">Fecha de Envío</span>
+        <span class="field-value">{{ solicitudVerDetalle.created_at | date:'dd/MM/yyyy - hh:mm a' }}</span>
+      </div>
+      <div class="modal-field">
+        <span class="field-label">Motivo ingresado</span>
+        <div class="reason-box">{{ solicitudVerDetalle.reason }}</div>
+      </div>
     </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" (click)="cerrarDetalleSolicitud()">Cerrar</button>
+      <button class="btn-icon btn-reject" (click)="abrirConfirmacionSolicitud(solicitudVerDetalle, 'rechazar')">
+        <svg class="icon icon-sm">
+          <use href="#s-x"></use>
+        </svg>
+        Rechazar
+      </button>
+      <button class="btn-icon btn-approve" (click)="abrirConfirmacionSolicitud(solicitudVerDetalle, 'aprobar')">
+        <svg class="icon icon-sm">
+          <use href="#s-check"></use>
+        </svg>
+        Admitir
+      </button>
+    </div>
+  </div>
 </div>
 }
 
-<!-- MODAL CONFIRMACIÓN / MENSAJE A SOLICITUD -->
+<!-- ==========================================================
+     MODAL: CONFIRMACIÓN / MENSAJE
+     ========================================================== -->
 @if (solicitudSeleccionada) {
 <div class="modal-backdrop">
-    <div class="modal" style="max-width: 500px;">
-        <h2>
-            {{ accionSolicitud === 'aprobar' ? 'Aprobar Solicitud' : 'Rechazar Solicitud' }}
-        </h2>
-        <p>
-            Estás a punto de {{ accionSolicitud === 'aprobar' ? 'aprobar' : 'rechazar' }} la solicitud de
-            <strong>{{ solicitudSeleccionada.name }}</strong> ({{ solicitudSeleccionada.email }}).
-        </p>
+  <div class="modal modal-sm">
+    <h2 class="modal-title" [class.title-danger]="accionSolicitud !== 'aprobar'">
+      <svg class="icon icon-md">
+        <use [attr.href]="accionSolicitud === 'aprobar' ? '#s-check-circle' : '#s-message'"></use>
+      </svg>
+      {{ accionSolicitud === 'aprobar' ? 'Aprobar Solicitud' : 'Rechazar Solicitud' }}
+    </h2>
+    <p class="modal-lead">
+      Estás a punto de {{ accionSolicitud === 'aprobar' ? 'aprobar' : 'rechazar' }} la solicitud de
+      <strong>{{ solicitudSeleccionada.name }}</strong> ({{ solicitudSeleccionada.email }}).
+    </p>
 
-        <div style="margin: 1rem 0; text-align: left;">
-            <label style="display: block; font-weight: bold; margin-bottom: 0.5rem;">
-                Mensaje de notificación (se enviará al correo):
-            </label>
-            <textarea [(ngModel)]="mensajeRespuesta" rows="4"
-                style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc; font-family: inherit;">
-            </textarea>
-        </div>
-
-        <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
-            <button class="btn-filter" (click)="cerrarConfirmacionSolicitud()">
-                Cancelar
-            </button>
-            <button type="button" class="btn btn-primary" [disabled]="procesandoSolicitud"
-                (click)="confirmarProcesarSolicitud()">
-                {{ procesandoSolicitud ? 'Procesando...' : 'Confirmar' }}
-            </button>
-        </div>
+    <div class="modal-field">
+      <label for="mensajeRespuesta" class="field-label">Mensaje de notificación (se enviará al correo)</label>
+      <textarea id="mensajeRespuesta" [(ngModel)]="mensajeRespuesta" rows="4"></textarea>
     </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" (click)="cerrarConfirmacionSolicitud()">Cancelar</button>
+      <button type="button" class="btn-primary btn-confirm" [class.is-danger]="accionSolicitud !== 'aprobar'"
+        [disabled]="procesandoSolicitud" (click)="confirmarProcesarSolicitud()">
+        {{ procesandoSolicitud ? 'Procesando...' : 'Confirmar' }}
+      </button>
+    </div>
+  </div>
 </div>
 }

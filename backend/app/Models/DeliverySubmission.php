@@ -16,6 +16,8 @@ class DeliverySubmission extends Model
 
         'comentario',
 
+        'nota',
+
         'estado'
 
     ];

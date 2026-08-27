@@ -1,221 +1,459 @@
-// VARIABLES DE PALETA VERDE OSCURO INSTITUCIONAL
-$bg-sidebar: #229e48;           // Fondo verde oscuro
-$border-sidebar: rgba(255, 255, 255, 0.12);
+@use "sass:color";
 
-$text-light: #ffffff;
-$text-muted: rgba(255, 255, 255, 0.7);
+// ============================================================
+//  BARRA LATERAL — Universidad de Nariño
+//  Sistema visual compartido: student-home / tools /
+//  community-profile / profile
+// ============================================================
 
-$hover-bg: rgba(255, 255, 255, 0.08);
-$active-bg: rgba(255, 255, 255, 0.18);
-$active-border: #10b981;        // Detalle de acento esmeralda claro
+// --- Paleta institucional ---
+$udenar-verde:        #006633; // Verde Sinople
+$udenar-verde-dark:   #00522A;
+$udenar-amarillo:     #FFCC00; // Gualda
+$udenar-rojo:         #C62828; // Gules
 
-// ESTRUCTURA PRINCIPAL DE LA BARRA LATERAL
-.sidebar {
-  width: 260px;
-  height: 100vh;
-  background: $bg-sidebar;
-  border-right: 1px solid $border-sidebar;
-  display: flex;
-  flex-direction: column;
-  padding: 1.25rem 1rem;
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, sans-serif;
-  position: relative;
+// --- Neutros sobre verde ---
+$sb-texto:            #FFFFFF;
+$sb-texto-suave:      rgba(255, 255, 255, 0.70);
+$sb-texto-tenue:      rgba(255, 255, 255, 0.48);
+$sb-borde:            rgba(255, 255, 255, 0.14);
+$sb-hover:            rgba(255, 255, 255, 0.09);
+
+// --- Neutros del dropdown ---
+$panel-bg:            #FFFFFF;
+$panel-borde:         #E3E8E4;
+$panel-texto:         #1F2A24;
+$panel-hover:         #F1F5F2;
+
+// --- Movimiento ---
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+$fast: 0.18s;
+$base: 0.26s;
+
+// ============================================================
+//  ICONOS (sprite compartido)
+// ============================================================
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
-// HEADER / BRAND
+.icon {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  display: block;
+}
+
+.icon-xxs { width: 15px; height: 15px; }
+.icon-xs  { width: 18px; height: 18px; }
+.icon-sm  { width: 21px; height: 21px; }
+
+// ============================================================
+//  ESTRUCTURA
+// ============================================================
+.sidebar {
+  width: 258px;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 0.85rem 1.1rem;
+  background: $udenar-verde;
+  border-right: 1px solid rgba(0, 0, 0, 0.10);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  // Sutil profundidad plana, sin degradados decorativos
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.06);
+}
+
+// ============================================================
+//  MARCA
+// ============================================================
 .sidebar-header {
-  padding-bottom: 1.25rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid $border-sidebar;
+  padding: 0 0.4rem;
+  margin-bottom: 1.35rem;
 
   .brand-logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.7rem;
+  }
 
-    .logo-icon {
-      font-size: 1.5rem;
-    }
+  .logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
 
-    h2 {
-      margin: 0;
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: $text-light;
-      letter-spacing: -0.02em;
+    .sidebar-logo-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.14rem;
+    min-width: 0;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.06rem;
+    font-weight: 750;
+    letter-spacing: -0.015em;
+    color: $sb-texto;
+    line-height: 1.1;
+  }
+
+  .brand-sub {
+    font-size: 0.62rem;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba($udenar-amarillo, 0.92);
+  }
+
+  // Línea dorada institucional
+  .brand-rule {
+    display: block;
+    width: 64px;
+    height: 2px;
+    margin-top: 1.15rem;
+    background: $udenar-amarillo;
+    border-radius: 2px;
+    transform-origin: left center;
+    animation: sbRule 0.6s $ease-out both;
   }
 }
 
-// MENÚ DE NAVEGACIÓN
+// ============================================================
+//  NAVEGACIÓN
+// ============================================================
 .sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.15rem;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+
+  &::-webkit-scrollbar { width: 3px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 3px;
+  }
+
+  .menu-label {
+    padding: 0.95rem 0.75rem 0.3rem;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: $sb-texto-tenue;
+
+    &:first-child { padding-top: 0; }
+  }
 
   a {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.65rem 0.85rem;
-    border-radius: 10px;
-    color: $text-muted;
+    gap: 0.7rem;
+    padding: 0.58rem 0.75rem;
+    border-radius: 9px;
+    color: $sb-texto-suave;
     text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    border-left: 3px solid transparent;
+    font-size: 0.855rem;
+    font-weight: 550;
+    letter-spacing: -0.005em;
+    transition:
+      background $fast ease,
+      color $fast ease;
+    animation: sbFadeIn 0.4s $ease-out both;
 
-    .icon {
-      font-size: 1.1rem;
+    // Entrada escalonada
+    @for $i from 1 through 8 {
+      &:nth-of-type(#{$i}) { animation-delay: #{0.03 * $i}s; }
+    }
+
+    .icon-slot {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
+      width: 20px;
+      flex-shrink: 0;
+      color: inherit;
+      transition: color $fast ease;
+    }
+
+    .nav-text {
+      min-width: 0;
+      transition: transform $base $ease-out;
+    }
+
+    // Marcador dorado (oculto por defecto)
+    &::before {
+      content: "";
+      position: absolute;
+      left: -0.85rem;
+      top: 50%;
+      width: 3px;
+      height: 0;
+      background: $udenar-amarillo;
+      border-radius: 0 3px 3px 0;
+      transform: translateY(-50%);
+      transition: height $base $ease-out;
     }
 
     &:hover {
-      background: $hover-bg;
-      color: $text-light;
+      background: $sb-hover;
+      color: $sb-texto;
+
+      .icon-slot { color: $udenar-amarillo; }
+      .nav-text { transform: translateX(2px); }
     }
 
-    &.active {
-      background: $active-bg;
-      color: $text-light;
-      font-weight: 600;
-      border-left-color: $active-border;
+    &:focus-visible {
+      outline: 2px solid $udenar-amarillo;
+      outline-offset: 2px;
+    }
 
-      .icon {
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+    // --- Elemento activo: pastilla blanca + marcador dorado ---
+    &.active {
+      background: $sb-texto;
+      color: $udenar-verde;
+      font-weight: 700;
+
+      .icon-slot { color: $udenar-verde; }
+
+      &::before { height: 20px; }
+
+      &:hover {
+        background: $sb-texto;
+        color: $udenar-verde;
+        .icon-slot { color: $udenar-verde; }
+        .nav-text { transform: none; }
       }
     }
   }
 }
 
-// ÁREA INFERIOR DE USUARIO Y DROPDOWN
+// ============================================================
+//  ÁREA DE USUARIO
+// ============================================================
 .sidebar-user {
   position: relative;
   margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid $border-sidebar;
+  padding-top: 0.9rem;
+  border-top: 1px solid $sb-borde;
 
   .dropdown-backdrop {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    inset: 0;
     z-index: 10;
   }
 
   .user-menu-btn {
+    position: relative;
+    z-index: 11;
     width: 100%;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
-    gap: 0.65rem;
-    padding: 0.65rem 0.75rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid $border-sidebar;
+    gap: 0.6rem;
+    padding: 0.55rem 0.6rem;
+    background: transparent;
+    border: 1px solid $sb-borde;
     border-radius: 10px;
     cursor: pointer;
     text-align: left;
-    transition: all 0.2s ease;
-
-    &:hover, &.active {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.25);
-    }
+    font-family: inherit;
+    transition:
+      background $fast ease,
+      border-color $fast ease;
 
     .user-avatar {
-      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      color: $sb-texto;
+      flex-shrink: 0;
+      transition: background $fast ease;
     }
 
     .user-label {
       flex: 1;
-      font-size: 0.88rem;
+      min-width: 0;
+      font-size: 0.83rem;
       font-weight: 600;
-      color: $text-light;
+      color: $sb-texto;
     }
 
     .chevron {
-      font-size: 0.8rem;
-      color: $text-muted;
-      transition: transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      color: $sb-texto-suave;
+      transition: transform $base $ease-out, color $fast ease;
 
-      &.open {
-        transform: rotate(180deg);
-      }
+      &.open { transform: rotate(180deg); }
+    }
+
+    &:hover,
+    &.active {
+      background: $sb-hover;
+      border-color: rgba(255, 255, 255, 0.26);
+
+      .user-avatar { background: rgba(255, 255, 255, 0.20); }
+      .chevron { color: $udenar-amarillo; }
+    }
+
+    &:focus-visible {
+      outline: 2px solid $udenar-amarillo;
+      outline-offset: 2px;
     }
   }
 
-  /* Desplegable en tono claro/blanco para garantizar legibilidad */
+  // ------------------------------------------------------------
+  //  DESPLEGABLE
+  // ------------------------------------------------------------
   .user-dropdown {
     position: absolute;
-    bottom: calc(100% + 0.5rem);
+    bottom: calc(100% + 0.45rem);
     left: 0;
     right: 0;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 0.4rem;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
     z-index: 20;
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    animation: fadeIn 0.15s ease-out;
+    gap: 0.1rem;
+    padding: 0.35rem;
+    background: $panel-bg;
+    border: 1px solid $panel-borde;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+    transform-origin: bottom center;
+    animation: sbPopIn $base $ease-out both;
 
     button {
       display: flex;
       align-items: center;
       gap: 0.6rem;
       width: 100%;
-      padding: 0.55rem 0.75rem;
+      box-sizing: border-box;
+      padding: 0.58rem 0.62rem;
       border: none;
       background: transparent;
       border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #0f172a;
+      font-family: inherit;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: $panel-texto;
       cursor: pointer;
       text-align: left;
-      transition: background 0.15s ease;
+      transition: background $fast ease, color $fast ease;
 
-      .icon {
-        font-size: 0.95rem;
+      .icon-slot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        color: $udenar-verde;
+        flex-shrink: 0;
+        transition: color $fast ease;
+      }
+
+      .item-text {
+        transition: transform $base $ease-out;
       }
 
       &:hover {
-        background: #f1f5f9;
+        background: $panel-hover;
+        color: $udenar-verde;
+        .item-text { transform: translateX(2px); }
+      }
+
+      &:focus-visible {
+        outline: 2px solid $udenar-verde;
+        outline-offset: -2px;
       }
 
       &.logout-btn {
-        color: #dc2626;
+        color: $udenar-rojo;
+        .icon-slot { color: $udenar-rojo; }
 
         &:hover {
-          background: #fee2e2;
+          background: rgba($udenar-rojo, 0.07);
+          color: $udenar-rojo;
         }
+
+        &:focus-visible { outline-color: $udenar-rojo; }
       }
     }
 
     .dropdown-divider {
       height: 1px;
-      background: #e2e8f0;
-      margin: 0.2rem 0;
+      margin: 0.25rem 0.3rem;
+      background: $panel-borde;
     }
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
+// ============================================================
+//  ANIMACIONES
+// ============================================================
+@keyframes sbFadeIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes sbRule {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+@keyframes sbPopIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// ============================================================
+//  RESPONSIVE
+// ============================================================
+@media (max-width: 900px) {
+  .sidebar {
+    width: 226px;
+    padding: 1.25rem 0.7rem 0.95rem;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .sidebar-menu a { font-size: 0.83rem; }
+}
+
+// ============================================================
+//  ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+// ============================================================
+@media (prefers-reduced-motion: reduce) {
+  .sidebar *,
+  .sidebar *::before {
+    animation: none !important;
+    transition: none !important;
   }
 }

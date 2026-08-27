@@ -1,58 +1,144 @@
-/* Contenedor Principal Host - Posicionado a la Derecha */
+// ==========================================================
+//  PROJECT AI CHATBOT — Gama Azul Institucional
+//  Paleta: Azul Marino (#0B2545), Azul Primario (#134074), Azul Brillo (#0077B6)
+// ==========================================================
+
+// --- Paleta Azul Institucional ---
+$azul-dark:           #0B2545;
+$azul-primario:       #134074;
+$azul-accent:         #0077B6;
+$azul-soft:           #EEF6FC;
+$azul-hover:          #09315A;
+
+// --- Neutros y Superficies ---
+$bg-card:             #FFFFFF;
+$bg-chat:             #F4F7FA;
+$border-color:        #D8E2EC;
+$border-soft:         #E8EEF4;
+
+$text-main:           #0F172A;
+$text-muted:          #475569;
+$text-faint:          #94A3B8;
+
+$color-online:        #10B981;
+$color-danger:        #E11D48;
+
+// --- Tipografía ---
+$font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+// --- Radios y Animaciones ---
+$radius-sm:           8px;
+$radius-md:           14px;
+$radius-lg:           18px;
+$radius-full:         9999px;
+
+$ease-out:            cubic-bezier(0.16, 1, 0.3, 1);
+$ease-bounce:         cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// ==========================================================
+//  HOST (Posicionamiento fijo en esquina inferior derecha)
+// ==========================================================
 :host {
   position: fixed;
-  bottom: 25px;
-  right: 25px; // 👈 Mantiene la IA a la DERECHA
-  z-index: 1050; // Ligero incremento para sobreponerse adecuadamente
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1050;
+  font-family: $font-sans;
+  color: $text-main;
+  -webkit-font-smoothing: antialiased;
+
+  *, *::before, *::after { box-sizing: border-box; }
 }
 
-/* Botón flotante */
+.icon-sprite { display: none; }
+
+.icon-svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  display: block;
+
+  &.icon-xs { width: 16px; height: 16px; stroke-width: 2.2; }
+}
+
+// ==========================================================
+//  BOTÓN FLOTANTE (TOGGLE)
+// ==========================================================
 .chatbot-toggle-btn {
   width: 58px;
   height: 58px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: #ffffff;
+  border-radius: $radius-full;
+  background: linear-gradient(135deg, $azul-primario, $azul-dark);
+  color: #FFFFFF;
   border: none;
-  box-shadow: 0 4px 18px rgba(99, 102, 241, 0.45);
+  box-shadow: 0 6px 20px rgba(11, 37, 69, 0.35);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease;
+  transition: transform 0.25s $ease-bounce, background-color 0.3s ease, box-shadow 0.3s ease;
 
   .icon {
-    font-size: 26px;
-    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(11, 37, 69, 0.45);
+  }
+
+  &:focus-visible {
+    outline: 3px solid $azul-accent;
+    outline-offset: 3px;
   }
 
   &.active {
-    background: #ef4444;
-    box-shadow: 0 4px 18px rgba(239, 68, 68, 0.45);
+    background: linear-gradient(135deg, $color-danger, darken($color-danger, 10%));
+    box-shadow: 0 6px 20px rgba(225, 29, 72, 0.35);
+
+    &:hover {
+      box-shadow: 0 8px 25px rgba(225, 29, 72, 0.45);
+    }
   }
 }
 
-/* Ventana Flotante */
+// ==========================================================
+//  VENTANA FLOTANTE DEL CHATBOT
+// ==========================================================
 .chatbot-window {
   position: absolute;
   bottom: 72px;
   right: 0;
-  width: 370px;
-  height: 520px;
+  width: 380px;
+  height: 540px;
   max-width: calc(100vw - 32px);
   max-height: calc(100vh - 110px);
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16);
+  background-color: $bg-card;
+  border-radius: $radius-lg;
+  border: 1px solid $border-color;
+  box-shadow: 0 16px 40px rgba(11, 37, 69, 0.18),
+              0 4px 12px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideUp 0.3s $ease-out both;
+
+  // Decoración de borde superior en Azul Brillo
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, $azul-accent, $azul-primario);
+    z-index: 10;
+  }
 }
 
 @keyframes slideUp {
@@ -66,11 +152,11 @@
   }
 }
 
-/* Encabezado */
+// ---------- Encabezado ----------
 .chatbot-header {
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  color: #ffffff;
-  padding: 14px 18px;
+  background: linear-gradient(135deg, $azul-dark, $azul-primario);
+  color: #FFFFFF;
+  padding: 1rem 1.1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -78,38 +164,55 @@
   .bot-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem;
 
     .bot-avatar {
-      font-size: 22px;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 6px;
-      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      border-radius: $radius-md;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       display: flex;
       align-items: center;
       justify-content: center;
+      color: $azul-accent;
     }
 
-    h4 {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 600;
+    .bot-details {
+      display: flex;
+      flex-direction: column;
+
+      .header-eyebrow {
+        font-size: 0.58rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      h4 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: #FFFFFF;
+      }
     }
 
     .status-online {
-      font-size: 11px;
-      opacity: 0.9;
-      display: flex;
+      font-size: 0.68rem;
+      color: rgba(255, 255, 255, 0.85);
+      display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 0.35rem;
+      margin-top: 0.1rem;
 
-      &::before {
-        content: '';
-        display: inline-block;
-        width: 7px;
-        height: 7px;
-        background-color: #10b981;
-        border-radius: 50%;
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        background-color: $color-online;
+        border-radius: $radius-full;
+        box-shadow: 0 0 6px $color-online;
       }
     }
   }
@@ -117,97 +220,153 @@
   .close-btn {
     background: transparent;
     border: none;
-    color: #ffffff;
-    font-size: 18px;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.35rem;
+    border-radius: $radius-sm;
     cursor: pointer;
-    opacity: 0.8;
-    padding: 4px;
-    border-radius: 4px;
+    display: grid;
+    place-items: center;
+    transition: background 0.2s $ease-out, color 0.2s $ease-out;
 
     &:hover {
-      opacity: 1;
-      background-color: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.5);
     }
   }
 }
 
-/* Historial de Mensajes */
+// ==========================================================
+//  HISTORIAL DE MENSAJES
+// ==========================================================
 .chatbot-messages {
   flex: 1;
-  padding: 16px;
+  padding: 1.1rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  background-color: #f8fafc;
-
-  
+  gap: 0.85rem;
+  background-color: $bg-chat;
 
   .message {
     display: flex;
     flex-direction: column;
-    max-width: 82%;
+    max-width: 85%;
 
     .message-content {
-      padding: 10px 14px;
-      border-radius: 14px;
-      font-size: 13.5px;
-      line-height: 1.45;
+      padding: 0.65rem 0.9rem;
+      border-radius: $radius-md;
+      font-size: 0.83rem;
+      line-height: 1.48;
       word-break: break-word;
-      white-space: pre-wrap; 
     }
 
     .message-time {
-      font-size: 10px;
-      color: #94a3b8;
-      margin-top: 3px;
-      padding: 0 4px;
+      font-size: 0.62rem;
+      color: $text-faint;
+      margin-top: 0.25rem;
+      padding: 0 0.25rem;
     }
 
-    /* Mensaje del Usuario */
+    // --- Mensaje del Usuario ---
     &.user-message {
       align-self: flex-end;
       align-items: flex-end;
 
       .message-content {
-        background-color: #4f46e5;
-        color: #ffffff;
+        background: linear-gradient(135deg, $azul-primario, $azul-dark);
+        color: #FFFFFF;
         border-bottom-right-radius: 3px;
+        box-shadow: 0 2px 8px rgba(11, 37, 69, 0.15);
       }
+
+      .message-time { text-align: right; }
     }
 
-    /* Mensaje del Bot */
+    // --- Mensaje del Bot ---
     &.bot-message {
       align-self: flex-start;
       align-items: flex-start;
 
       .message-content {
-        background-color: #ffffff;
-        color: #1e293b;
-        border: 1px solid #e2e8f0;
+        background-color: $bg-card;
+        color: $text-main;
+        border: 1px solid $border-soft;
         border-bottom-left-radius: 3px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
       }
     }
   }
 }
 
-/* Indicador de "Escribiendo..." */
+// ---------- Estilos de Markdown (Respuestas Bot) ----------
+markdown {
+  display: block;
+
+  p {
+    margin: 0 0 0.5rem;
+    &:last-child { margin-bottom: 0; }
+  }
+
+  h1, h2, h3, h4 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0.6rem 0 0.3rem 0;
+    color: $azul-dark;
+  }
+
+  ul, ol {
+    margin: 0.4rem 0 0.5rem 1.1rem;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 0.25rem;
+  }
+
+  strong {
+    color: $azul-dark;
+    font-weight: 700;
+  }
+
+  blockquote {
+    border-left: 3px solid $azul-accent;
+    margin: 0.5rem 0;
+    padding: 0.35rem 0.6rem;
+    color: $text-muted;
+    font-style: italic;
+    background: $azul-soft;
+    border-radius: 0 $radius-sm $radius-sm 0;
+  }
+
+  code {
+    background: $bg-chat;
+    border: 1px solid $border-color;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+  }
+}
+
+// ---------- Indicador de "Escribiendo..." ----------
 .typing-box {
-  padding: 8px 14px !important;
+  padding: 0.6rem 0.8rem !important;
 }
 
 .typing-indicator {
   display: flex;
   align-items: center;
-  gap: 5px;
-  height: 16px;
+  gap: 4px;
+  height: 14px;
 
   span {
     width: 6px;
     height: 6px;
-    background-color: #818cf8;
-    border-radius: 50%;
+    background-color: $azul-accent;
+    border-radius: $radius-full;
     animation: bounce 1.4s infinite ease-in-out both;
 
     &:nth-child(1) { animation-delay: -0.32s; }
@@ -220,108 +379,72 @@
   40% { transform: scale(1); }
 }
 
-/* Formulario de Envío */
+// ==========================================================
+//  FORMULARIO DE ENVÍO (FOOTER)
+// ==========================================================
 .chatbot-footer {
-  padding: 12px;
-  background-color: #ffffff;
-  border-top: 1px solid #f1f5f9;
+  padding: 0.75rem 0.9rem;
+  background-color: $bg-card;
+  border-top: 1px solid $border-soft;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 
   input {
     flex: 1;
-    padding: 10px 14px;
-    border: 1px solid #cbd5e1;
-    border-radius: 22px;
-    font-size: 13px;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid $border-color;
+    border-radius: $radius-full;
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: $text-main;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    background: $bg-chat;
+    transition: border-color 0.2s $ease-out, background 0.2s $ease-out, box-shadow 0.2s $ease-out;
+
+    &::placeholder { color: $text-faint; }
 
     &:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+      background: $bg-card;
+      border-color: $azul-accent;
+      box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.12);
     }
 
     &:disabled {
-      background-color: #f1f5f9;
+      background-color: $border-soft;
       cursor: not-allowed;
     }
   }
 
   button {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-full;
     border: none;
-    background-color: #4f46e5;
-    color: white;
+    background: linear-gradient(135deg, $azul-primario, $azul-dark);
+    color: #FFFFFF;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s, transform 0.1s;
+    transition: background-color 0.2s $ease-out, transform 0.15s $ease-bounce, box-shadow 0.2s $ease-out;
 
     &:hover:not(:disabled) {
-      background-color: #4338ca;
       transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(11, 37, 69, 0.25);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $azul-accent;
+      outline-offset: 2px;
     }
 
     &:disabled {
-      background-color: #cbd5e1;
+      background: $border-color;
+      color: $text-faint;
       cursor: not-allowed;
-    }
-  }
-}
-
-.ai-message {
-  background-color: #f3f4f6;
-  color: #1f2937;
-  border-radius: 12px 12px 12px 2px;
-  padding: 10px 14px;
-  max-width: 85%;
-  margin-bottom: 10px;
-  font-size: 0.92rem;
-  line-height: 1.5;
-
-  /* Estilos aplicados al contenido de Markdown */
-  markdown {
-    p {
-      margin-bottom: 8px;
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    h1, h2, h3, h4 {
-      font-size: 1rem;
-      font-weight: 700;
-      margin: 10px 0 6px 0;
-      color: #111827;
-    }
-
-    ul, ol {
-      margin: 6px 0 8px 18px;
-      padding: 0;
-    }
-
-    li {
-      margin-bottom: 4px;
-    }
-
-    strong {
-      color: #111827;
-      font-weight: 600;
-    }
-
-    blockquote {
-      border-left: 3px solid #6366f1;
-      margin: 8px 0;
-      padding-left: 10px;
-      color: #4b5563;
-      font-style: italic;
-      background: #eef2ff;
-      border-radius: 0 4px 4px 0;
+      transform: none;
+      box-shadow: none;
     }
   }
 }

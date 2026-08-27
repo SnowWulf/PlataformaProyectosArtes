@@ -1,663 +1,733 @@
-<div class="art-dashboard">
-  <!-- Hero / Header Principal del Coordinador -->
+<!-- ==========================================================
+     SPRITE DE ICONOS PROFESIONALES (trazo 1.9, estilo Feather)
+     ========================================================== -->
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="ch-alert" viewBox="0 0 24 24">
+      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </symbol>
+    <symbol id="ch-board" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="5" height="18" rx="1.2" />
+      <rect x="10.5" y="3" width="5" height="12" rx="1.2" />
+      <rect x="18" y="3" width="3" height="8" rx="1.2" />
+    </symbol>
+    <symbol id="ch-users" viewBox="0 0 24 24">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </symbol>
+    <symbol id="ch-archive" viewBox="0 0 24 24">
+      <polyline points="21 8 21 21 3 21 3 8" />
+      <rect x="1" y="3" width="22" height="5" rx="1" />
+      <line x1="10" y1="12" x2="14" y2="12" />
+    </symbol>
+    <symbol id="ch-user-x" viewBox="0 0 24 24">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <line x1="17" y1="8" x2="22" y2="13" />
+      <line x1="22" y1="8" x2="17" y2="13" />
+    </symbol>
+    <symbol id="ch-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9" />
+      <polyline points="12 7 12 12 16 14" />
+    </symbol>
+    <symbol id="ch-activity" viewBox="0 0 24 24">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+    </symbol>
+    <symbol id="ch-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="7" />
+      <line x1="16.5" y1="16.5" x2="21" y2="21" />
+    </symbol>
+    <symbol id="ch-check" viewBox="0 0 24 24">
+      <polyline points="20 6 9 17 4 12" />
+    </symbol>
+    <symbol id="ch-check-circle" viewBox="0 0 24 24">
+      <path d="M21 12a9 9 0 1 1-4.66-7.89" />
+      <polyline points="21 4.5 12 13.5 9 10.5" />
+    </symbol>
+    <symbol id="ch-bell" viewBox="0 0 24 24">
+      <path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </symbol>
+    <symbol id="ch-user-plus" viewBox="0 0 24 24">
+      <path d="M15 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="8.5" cy="7" r="4" />
+      <line x1="19" y1="8" x2="19" y2="14" />
+      <line x1="22" y1="11" x2="16" y2="11" />
+    </symbol>
+    <symbol id="ch-file" viewBox="0 0 24 24">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+    </symbol>
+    <symbol id="ch-download" viewBox="0 0 24 24">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="3" x2="12" y2="15" />
+    </symbol>
+    <symbol id="ch-eye" viewBox="0 0 24 24">
+      <path d="M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12z" />
+      <circle cx="12" cy="12" r="3" />
+    </symbol>
+    <symbol id="ch-link-off" viewBox="0 0 24 24">
+      <path d="M18.36 6.64a9 9 0 0 1 .5 12.36" />
+      <path d="M6.64 6.64a9 9 0 0 0 0 12.72" />
+      <line x1="3" y1="3" x2="21" y2="21" />
+    </symbol>
+    <symbol id="ch-inbox" viewBox="0 0 24 24">
+      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+      <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+    </symbol>
+    <symbol id="ch-close" viewBox="0 0 24 24">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </symbol>
+    <symbol id="ch-info" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9" />
+      <line x1="12" y1="11" x2="12" y2="16" />
+      <line x1="12" y1="8" x2="12.01" y2="8" />
+    </symbol>
+    <symbol id="ch-calendar" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+      <line x1="8" y1="3" x2="8" y2="6" />
+      <line x1="16" y1="3" x2="16" y2="6" />
+    </symbol>
+    <symbol id="ch-layers" viewBox="0 0 24 24">
+      <polygon points="12 2 22 8 12 14 2 8 12 2" />
+      <polyline points="2 13 12 19 22 13" />
+    </symbol>
+  </defs>
+</svg>
+
+<!-- CONTENEDOR PRINCIPAL DEL DASHBOARD -->
+<div class="art-dashboard coordinator-dashboard">
+  <!-- Header con Contexto Operativo -->
   <header class="art-hero hero-coordinador">
     <div class="hero-content">
       <div class="hero-badge">
-        <span class="badge-dot"></span>
-        Facultad de Artes • Panel de Coordinación
+        <span class="badge-dot" aria-hidden="true"></span>
+        Facultad de Artes &bull; Panel de Coordinación Académica
       </div>
-      <h1 class="hero-title">Gestión & Control Académico</h1>
+      <h1 class="hero-title">Centro de Control y Gestión Académica</h1>
       <p class="hero-subtitle">
-        Supervisión de proyectos de grado, asignación de docentes y seguimiento del estado documental.
+        Monitoreo en tiempo real de cuellos de botella, balance de carga docente y ciclo de vida de proyectos.
       </p>
+    </div>
+
+    <div class="hero-metrics" aria-label="Resumen general">
+      <div class="hero-metric">
+        <span class="metric-value">{{ totalProyectos }}</span>
+        <span class="metric-label">Proyectos activos</span>
+      </div>
+      <span class="metric-divider" aria-hidden="true"></span>
+      <div class="hero-metric">
+        <span class="metric-value">{{ tutores.length }}</span>
+        <span class="metric-label">Docentes tutores</span>
+      </div>
+      <span class="metric-divider" aria-hidden="true"></span>
+      <div class="hero-metric" [class.is-critical]="totalAlertas > 0">
+        <span class="metric-value">{{ totalAlertas }}</span>
+        <span class="metric-label">Alertas abiertas</span>
+      </div>
     </div>
   </header>
 
-  <!-- Navegación por Píldoras Flotantes -->
-  <nav class="nav-pills-container">
-    <div class="nav-pills">
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'inicio'" 
-        (click)="tabActiva = 'inicio'">
-        <span class="pill-icon">⚡</span>
-        <span class="pill-text">Inicio</span>
+  <!-- Navegación Principal -->
+  <nav class="nav-pills-container" aria-label="Secciones del panel">
+    <div class="nav-pills" role="tablist">
+      <button class="pill-btn" role="tab" [attr.aria-selected]="vistaActiva === 'alertas'"
+        [class.active]="vistaActiva === 'alertas'" (click)="vistaActiva = 'alertas'">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-alert"></use></svg>
+        <span class="pill-text">Atención Requerida</span>
+        @if (totalAlertas > 0) {
+        <span class="pill-count danger">{{ totalAlertas }}</span>
+        }
       </button>
 
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'proyectos'" 
-        (click)="tabActiva = 'proyectos'">
-        <span class="pill-icon">📁</span>
-        <span class="pill-text">Proyectos</span>
-        <span class="pill-count" *ngIf="totalProyectos">{{ totalProyectos }}</span>
+      <button class="pill-btn" role="tab" [attr.aria-selected]="vistaActiva === 'kanban'"
+        [class.active]="vistaActiva === 'kanban'" (click)="vistaActiva = 'kanban'">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-board"></use></svg>
+        <span class="pill-text">Tablero Kanban</span>
+        <span class="pill-count">{{ totalProyectos }}</span>
       </button>
 
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'estudiantes'" 
-        (click)="tabActiva = 'estudiantes'">
-        <span class="pill-icon">🎓</span>
-        <span class="pill-text">Estudiantes</span>
-        <span class="pill-count" *ngIf="totalEstudiantes">{{ totalEstudiantes }}</span>
+      <button class="pill-btn" role="tab" [attr.aria-selected]="vistaActiva === 'docentes'"
+        [class.active]="vistaActiva === 'docentes'" (click)="vistaActiva = 'docentes'">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-users"></use></svg>
+        <span class="pill-text">Carga Docente</span>
+        <span class="pill-count">{{ tutores.length }}</span>
       </button>
 
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'tutores'" 
-        (click)="tabActiva = 'tutores'">
-        <span class="pill-icon">👩‍🏫</span>
-        <span class="pill-text">Tutores</span>
-        <span class="pill-count" *ngIf="totalTutores">{{ totalTutores }}</span>
-      </button>
-
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'documentos'" 
-        (click)="tabActiva = 'documentos'">
-        <span class="pill-icon">📄</span>
-        <span class="pill-text">Documentos</span>
-        <span class="pill-count" *ngIf="totalDocumentos">{{ totalDocumentos }}</span>
-      </button>
-
-      <button 
-        class="pill-btn" 
-        [class.active]="tabActiva === 'reportes'" 
-        (click)="tabActiva = 'reportes'">
-        <span class="pill-icon">📊</span>
-        <span class="pill-text">Reportes</span>
+      <button class="pill-btn" role="tab" [attr.aria-selected]="vistaActiva === 'archivo'"
+        [class.active]="vistaActiva === 'archivo'" (click)="vistaActiva = 'archivo'">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-archive"></use></svg>
+        <span class="pill-text">Repositorio y Auditoría</span>
       </button>
     </div>
   </nav>
 
-  <!-- TAB 1: INICIO -->
-  @if (tabActiva === 'inicio') {
-    <section class="tab-pane">
-      <!-- Métricas Principales -->
-      <div class="metrics-grid">
-        <div 
-          class="metric-card" 
-          [class.active]="filtroCoordinador === 'estudiantes'"
-          (click)="filtroCoordinador = 'estudiantes'">
-          <div class="metric-header">
-            <span class="metric-label">Estudiantes</span>
-            <div class="metric-icon icon-emerald">🎓</div>
-          </div>
-          <div class="metric-value">{{ totalEstudiantes }}</div>
-          <span class="metric-footer">Estudiantes activos</span>
+  <!-- VISTA 1: ALERTAS -->
+  @if (vistaActiva === 'alertas') {
+  <section class="tab-pane">
+    <div class="kpi-banner">
+      <article class="kpi-card danger">
+        <div class="kpi-icon">
+          <svg class="icon icon-md" aria-hidden="true"><use href="#ch-user-x"></use></svg>
         </div>
-
-        <div 
-          class="metric-card" 
-          [class.active]="filtroCoordinador === 'tutores'"
-          (click)="filtroCoordinador = 'tutores'">
-          <div class="metric-header">
-            <span class="metric-label">Tutores</span>
-            <div class="metric-icon icon-blue">👩‍🏫</div>
-          </div>
-          <div class="metric-value">{{ totalTutores }}</div>
-          <span class="metric-footer">Planta docente</span>
+        <div class="kpi-info">
+          <span class="kpi-label">Proyectos huérfanos</span>
+          <strong class="kpi-value">{{ proyectosSinTutorList.length }}</strong>
+          <span class="kpi-subtext">Requieren tutor urgente</span>
         </div>
+      </article>
 
-        <div 
-          class="metric-card" 
-          [class.active]="filtroCoordinador === 'proyectos'"
-          (click)="filtroCoordinador = 'proyectos'">
-          <div class="metric-header">
-            <span class="metric-label">Proyectos</span>
-            <div class="metric-icon icon-purple">📁</div>
-          </div>
-          <div class="metric-value">{{ totalProyectos }}</div>
-          <span class="metric-footer">Proyectos de grado</span>
+      <article class="kpi-card warning">
+        <div class="kpi-icon">
+          <svg class="icon icon-md" aria-hidden="true"><use href="#ch-clock"></use></svg>
         </div>
-
-        <div 
-          class="metric-card" 
-          [class.active]="filtroCoordinador === 'documentos'"
-          (click)="filtroCoordinador = 'documentos'">
-          <div class="metric-header">
-            <span class="metric-label">Documentos</span>
-            <div class="metric-icon icon-amber">📄</div>
-          </div>
-          <div class="metric-value">{{ totalDocumentos }}</div>
-          <span class="metric-footer">Subidos al sistema</span>
+        <div class="kpi-info">
+          <span class="kpi-label">Revisiones estancadas</span>
+          <strong class="kpi-value">{{ revisionesDemoradas }}</strong>
+          <span class="kpi-subtext">Más de 7 días sin respuesta</span>
         </div>
+      </article>
 
-        <div 
-          class="metric-card" 
-          [class.active]="filtroCoordinador === 'pendientes'"
-          (click)="filtroCoordinador = 'pendientes'">
-          <div class="metric-header">
-            <span class="metric-label">Pendientes</span>
-            <div class="metric-icon icon-rose">⏳</div>
-          </div>
-          <div class="metric-value text-rose">{{ pendientesRevision }}</div>
-          <span class="metric-footer text-rose">Requieren evaluación</span>
+      <article class="kpi-card info">
+        <div class="kpi-icon">
+          <svg class="icon icon-md" aria-hidden="true"><use href="#ch-activity"></use></svg>
         </div>
-
-        <div 
-          class="metric-card" 
-          [class.active]="filtroCoordinador === 'sintutor'"
-          (click)="filtroCoordinador = 'sintutor'">
-          <div class="metric-header">
-            <span class="metric-label">Sin Tutor</span>
-            <div class="metric-icon icon-orange">⚠️</div>
-          </div>
-          <div class="metric-value text-orange">{{ proyectosSinTutor }}</div>
-          <span class="metric-footer text-orange">Sin docente asignado</span>
+        <div class="kpi-info">
+          <span class="kpi-label">Tutores en sobrecarga</span>
+          <strong class="kpi-value">{{ tutoresSobrecargados }}</strong>
+          <span class="kpi-subtext">Superan el límite de 6 proyectos</span>
         </div>
-      </div>
+      </article>
+    </div>
 
-      <!-- Tabla de Resultados Filtrados con Toolbar -->
-      <div class="content-section">
-        <div class="section-toolbar">
-          <div>
-            <h2>Listado Filtrado: {{ filtroCoordinador | titlecase }}</h2>
-            <p class="section-subtitle">Registros consolidados según la categoría seleccionada</p>
+    <div class="action-grid">
+      <article class="action-card">
+        <header class="action-card-header">
+          <h3>
+            <span class="status-indicator danger" aria-hidden="true"></span>
+            Proyectos esperando tutor
+          </h3>
+          <span class="badge-count">{{ proyectosSinTutorList.length }}</span>
+        </header>
+        <p class="action-card-desc">Aprobados, pero no pueden avanzar sin un docente a cargo.</p>
+
+        <div class="action-item-list">
+          @for (proj of proyectosSinTutorList; track proj.id) {
+          <div class="action-item">
+            <div class="item-main">
+              <strong>{{ proj.titulo }}</strong>
+              <span class="subtext">
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-users"></use></svg>
+                {{ proj.owner?.name }}
+                <span class="dot-sep" aria-hidden="true"></span>
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-clock"></use></svg>
+                {{ diasSinTutor(proj.created_at) }} días en espera
+              </span>
+            </div>
+            <button class="btn-action primary" (click)="abrirModalAsignarTutor(proj)">
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-user-plus"></use></svg>
+              Asignar tutor
+            </button>
           </div>
+          } @empty {
+          <div class="empty-state-sm">
+            <svg class="icon icon-md" aria-hidden="true"><use href="#ch-check-circle"></use></svg>
+            <span>Todos los proyectos tienen tutor asignado.</span>
+          </div>
+          }
+        </div>
+      </article>
 
-          <!-- Buscador y Ordenación Global -->
-          <div class="toolbar-actions">
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
-              <input 
-                type="text" 
-                placeholder="Buscar por nombre, correo o título..." 
-                [(ngModel)]="busquedaGeneral"
-                (input)="filtrarTablaGlobal()" />
+      <article class="action-card">
+        <header class="action-card-header">
+          <h3>
+            <span class="status-indicator warning" aria-hidden="true"></span>
+            Revisiones con retraso crítico
+          </h3>
+          <span class="badge-count">{{ documentosEstancadosList.length }}</span>
+        </header>
+        <p class="action-card-desc">Entregas que superan el tiempo límite de revisión docente.</p>
+
+        <div class="action-item-list">
+          @for (doc of documentosEstancadosList; track doc.id) {
+          <div class="action-item">
+            <div class="item-main">
+              <strong>{{ doc.nombre || doc.titulo }}</strong>
+              <span class="subtext">
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-users"></use></svg>
+                <span class="text-bold">{{ obtenerTutorDocumento(doc.proyectoId) }}</span>
+                <span class="dot-sep" aria-hidden="true"></span>
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-clock"></use></svg>
+                {{ diasPendiente(doc.created_at) }} días sin respuesta
+              </span>
             </div>
 
-            <select class="select-sort" [(ngModel)]="criterioOrden" (change)="ordenarTablaGlobal()">
-              <option value="reciente">Más reciente</option>
-              <option value="antiguo">Más antiguo</option>
-              <option value="nombre">Nombre (A-Z)</option>
-            </select>
+            <!-- CONTROL DINÁMICO DE ESTADO DE RECORDATORIO -->
+            @if (esRecordatorioReciente(doc.id)) {
+            <span class="badge-sent" title="Recordatorio enviado en las últimas 24 horas">
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-check"></use></svg>
+              Enviado hoy
+            </span>
+            } @else {
+            <button class="btn-action outline-warning" (click)="enviarRecordatorioTutor(doc)"
+              [disabled]="enviandoRecordatorioMap[doc.id]">
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-bell"></use></svg>
+              {{ enviandoRecordatorioMap[doc.id] ? 'Enviando...' : 'Recordar' }}
+            </button>
+            }
           </div>
+          } @empty {
+          <div class="empty-state-sm">
+            <svg class="icon icon-md" aria-hidden="true"><use href="#ch-check-circle"></use></svg>
+            <span>Sin revisiones estancadas en el sistema.</span>
+          </div>
+          }
         </div>
-
-        @if (obtenerElementosFiltrados().length > 0) {
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  @if (filtroCoordinador === 'estudiantes') {
-                    <th>Estudiante</th>
-                    <th>Registro</th>
-                    <th>Proyectos</th>
-                    <th>Tutores Asignados</th>
-                  } @else if (filtroCoordinador === 'documentos') {
-                    <th>Documento</th>
-                    <th>Proyecto</th>
-                    <th>Estudiante</th>
-                    <th>Tutor</th>
-                    <th>Estado</th>
-                  } @else if (filtroCoordinador === 'tutores') {
-                    <th>Docente</th>
-                    <th>Proyectos</th>
-                    <th>Estudiantes</th>
-                    <th>Pendientes</th>
-                  } @else if (filtroCoordinador === 'proyectos') {
-                    <th>Proyecto</th>
-                    <th>Estudiante</th>
-                    <th>Tutor</th>
-                    <th>Estado</th>
-                  } @else if (filtroCoordinador === 'pendientes') {
-                    <th>Documento</th>
-                    <th>Proyecto</th>
-                    <th>Tutor Asignado</th>
-                    <th>En Espera</th>
-                    <th>Estado</th>
-                  } @else if (filtroCoordinador === 'sintutor') {
-                    <th>Proyecto Huérfano</th>
-                    <th>Estudiante</th>
-                    <th>Creación</th>
-                    <th>Días en Espera</th>
-                  }
-                </tr>
-              </thead>
-              <tbody>
-                @for (item of obtenerElementosFiltrados(); track item.id) {
-                  <tr>
-                    @if (filtroCoordinador === 'estudiantes') {
-                      <td>
-                        <div class="user-cell">
-                          <div class="avatar-circle font-emerald">{{ item.name.charAt(0) }}</div>
-                          <div>
-                            <strong>{{ item.name }}</strong>
-                            <span class="subtext">{{ item.email }}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
-                      <td><span class="count-pill">{{ contarProyectosEstudiante(item.id) }}</span></td>
-                      <td>{{ obtenerTutoresEstudiante(item.id) }}</td>
-                    } 
-                    
-                    @else if (filtroCoordinador === 'documentos') {
-                      <td>
-                        <strong>{{ item.nombre }}</strong>
-                        <span class="type-tag">{{ item.tipo ?? 'Documento' }}</span>
-                      </td>
-                      <td>{{ item.proyectoTitulo }}</td>
-                      <td>{{ obtenerEstudianteDocumento(item.proyectoId) }}</td>
-                      <td>{{ obtenerTutorDocumento(item.proyectoId) }}</td>
-                      <td>
-                        <span class="status-pill" [ngClass]="{
-                          'status-pending': item.estado === 'Pendiente revisión' || item.estado === 'submitted',
-                          'status-reviewing': item.estado === 'En revisión',
-                          'status-approved': item.estado === 'Aprobado',
-                          'status-correction': item.estado === 'Requiere correcciones',
-                          'status-rejected': item.estado === 'Rechazado'
-                        }">
-                          <span class="status-dot"></span> {{ item.estado }}
-                        </span>
-                      </td>
-                    }
-
-                    @else if (filtroCoordinador === 'tutores') {
-                      <td>
-                        <div class="user-cell">
-                          <div class="avatar-circle font-blue">{{ item.name.charAt(0) }}</div>
-                          <div>
-                            <strong>{{ item.name }}</strong>
-                            <span class="subtext">{{ item.email }}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td><span class="count-pill">{{ contarProyectosTutor(item.id) }}</span></td>
-                      <td>{{ contarEstudiantesTutor(item.id) }}</td>
-                      <td><strong class="text-rose">{{ contarPendientesTutor(item.id) }}</strong></td>
-                    }
-
-                    @else if (filtroCoordinador === 'proyectos') {
-                      <td><strong>{{ item.titulo }}</strong></td>
-                      <td>{{ item.owner?.name }}</td>
-                      <td>{{ item.tutor?.name ?? 'Sin tutor' }}</td>
-                      <td><span class="status-pill status-reviewing"><span class="status-dot"></span> {{ item.estado }}</span></td>
-                    }
-
-                    @else if (filtroCoordinador === 'pendientes') {
-                      <td><strong>{{ item.nombre }}</strong></td>
-                      <td>{{ item.proyectoTitulo }}</td>
-                      <td>{{ obtenerTutorDocumento(item.proyectoId) }}</td>
-                      <td>
-                        <span class="time-badge" [class.danger]="diasPendiente(item.created_at) > 7">
-                          {{ diasPendiente(item.created_at) }} día(s)
-                        </span>
-                      </td>
-                      <td><span class="status-pill status-pending"><span class="status-dot"></span> {{ item.estado }}</span></td>
-                    }
-
-                    @else if (filtroCoordinador === 'sintutor') {
-                      <td><strong>{{ item.titulo }}</strong></td>
-                      <td>{{ item.owner?.name }}</td>
-                      <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
-                      <td><span class="alert-chip tag-orange">{{ diasSinTutor(item.created_at) }} días</span></td>
-                    }
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        } @else {
-          <div class="empty-state">
-            <div class="empty-icon">📂</div>
-            <p>No se encontraron resultados coincidentes.</p>
-          </div>
-        }
-      </div>
-    </section>
+      </article>
+    </div>
+  </section>
   }
 
-  <!-- TAB 2: PROYECTOS (REDISEÑO DE ALTO NIVEL CON CANVAS CARDS) -->
-  @if (tabActiva === 'proyectos') {
-    <section class="tab-pane">
-      <div class="content-section">
-        <!-- Toolbar Superior de Proyectos -->
-        <div class="section-toolbar border-bottom">
-          <div>
-            <h2>Panel de Proyectos de Investigación</h2>
-            <p class="section-subtitle">Monitoreo de avance, asignación docente y estado de entregables</p>
+  <!-- VISTA 2: KANBAN -->
+  @if (vistaActiva === 'kanban') {
+  <section class="tab-pane">
+    <div class="kanban-toolbar">
+      <div class="search-box">
+        <svg class="icon icon-sm search-icon" aria-hidden="true"><use href="#ch-search"></use></svg>
+        <input type="text" placeholder="Filtrar por título o estudiante..." [(ngModel)]="busquedaKanban"
+          aria-label="Filtrar proyectos" />
+      </div>
+      <div class="kanban-legend">
+        <span class="legend-item"><span class="dot emerald" aria-hidden="true"></span> Al día</span>
+        <span class="legend-item"><span class="dot amber" aria-hidden="true"></span> En revisión</span>
+        <span class="legend-item"><span class="dot rose" aria-hidden="true"></span> Detenido / sin tutor</span>
+      </div>
+    </div>
+
+    <div class="kanban-board">
+      <div class="kanban-column">
+        <header class="column-header">
+          <h4><span class="col-step">1</span> Propuestas iniciales</h4>
+          <span class="column-count">{{ getProyectosPorEtapa('propuesta').length }}</span>
+        </header>
+        <div class="column-body">
+          @for (p of getProyectosPorEtapa('propuesta'); track p.id) {
+          <article class="kanban-card" [class.border-danger]="!p.tutor">
+            <span class="card-tag">{{ p.tipo_proyecto }}</span>
+            <h5 class="card-title">{{ p.titulo }}</h5>
+            <div class="card-user">
+              <span class="avatar-mini">{{ p.owner?.name?.charAt(0) }}</span>
+              <span class="user-name">{{ p.owner?.name }}</span>
+            </div>
+            <footer class="card-footer">
+              <span class="tutor-label" [class.unassigned]="!p.tutor">
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-users"></use></svg>
+                {{ p.tutor?.name ? p.tutor.name : 'Sin tutor' }}
+              </span>
+            </footer>
+          </article>
+          } @empty {
+          <div class="column-empty">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-inbox"></use></svg>
+            <span>Sin proyectos</span>
           </div>
-
-          <div class="toolbar-actions">
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
-              <input 
-                type="text" 
-                placeholder="Buscar proyecto o participante..." 
-                [(ngModel)]="busquedaProyecto" />
-            </div>
-
-            <div class="sub-filter-buttons">
-              <button class="sub-filter-btn" [class.active]="filtroProyectos === 'todos'" (click)="filtroProyectos = 'todos'">Todos</button>
-              <button class="sub-filter-btn" [class.active]="filtroProyectos === 'sintutor'" (click)="filtroProyectos = 'sintutor'">Sin Tutor</button>
-              <button class="sub-filter-btn" [class.active]="filtroProyectos === 'endesarrollo'" (click)="filtroProyectos = 'endesarrollo'">En Desarrollo</button>
-              <button class="sub-filter-btn" [class.active]="filtroProyectos === 'finalizados'" (click)="filtroProyectos = 'finalizados'">Finalizados</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Canvas Studio Grid -->
-        <div class="projects-studio-grid">
-          @for (project of obtenerProyectosFiltrados(); track project.id) {
-            <div class="project-canvas-card">
-              <!-- Top Metadata -->
-              <div class="canvas-header">
-                <span class="category-chip">{{ project.tipo_proyecto }}</span>
-                <span class="status-pill" [ngClass]="{
-                  'status-approved': project.estado === 'Finalizado' || project.estado === 'Aprobado',
-                  'status-reviewing': project.estado === 'En desarrollo' || project.estado === 'En revisión',
-                  'status-pending': !project.tutor?.name
-                }">
-                  <span class="status-dot"></span>
-                  {{ project.tutor?.name ? project.estado : 'Requiere Tutor' }}
-                </span>
-              </div>
-
-              <!-- Content Body -->
-              <div class="canvas-body">
-                <h3 class="canvas-title">{{ project.titulo }}</h3>
-                <p class="canvas-description">{{ project.descripcion }}</p>
-              </div>
-
-              <!-- Visual Progress Bar -->
-              <div class="progress-container">
-                <div class="progress-labels">
-                  <span>Progreso de Entregas</span>
-                  <strong>{{ calcularProgresoProyecto(project.id) }}%</strong>
-                </div>
-                <div class="progress-track">
-                  <div class="progress-fill" [style.width.%]="calcularProgresoProyecto(project.id)"></div>
-                </div>
-              </div>
-
-              <!-- Participantes con Avatares -->
-              <div class="canvas-team">
-                <div class="team-member">
-                  <div class="avatar-small font-emerald">{{ project.owner?.name?.charAt(0) }}</div>
-                  <div class="member-info">
-                    <span class="role-lbl">Estudiante</span>
-                    <strong class="member-name">{{ project.owner?.name }}</strong>
-                  </div>
-                </div>
-
-                <div class="team-member">
-                  <div class="avatar-small" [ngClass]="project.tutor?.name ? 'font-blue' : 'font-amber'">
-                    {{ project.tutor?.name ? project.tutor.name.charAt(0) : '?' }}
-                  </div>
-                  <div class="member-info">
-                    <span class="role-lbl">Tutor Asignado</span>
-                    <strong class="member-name" [class.unassigned]="!project.tutor?.name">
-                      {{ project.tutor?.name ?? 'Sin asignar' }}
-                    </strong>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Footer Stats -->
-              <div class="canvas-footer">
-                <div class="footer-stat">
-                  <span>📄 Entregas:</span> <strong>{{ contarDocumentosProyecto(project.id) }}</strong>
-                </div>
-                <div class="footer-stat">
-                  <span>⏳ Pendientes:</span> <strong class="text-rose">{{ contarPendientesProyecto(project.id) }}</strong>
-                </div>
-                <button class="btn-quick-view">Detalles →</button>
-              </div>
-            </div>
           }
         </div>
       </div>
-    </section>
-  }
 
-  <!-- TAB 3: ESTUDIANTES -->
-  @if (tabActiva === 'estudiantes') {
-    <section class="tab-pane">
-      <div class="content-section">
-        <div class="section-toolbar border-bottom">
-          <div>
-            <h2>Directorio de Estudiantes</h2>
-            <p class="section-subtitle">Gestión de datos de los estudiantes registrados</p>
-          </div>
-
-          <div class="toolbar-actions">
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
-              <input type="text" placeholder="Buscar estudiante..." [(ngModel)]="busquedaEstudiante" />
+      <div class="kanban-column">
+        <header class="column-header">
+          <h4><span class="col-step">2</span> Anteproyecto</h4>
+          <span class="column-count">{{ getProyectosPorEtapa('anteproyecto').length }}</span>
+        </header>
+        <div class="column-body">
+          @for (p of getProyectosPorEtapa('anteproyecto'); track p.id) {
+          <article class="kanban-card">
+            <span class="card-tag">{{ p.tipo_proyecto }}</span>
+            <h5 class="card-title">{{ p.titulo }}</h5>
+            <div class="card-user">
+              <span class="avatar-mini">{{ p.owner?.name?.charAt(0) }}</span>
+              <span class="user-name">{{ p.owner?.name }}</span>
             </div>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Estudiante</th>
-                <th>Fecha Registro</th>
-                <th>Proyectos</th>
-                <th>Tutor Asignado</th>
-                <th>Documentos</th>
-                <th>Estado Entregas</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (item of estudiantes; track item.id) {
-                <tr>
-                  <td>
-                    <div class="user-cell">
-                      <div class="avatar-circle font-emerald">{{ item.name.charAt(0) }}</div>
-                      <div>
-                        <strong>{{ item.name }}</strong>
-                        <span class="subtext">{{ item.email }}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
-                  <td><span class="count-pill">{{ contarProyectosEstudiante(item.id) }}</span></td>
-                  <td>{{ obtenerTutoresEstudiante(item.id) }}</td>
-                  <td>{{ contarDocumentosEstudiante(item.id) }}</td>
-                  <td>
-                    <div class="stats-mini-group">
-                      <span class="mini-stat emerald">✓ {{ contarAprobadosEstudiante(item.id) }}</span>
-                      <span class="mini-stat rose">⏳ {{ contarPendientesEstudiante(item.id) }}</span>
-                    </div>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  }
-
-  <!-- TAB 4: TUTORES -->
-  @if (tabActiva === 'tutores') {
-    <section class="tab-pane">
-      <div class="content-section">
-        <div class="section-toolbar border-bottom">
-          <div>
-            <h2>Planta Docente y Carga Académica</h2>
-            <p class="section-subtitle">Supervisión de tutores y distribución de carga</p>
-          </div>
-
-          <div class="toolbar-actions">
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
-              <input type="text" placeholder="Buscar tutor..." [(ngModel)]="busquedaTutor" />
+            <div class="progress-bar-mini" role="presentation">
+              <div class="progress-fill" [style.width.%]="calcularProgresoProyecto(p.id)"></div>
             </div>
+            <footer class="card-footer">
+              <span class="tutor-label">
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-users"></use></svg>
+                {{ p.tutor?.name }}
+              </span>
+            </footer>
+          </article>
+          } @empty {
+          <div class="column-empty">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-inbox"></use></svg>
+            <span>Sin proyectos</span>
           </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Docente Tutor</th>
-                <th>Registro</th>
-                <th>Proyectos</th>
-                <th>Estudiantes</th>
-                <th>Evaluaciones</th>
-                <th>Pendientes</th>
-                <th>Estado Carga</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (item of tutores; track item.id) {
-                <tr>
-                  <td>
-                    <div class="user-cell">
-                      <div class="avatar-circle font-blue">{{ item.name.charAt(0) }}</div>
-                      <div>
-                        <strong>{{ item.name }}</strong>
-                        <span class="subtext">{{ item.email }}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
-                  <td><span class="count-pill">{{ contarProyectosTutor(item.id) }}</span></td>
-                  <td>{{ contarEstudiantesTutor(item.id) }}</td>
-                  <td>{{ contarRevisionesTutor(item.id) }}</td>
-                  <td><strong class="text-rose">{{ contarPendientesTutor(item.id) }}</strong></td>
-                  <td>
-                    @if (contarPendientesTutor(item.id) > 5 || contarProyectosTutor(item.id) > 8) {
-                      <span class="alert-chip tag-rose">🚨 Sobrecarga</span>
-                    } @else if (contarProyectosTutor(item.id) === 0) {
-                      <span class="alert-chip tag-orange">⚠️ Disponible</span>
-                    } @else {
-                      <span class="alert-chip tag-emerald">✅ Normal</span>
-                    }
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  }
-
-  <!-- TAB 5: DOCUMENTOS -->
-  @if (tabActiva === 'documentos') {
-    <section class="tab-pane">
-      <div class="content-section">
-        <div class="section-toolbar border-bottom">
-          <div>
-            <h2>Repositorio Documental del Sistema</h2>
-            <p class="section-subtitle">Historial completo de archivos y entregables subidos</p>
-          </div>
-
-          <div class="toolbar-actions">
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
-              <input type="text" placeholder="Buscar por documento..." [(ngModel)]="busquedaDocumento" />
-            </div>
-          </div>
-        </div>
-
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Documento</th>
-                <th>Proyecto</th>
-                <th>Estudiante</th>
-                <th>Tutor</th>
-                <th>Fecha Subida</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (item of documentosSistema; track item.id) {
-                <tr>
-                  <td>
-                    <strong>{{ item.nombre }}</strong>
-                    <span class="type-tag">{{ item.tipo ?? 'Documento' }}</span>
-                  </td>
-                  <td>{{ item.proyectoTitulo }}</td>
-                  <td>{{ obtenerEstudianteDocumento(item.proyectoId) }}</td>
-                  <td>{{ obtenerTutorDocumento(item.proyectoId) }}</td>
-                  <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
-                  <td>
-                    <span class="status-pill" [ngClass]="{
-                      'status-pending': item.estado === 'Pendiente revisión' || item.estado === 'submitted',
-                      'status-reviewing': item.estado === 'En revisión',
-                      'status-approved': item.estado === 'Aprobado',
-                      'status-correction': item.estado === 'Requiere correcciones',
-                      'status-rejected': item.estado === 'Rechazado'
-                    }">
-                      <span class="status-dot"></span> {{ item.estado }}
-                    </span>
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  }
-
-  <!-- TAB 6: REPORTES -->
-  @if (tabActiva === 'reportes') {
-    <section class="tab-pane">
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-header"><span class="metric-label">Proyectos Activos</span><div class="metric-icon icon-purple">📊</div></div>
-          <div class="metric-value">{{ totalProyectos }}</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-header"><span class="metric-label">Pendientes</span><div class="metric-icon icon-rose">⏳</div></div>
-          <div class="metric-value text-rose">{{ pendientesRevision }}</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-header"><span class="metric-label">Sin Tutor</span><div class="metric-icon icon-orange">⚠️</div></div>
-          <div class="metric-value text-orange">{{ proyectosSinTutor }}</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-header"><span class="metric-label">Tasa Aprobación</span><div class="metric-icon icon-emerald">📈</div></div>
-          <div class="metric-value text-emerald">{{ porcentajeAprobacion() }}%</div>
+          }
         </div>
       </div>
 
-      <div class="reports-layout">
-        <div class="content-section">
-          <div class="section-header border-bottom">
-            <h2>Balance de Estado Documental</h2>
+      <div class="kanban-column">
+        <header class="column-header">
+          <h4><span class="col-step">3</span> En desarrollo</h4>
+          <span class="column-count">{{ getProyectosPorEtapa('desarrollo').length }}</span>
+        </header>
+        <div class="column-body">
+          @for (p of getProyectosPorEtapa('desarrollo'); track p.id) {
+          <article class="kanban-card">
+            <span class="card-tag">{{ p.tipo_proyecto }}</span>
+            <h5 class="card-title">{{ p.titulo }}</h5>
+            <div class="card-user">
+              <span class="avatar-mini">{{ p.owner?.name?.charAt(0) }}</span>
+              <span class="user-name">{{ p.owner?.name }}</span>
+            </div>
+            <div class="progress-bar-mini" role="presentation">
+              <div class="progress-fill" [style.width.%]="calcularProgresoProyecto(p.id)"></div>
+            </div>
+            <footer class="card-footer">
+              <span class="tutor-label">
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-users"></use></svg>
+                {{ p.tutor?.name }}
+              </span>
+              <span class="doc-count">
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-file"></use></svg>
+                {{ contarDocumentosProyecto(p.id) }}
+              </span>
+            </footer>
+          </article>
+          } @empty {
+          <div class="column-empty">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-inbox"></use></svg>
+            <span>Sin proyectos</span>
           </div>
-          <div class="summary-cards-grid">
-            <div class="summary-box box-emerald">
-              <span class="num">{{ contarEstado('Aprobado') }}</span>
-              <span class="lbl">Aprobados</span>
+          }
+        </div>
+      </div>
+
+      <div class="kanban-column">
+        <header class="column-header">
+          <h4><span class="col-step">4</span> Sustentación y cierre</h4>
+          <span class="column-count">{{ getProyectosPorEtapa('finalizado').length }}</span>
+        </header>
+        <div class="column-body">
+          @for (p of getProyectosPorEtapa('finalizado'); track p.id) {
+          <article class="kanban-card success">
+            <span class="card-tag tag-success">
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-check"></use></svg>
+              Listo para grado
+            </span>
+            <h5 class="card-title">{{ p.titulo }}</h5>
+            <div class="card-user">
+              <span class="avatar-mini font-emerald">{{ p.owner?.name?.charAt(0) }}</span>
+              <span class="user-name">{{ p.owner?.name }}</span>
             </div>
-            <div class="summary-box box-orange">
-              <span class="num">{{ contarEstado('Requiere correcciones') }}</span>
-              <span class="lbl">Correcciones</span>
-            </div>
-            <div class="summary-box box-rose">
-              <span class="num">{{ contarEstado('Rechazado') }}</span>
-              <span class="lbl">Rechazados</span>
-            </div>
-            <div class="summary-box box-amber">
-              <span class="num">{{ contarPendientesGlobal() }}</span>
-              <span class="lbl">Pendientes</span>
+            <footer class="card-footer">
+              <span class="tutor-label">
+                <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-users"></use></svg>
+                {{ p.tutor?.name }}
+              </span>
+            </footer>
+          </article>
+          } @empty {
+          <div class="column-empty">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-inbox"></use></svg>
+            <span>Sin proyectos</span>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+  }
+
+  <!-- VISTA 3: CARGA DOCENTE -->
+  @if (vistaActiva === 'docentes') {
+  <section class="tab-pane">
+    <div class="section-title-box">
+      <h2>Matriz de distribución de carga docente</h2>
+      <p>Evalúa el nivel de ocupación de la planta docente antes de asignar nuevos proyectos.</p>
+    </div>
+
+    <div class="teacher-capacity-grid">
+      @for (tutor of tutores; track tutor.id) {
+      <article class="teacher-card" [class.overloaded]="contarProyectosTutor(tutor.id) >= 6">
+        <header class="teacher-header">
+          <div class="avatar-circle">{{ tutor.name.charAt(0) }}</div>
+          <div class="teacher-info">
+            <strong>{{ tutor.name }}</strong>
+            <span class="subtext">{{ tutor.email }}</span>
+          </div>
+          <span class="capacity-badge" [ngClass]="{
+                'badge-danger': contarProyectosTutor(tutor.id) >= 6,
+                'badge-warning': contarProyectosTutor(tutor.id) >= 4 && contarProyectosTutor(tutor.id) < 6,
+                'badge-success': contarProyectosTutor(tutor.id) < 4
+              }">
+            {{ contarProyectosTutor(tutor.id) }}/6
+          </span>
+        </header>
+
+        <div class="capacity-meter">
+          <div class="meter-labels">
+            <span>Ocupación</span>
+            <span>{{ contarProyectosTutor(tutor.id) }} de 6 proyectos</span>
+          </div>
+          <div class="meter-track">
+            <div class="meter-fill" [style.width.%]="(contarProyectosTutor(tutor.id) / 6) * 100" [ngClass]="{
+                        'bg-rose': contarProyectosTutor(tutor.id) >= 6,
+                        'bg-amber': contarProyectosTutor(tutor.id) >= 4 && contarProyectosTutor(tutor.id) < 6,
+                        'bg-emerald': contarProyectosTutor(tutor.id) < 4
+                     }">
             </div>
           </div>
         </div>
 
-        <div class="content-section download-card">
-          <div class="section-header">
-            <h2>Informe Oficial</h2>
-            <p class="section-subtitle">Descarga en formato PDF el balance consolidado del periodo</p>
+        <div class="teacher-stats-row">
+          <div class="stat-box">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-users"></use></svg>
+            <span class="stat-num">{{ contarEstudiantesTutor(tutor.id) }}</span>
+            <span class="stat-lbl">Estudiantes</span>
           </div>
-          <button class="action-btn-primary" (click)="descargarReportePDF()">
-            📄 Descargar Informe en PDF
+          <span class="stat-divider" aria-hidden="true"></span>
+          <div class="stat-box">
+            <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-clock"></use></svg>
+            <span class="stat-num text-rose">{{ contarPendientesTutor(tutor.id) }}</span>
+            <span class="stat-lbl">Rev. pendientes</span>
+          </div>
+        </div>
+
+        <div class="teacher-actions">
+          <button class="btn-sm btn-outline" (click)="verDetalleTutor(tutor)">
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-eye"></use></svg>
+            Ver proyectos
           </button>
-          <span class="timestamp">Generado: {{ fechaReporte | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+      </article>
+      } @empty {
+      <div class="empty-state-sm">
+        <svg class="icon icon-md" aria-hidden="true"><use href="#ch-users"></use></svg>
+        <span>Aún no hay docentes registrados en el programa.</span>
+      </div>
+      }
+    </div>
+  </section>
+  }
+
+  <!-- VISTA 4: ARCHIVO Y REPOSITORIO -->
+  @if (vistaActiva === 'archivo') {
+  <section class="tab-pane">
+    <div class="section-title-box">
+      <h2>Repositorio de archivo y auditoría académica</h2>
+      <p>Consulta histórica de entregables, actas de grado y trazabilidad documental.</p>
+    </div>
+
+    <div class="repository-container">
+      <div class="filter-bar">
+        <div class="search-box">
+          <svg class="icon icon-sm search-icon" aria-hidden="true"><use href="#ch-search"></use></svg>
+          <input type="text" placeholder="Buscar por código de acta, título, estudiante o tutor..."
+            [(ngModel)]="busquedaArchivo" aria-label="Buscar en el repositorio" />
+        </div>
+        <div class="select-wrap">
+          <svg class="icon icon-sm select-icon" aria-hidden="true"><use href="#ch-calendar"></use></svg>
+          <select [(ngModel)]="filtroAnio" aria-label="Filtrar por año">
+            <option value="">Todos los años</option>
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+            <option value="2024">2024</option>
+          </select>
         </div>
       </div>
-    </section>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Código / ID</th>
+              <th scope="col">Proyecto</th>
+              <th scope="col">Estudiante</th>
+              <th scope="col">Tutor</th>
+              <th scope="col">Fecha cierre</th>
+              <th scope="col" class="col-actions">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of repositorioFiltrado; track item.id) {
+            <tr>
+              <td><code>{{ item.codigo }}</code></td>
+              <td><strong>{{ item.titulo }}</strong></td>
+              <td>{{ item.estudiante }}</td>
+              <td>{{ item.tutor }}</td>
+              <td class="td-date">{{ item.fechaCierre | date:'shortDate' }}</td>
+              <td class="col-actions">
+                <button class="btn-sm btn-icon" (click)="descargarExpediente(item)" title="Descargar expediente">
+                  <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-download"></use></svg>
+                  Expediente
+                </button>
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="6">
+                <div class="empty-state-sm table-empty">
+                  <svg class="icon icon-md" aria-hidden="true"><use href="#ch-archive"></use></svg>
+                  <span>No se encontraron registros de auditoría para esta búsqueda.</span>
+                </div>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
   }
 </div>
+<!-- AQUÍ CIERRA EL DIV DEL DASHBOARD -->
+
+
+<!-- ================================================================= -->
+<!-- MODALES Y TOASTS FUERA DEL DIV DEL DASHBOARD -->
+<!-- ================================================================= -->
+
+<!-- Modal para Asignar Tutor -->
+@if (mostrarModalTutor) {
+<div class="modal-backdrop" (click)="cerrarModalAsignarTutor()">
+  <div class="modal-card" (click)="$event.stopPropagation()" role="dialog" aria-modal="true"
+    aria-label="Asignar tutor al proyecto">
+    <header class="modal-header">
+      <div>
+        <h3>
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-user-plus"></use></svg>
+          Asignar tutor al proyecto
+        </h3>
+        <p class="modal-subtitle">Selecciona un docente con cupo disponible.</p>
+      </div>
+      <button class="btn-close" (click)="cerrarModalAsignarTutor()" aria-label="Cerrar">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-close"></use></svg>
+      </button>
+    </header>
+
+    <div class="modal-body">
+      <dl class="detail-list">
+        <div class="detail-row">
+          <dt>
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-layers"></use></svg>
+            Proyecto
+          </dt>
+          <dd>{{ proyectoSeleccionadoModal?.titulo }}</dd>
+        </div>
+        <div class="detail-row">
+          <dt>
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-users"></use></svg>
+            Estudiante
+          </dt>
+          <dd>{{ proyectoSeleccionadoModal?.owner?.name }}</dd>
+        </div>
+      </dl>
+
+      <div class="form-group">
+        <label for="selectTutor">Docente tutor</label>
+        <select id="selectTutor" class="form-control" [(ngModel)]="tutorSeleccionadoId">
+          <option value="" disabled>-- Seleccione un tutor --</option>
+          @for (tutor of tutores; track tutor.id) {
+          @let cantidad = contarProyectosTutor(tutor.id);
+          @let limiteAlcanzado = cantidad >= 6;
+          <option [value]="tutor.id" [disabled]="limiteAlcanzado">
+            {{ tutor.name }} ({{ cantidad }}/6){{ limiteAlcanzado ? ' — CUPO LLENO' : '' }}
+          </option>
+          }
+        </select>
+        <p class="form-hint">
+          <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-info"></use></svg>
+          El límite institucional es de 6 proyectos simultáneos por docente.
+        </p>
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button class="btn-action secondary" (click)="cerrarModalAsignarTutor()" [disabled]="guardandoTutor">
+        Cancelar
+      </button>
+      <button class="btn-action primary" (click)="confirmarAsignacionTutor()"
+        [disabled]="!tutorSeleccionadoId || guardandoTutor">
+        <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-check"></use></svg>
+        {{ guardandoTutor ? 'Guardando...' : 'Confirmar asignación' }}
+      </button>
+    </footer>
+  </div>
+</div>
+}
+
+<!-- Notificación Flotante Toast -->
+@if (mostrarToast) {
+<div class="toast-notification" [ngClass]="tipoToast" role="status" aria-live="polite">
+  <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-info"></use></svg>
+  <span>{{ mensajeToast }}</span>
+</div>
+}
+
+<!-- Modal para Ver y Desvincular Proyectos del Tutor -->
+@if (mostrarModalProyectosTutor) {
+<div class="modal-backdrop" (click)="cerrarModalProyectosTutor()">
+  <div class="modal-card modal-lg" (click)="$event.stopPropagation()" role="dialog" aria-modal="true"
+    aria-label="Proyectos asignados al docente">
+    <header class="modal-header">
+      <div>
+        <h3>
+          <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-layers"></use></svg>
+          Proyectos asignados
+        </h3>
+        <p class="modal-subtitle">
+          Docente: <strong>{{ tutorSeleccionadoVer?.name }}</strong> &bull; {{ proyectosDelTutor.length }}/6 asignados
+        </p>
+      </div>
+      <button class="btn-close" (click)="cerrarModalProyectosTutor()" aria-label="Cerrar">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#ch-close"></use></svg>
+      </button>
+    </header>
+
+    <div class="modal-body">
+      <div class="action-item-list">
+        @for (proj of proyectosDelTutor; track proj.id) {
+        <div class="action-item">
+          <div class="item-main">
+            <strong>{{ proj.titulo }}</strong>
+            <span class="subtext">
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-users"></use></svg>
+              {{ proj.owner?.name || 'Sin asignar' }}
+              <span class="dot-sep" aria-hidden="true"></span>
+              <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-layers"></use></svg>
+              {{ proj.tipo_proyecto || 'Grado' }}
+            </span>
+          </div>
+          <button class="btn-action outline-danger" (click)="desvincularTutorDelProyecto(proj)"
+            [disabled]="desvinculandoProyectoMap[proj.id]">
+            <svg class="icon icon-xs" aria-hidden="true"><use href="#ch-link-off"></use></svg>
+            {{ desvinculandoProyectoMap[proj.id] ? 'Desvinculando...' : 'Desvincular' }}
+          </button>
+        </div>
+        } @empty {
+        <div class="empty-state-sm">
+          <svg class="icon icon-md" aria-hidden="true"><use href="#ch-inbox"></use></svg>
+          <span>Este docente no tiene proyectos asignados actualmente.</span>
+        </div>
+        }
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button class="btn-action secondary" (click)="cerrarModalProyectosTutor()">
+        Cerrar
+      </button>
+    </footer>
+  </div>
+</div>
+}

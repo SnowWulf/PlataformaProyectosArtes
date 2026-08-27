@@ -1,399 +1,1034 @@
-// Variables locales de diseño
-$primary: #2563eb;
-$primary-hover: #1d4ed8;
-$primary-light: #eff6ff;
-$text-main: #0f172a;
-$text-muted: #64748b;
-$border-color: #e2e8f0;
-$radius: 16px;
-$shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+// ==========================================================
+//  GESTIÓN DE USUARIOS — Facultad de Artes
+//  Paleta institucional Universidad de Nariño (UDENAR)
+//  Misma base que community / tutor-request / tutor-dashboard
+// ==========================================================
+$udenar-verde:        #006633; // Verde Sinople Oficial
+$udenar-verde-hover:  #004d26;
+$udenar-verde-soft:   #e6f0eb;
+$udenar-verde-light:  #cce1d6;
 
-.users-container {
-  padding: 24px;
-  max-width: 1400px;
+$udenar-dorado:       #FFCC00; // Amarillo Gualda Oficial
+$udenar-dorado-dark:  #b38f00;
+$udenar-dorado-soft:  #fff9e6;
+
+$udenar-rojo:         #D32F2F;
+$udenar-rojo-soft:    #fdecec;
+$udenar-rojo-border:  #f3c9c9;
+$udenar-rojo-hover:   #991b1b;
+
+// Neutros y superficies
+$bg-main:             #F4F7F5;
+$bg-card:             #FFFFFF;
+$bg-subtle:           #EBF0EC;
+$bg-soft:             #F7F9F8;
+
+$border-color:        #E1E8E4;
+$border-strong:       #CFDAD3;
+
+$text-main:           #1A2521;
+$text-muted:          #5A6B63;
+$text-faint:          #8C9A93;
+
+// Tipografía
+$font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+// Sombras y radios
+$shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.04);
+$shadow-card:  0 4px 10px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+$shadow-hover: 0 12px 24px -4px rgba(0, 102, 51, 0.12), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+$shadow-pop:   0 16px 40px -8px rgba(0, 0, 0, 0.18);
+
+$radius-sm:   8px;
+$radius-md:   12px;
+$radius-lg:   16px;
+$radius-full: 9999px;
+
+// ==========================================================
+//  RESET DEL HOST
+// ==========================================================
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: $font-sans;
+  color: $text-main;
+  background-color: $bg-main;
+
+  *, *::before, *::after { box-sizing: border-box; }
+}
+
+// ==========================================================
+//  SISTEMA DE ICONOS (SVG SPRITE)
+// ==========================================================
+.icon-sprite { display: none; }
+
+.icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+
+  &.icon-xs { width: 14px; height: 14px; }
+  &.icon-sm { width: 16px; height: 16px; }
+  &.icon-md { width: 20px; height: 20px; }
+  &.icon-lg { width: 30px; height: 30px; stroke-width: 1.5; }
+}
+
+// ==========================================================
+//  ANIMACIONES
+// ==========================================================
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes softPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba($udenar-rojo, 0.4); }
+  70%      { box-shadow: 0 0 0 6px rgba($udenar-rojo, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+// ==========================================================
+//  1. CONTENEDOR
+// ==========================================================
+.art-dashboard.users-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.75rem;
+  max-width: 1200px;
   margin: 0 auto;
+  min-height: 100vh;
 
-  // --- HEADER DE LA VISTA ---
-  .users-header {
-    display: flex;
-    justify-content: space-between;
+  @media (max-width: 640px) {
+    padding: 1rem;
+    gap: 1.15rem;
+  }
+}
+
+// ==========================================================
+//  2. HERO / CABECERA
+// ==========================================================
+.art-hero {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.75rem 1.9rem;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.35s ease both;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 3px;
+    background-color: $udenar-dorado;
+  }
+
+  @media (max-width: 640px) { padding: 1.4rem 1.25rem; }
+}
+
+.hero-main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.hero-text { max-width: 620px; }
+
+.hero-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $udenar-verde;
+  margin-bottom: 0.6rem;
+}
+
+.hero-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: $text-main;
+  text-wrap: balance;
+
+  @media (max-width: 640px) { font-size: 1.35rem; }
+}
+
+.hero-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: $text-muted;
+  text-wrap: pretty;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 0.85rem 1.4rem;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  border-radius: $radius-md;
+}
+
+.summary-divider {
+  width: 1px;
+  align-self: stretch;
+  background-color: $border-strong;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+
+.summary-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: $udenar-verde;
+
+  &.is-alert { color: $udenar-rojo; }
+}
+
+.summary-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-faint;
+}
+
+// ==========================================================
+//  BOTÓN PRIMARIO
+// ==========================================================
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: $radius-sm;
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  background-color: $udenar-verde;
+  color: #ffffff;
+  transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+
+  &:hover:not(:disabled) {
+    background-color: $udenar-verde-hover;
+    transform: translateY(-2px);
+    box-shadow: $shadow-hover;
+  }
+
+  &:active { transform: translateY(0); }
+
+  &:focus-visible {
+    outline: 2px solid $udenar-verde;
+    outline-offset: 2px;
+  }
+
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  &.is-danger {
+    background-color: $udenar-rojo;
+    &:hover:not(:disabled) { background-color: $udenar-rojo-hover; }
+    &:focus-visible { outline-color: $udenar-rojo; }
+  }
+}
+
+// ==========================================================
+//  3. PESTAÑAS
+// ==========================================================
+.tabs-bar {
+  display: inline-flex;
+  gap: 0.35rem;
+  padding: 0.35rem;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-full;
+  box-shadow: $shadow-card;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  animation: fadeIn 0.3s ease both;
+
+  .tab-btn {
+    display: inline-flex;
     align-items: center;
-    margin-bottom: 24px;
-    gap: 16px;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border: none;
+    background: transparent;
+    border-radius: $radius-full;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $text-muted;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
 
-    h1 {
-      margin: 0;
-      font-size: 1.875rem;
-      font-weight: 700;
-      color: $text-main;
-      letter-spacing: -0.02em;
+    .icon { stroke-width: 2; }
+
+    &:hover {
+      color: $udenar-verde;
+      background-color: $udenar-verde-soft;
     }
 
-    p {
-      margin: 6px 0 0;
+    &.active {
+      color: #ffffff;
+      background-color: $udenar-verde;
+    }
+
+    .tab-count {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.05rem 0.5rem;
+      border-radius: $radius-full;
+      background-color: rgba($text-faint, 0.16);
+      color: inherit;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &.active .tab-count {
+      background-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .badge-pending {
+      display: inline-grid;
+      place-items: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 0.35rem;
+      border-radius: $radius-full;
+      background-color: $udenar-rojo;
+      color: #ffffff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      animation: softPulse 2s infinite;
+    }
+  }
+}
+
+// ==========================================================
+//  4. TARJETAS DE ESTADÍSTICA (filtros)
+// ==========================================================
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+
+  .stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.35rem;
+    text-align: left;
+    background-color: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    box-shadow: $shadow-card;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    animation: slideUp 0.35s ease both;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background-color: $udenar-verde;
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.25s ease;
+    }
+
+    @for $i from 1 through 4 {
+      &:nth-child(#{$i}) { animation-delay: #{$i * 0.06}s; }
+    }
+
+    .stat-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: $radius-sm;
+      background-color: $udenar-verde-soft;
+      color: $udenar-verde;
+      flex-shrink: 0;
+      transition: transform 0.25s ease, background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .stat-body { display: flex; flex-direction: column; gap: 0.15rem; }
+
+    .stat-value {
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1;
+      color: $text-main;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      font-weight: 600;
       color: $text-muted;
-      font-size: 0.95rem;
+    }
+
+    &:hover {
+      transform: translateY(-3px);
+      border-color: $udenar-verde-light;
+      box-shadow: $shadow-hover;
+
+      &::before { transform: scaleY(1); }
+      .stat-icon { transform: scale(1.06); }
+    }
+
+    &:focus-visible {
+      outline: 2px solid $udenar-verde;
+      outline-offset: 2px;
+    }
+
+    &.activa {
+      border-color: $udenar-verde;
+      background-color: $udenar-verde-soft;
+
+      &::before { transform: scaleY(1); }
+
+      .stat-icon {
+        background-color: $udenar-verde;
+        color: #ffffff;
+      }
+      .stat-value { color: $udenar-verde-hover; }
+    }
+  }
+}
+
+// ==========================================================
+//  5. SECCIÓN DE CONTENIDO
+// ==========================================================
+.content-section {
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 1.5rem;
+  box-shadow: $shadow-card;
+  animation: fadeIn 0.3s ease both;
+
+  @media (max-width: 640px) { padding: 1.15rem; }
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.15rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid $border-color;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+
+  > .icon { color: $udenar-verde; margin-top: 0.15rem; }
+
+  h2 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: $text-main;
+  }
+}
+
+.section-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.79rem;
+  color: $text-muted;
+}
+
+// ==========================================================
+//  6. TOOLBAR (búsqueda + filtros)
+// ==========================================================
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    color: $text-faint;
+    pointer-events: none;
+  }
+
+  input {
+    width: 260px;
+    max-width: 100%;
+    padding: 0.6rem 0.85rem 0.6rem 2.35rem;
+    border: 1px solid $border-strong;
+    border-radius: $radius-sm;
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: $text-main;
+    background-color: $bg-card;
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+
+    &::placeholder { color: $text-faint; }
+
+    &:focus {
+      border-color: $udenar-verde;
+      box-shadow: 0 0 0 3px rgba($udenar-verde, 0.12);
+
+      & + .search-icon { color: $udenar-verde; }
+    }
+  }
+}
+
+.program-filter {
+  position: relative;
+
+  .btn-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.95rem;
+    border: 1px solid $border-strong;
+    border-radius: $radius-sm;
+    background-color: $bg-card;
+    color: $text-muted;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
+
+    .icon { color: $udenar-verde; }
+
+    &:hover {
+      border-color: $udenar-verde-light;
+      color: $udenar-verde;
+      background-color: $udenar-verde-soft;
+    }
+
+    &.active {
+      border-color: $udenar-verde;
+      color: $udenar-verde;
+      background-color: $udenar-verde-soft;
     }
   }
 
-  // --- BARRA DE PESTAÑAS (TABS) ---
-  .tabs-bar {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    border-bottom: 2px solid $border-color;
+  .program-list {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 20;
+    min-width: 230px;
+    padding: 0.4rem;
+    background-color: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    box-shadow: $shadow-pop;
+    animation: popIn 0.18s ease both;
 
-    .tab-btn {
-      background: transparent;
+    .program-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.55rem 0.7rem;
       border: none;
-      padding: 12px 18px;
-      font-size: 0.95rem;
-      font-weight: 600;
+      background: transparent;
+      border-radius: $radius-sm;
+      font-family: inherit;
+      font-size: 0.83rem;
       color: $text-muted;
       cursor: pointer;
-      border-bottom: 3px solid transparent;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: -2px;
-      transition: all 0.2s ease;
+      transition: background-color 0.15s ease, color 0.15s ease;
 
       &:hover {
-        color: $text-main;
+        background-color: $udenar-verde-soft;
+        color: $udenar-verde;
       }
 
       &.active {
-        color: $primary;
-        border-bottom-color: $primary;
-      }
-
-      .badge-pending {
-        background-color: #ef4444;
-        color: #ffffff;
-        font-size: 0.75rem;
+        background-color: $udenar-verde-soft;
+        color: $udenar-verde;
         font-weight: 700;
-        padding: 2px 8px;
-        border-radius: 999px;
       }
-    }
-  }
-
-  // --- TARJETAS DE ESTADÍSTICAS ---
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
-
-    .stat-card {
-      background: #ffffff;
-      border-radius: $radius;
-      padding: 20px;
-      text-align: center;
-      box-shadow: $shadow;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
-      }
-
-      &.activa {
-        border-color: $primary;
-        background: $primary-light;
-      }
-
-      h3 {
-        margin: 0;
-        font-size: 2rem;
-        font-weight: 700;
-        color: $primary;
-      }
-
-      p {
-        margin: 6px 0 0;
-        color: $text-muted;
-        font-size: 0.875rem;
-        font-weight: 500;
-      }
-    }
-  }
-
-  // --- ÁREA DE BÚSQUEDA Y FILTROS ---
-  .search-area {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-
-    .search-box {
-      margin-bottom: 0;
-
-      input {
-        width: 320px;
-        padding: 10px 16px;
-        border: 1px solid #cbd5e1;
-        border-radius: 12px;
-        font-size: 0.9rem;
-        outline: none;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-        &:focus {
-          border-color: $primary;
-          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-        }
-      }
-    }
-
-    .program-filter {
-      position: relative;
-
-      .btn-filter {
-        height: 42px;
-        padding: 0 14px;
-        border: 1px solid #cbd5e1;
-        background: #ffffff;
-        border-radius: 12px;
-        font-size: 1rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background-color 0.2s ease, border-color 0.2s ease;
-
-        &:hover {
-          background: #f8fafc;
-          border-color: #94a3b8;
-        }
-      }
-
-      .program-list {
-        position: absolute;
-        top: 48px;
-        left: 0;
-        width: 230px;
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 8px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        border: 1px solid $border-color;
-        z-index: 100;
-
-        .program-item {
-          width: 100%;
-          text-align: left;
-          padding: 10px 12px;
-          border: none;
-          background: transparent;
-          border-radius: 8px;
-          cursor: pointer;
-          font-size: 0.875rem;
-          color: $text-main;
-          transition: background-color 0.15s ease;
-
-          &:hover {
-            background: #f1f5f9;
-          }
-
-          &.active {
-            background: $primary-light;
-            color: $primary;
-            font-weight: 600;
-          }
-        }
-      }
-    }
-  }
-
-  // --- TABLAS Y CONTENEDOR ---
-  .table-container {
-    background: #ffffff;
-    border-radius: $radius;
-    overflow: hidden;
-    box-shadow: $shadow;
-    border: 1px solid $border-color;
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-
-      thead {
-        background: #f8fafc;
-
-        th {
-          text-align: left;
-          padding: 14px 20px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: $text-muted;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          border-bottom: 1px solid $border-color;
-        }
-      }
-
-      tbody {
-        tr {
-          transition: background-color 0.15s ease;
-
-          &:hover {
-            background: #f8fafc;
-          }
-
-          td {
-            padding: 16px 20px;
-            border-top: 1px solid $border-color;
-            font-size: 0.925rem;
-            color: $text-main;
-            vertical-align: middle;
-          }
-        }
-      }
-    }
-  }
-
-  // --- BADGES Y ETIQUETAS DE ROL ---
-  .role-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 600;
-
-    &.role-estudiante {
-      background: #dbeafe;
-      color: #1d4ed8;
-    }
-
-    &.role-tutor {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    &.role-coordinador {
-      background: #ede9fe;
-      color: #6d28d9;
-    }
-
-    &.role-pending {
-      background: #fef3c7;
-      color: #d97706;
-    }
-  }
-
-  // --- ACCIONES Y BOTONES ---
-  .action-buttons {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .btn-primary {
-    background: $primary;
-    color: #ffffff;
-    border: none;
-    border-radius: 12px;
-    padding: 10px 18px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-
-    &:hover {
-      background: $primary-hover;
-    }
-
-    &:active {
-      transform: scale(0.98);
-    }
-  }
-
-  .btn-edit {
-    background: #f59e0b;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    padding: 7px 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background: #d97706;
-    }
-  }
-
-  .btn-delete {
-    background: #ef4444;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    padding: 7px 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background: #dc2626;
-    }
-  }
-
-  .btn-approve {
-    background-color: #10b981;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    padding: 7px 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: #059669;
-    }
-  }
-
-  .btn-reject {
-    background-color: #ef4444;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    padding: 7px 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: #dc2626;
     }
   }
 }
 
-// --- VENTANAS MODALES ---
+// ==========================================================
+//  7. TABLA
+// ==========================================================
+.table-container {
+  overflow-x: auto;
+  border-radius: $radius-md;
+  border: 1px solid $border-color;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.87rem;
+  }
+
+  thead th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background-color: $bg-soft;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $text-faint;
+    border-bottom: 1px solid $border-color;
+    white-space: nowrap;
+
+    &.col-actions { text-align: right; }
+  }
+
+  tbody tr {
+    animation: fadeIn 0.3s ease both;
+    transition: background-color 0.15s ease;
+
+    &:not(:last-child) td { border-bottom: 1px solid $border-color; }
+
+    &:hover { background-color: $bg-soft; }
+  }
+
+  tbody td {
+    padding: 0.8rem 1rem;
+    color: $text-main;
+    vertical-align: middle;
+
+    &.text-muted { color: $text-muted; }
+  }
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+
+  .avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: $udenar-verde;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .user-name { font-weight: 600; color: $text-main; }
+
+  .link-name {
+    padding: 0;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+    color: $udenar-verde;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover { color: $udenar-verde-hover; text-decoration: underline; }
+  }
+}
+
+// ==========================================================
+//  8. BADGES DE ROL
+// ==========================================================
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: $radius-full;
+  border: 1px solid transparent;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  .role-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+
+  &.role-estudiante {
+    background-color: $udenar-verde-soft;
+    color: $udenar-verde;
+    border-color: $udenar-verde-light;
+  }
+
+  &.role-tutor {
+    background-color: $udenar-dorado-soft;
+    color: $udenar-dorado-dark;
+    border-color: #f0e0a8;
+  }
+
+  &.role-coordinador {
+    background-color: $bg-subtle;
+    color: $text-main;
+    border-color: $border-strong;
+  }
+
+  &.role-pending {
+    background-color: $udenar-rojo-soft;
+    color: $udenar-rojo;
+    border-color: $udenar-rojo-border;
+
+    .role-dot { animation: softPulse 2s infinite; }
+  }
+}
+
+// ==========================================================
+//  9. BOTONES DE ACCIÓN
+// ==========================================================
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: $radius-sm;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease,
+              border-color 0.18s ease, transform 0.18s ease;
+
+  &:hover:not(:disabled) { transform: translateY(-1px); }
+  &:active { transform: translateY(0); }
+  &:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+}
+
+.btn-edit {
+  background-color: $bg-card;
+  color: $text-muted;
+  border-color: $border-strong;
+
+  &:hover:not(:disabled) {
+    background-color: $bg-subtle;
+    color: $text-main;
+    border-color: $text-faint;
+  }
+}
+
+.btn-detail {
+  background-color: $bg-card;
+  color: $udenar-verde;
+  border-color: $udenar-verde-light;
+
+  &:hover:not(:disabled) { background-color: $udenar-verde-soft; }
+}
+
+.btn-approve {
+  background-color: $udenar-verde;
+  color: #ffffff;
+
+  &:hover:not(:disabled) { background-color: $udenar-verde-hover; box-shadow: $shadow-hover; }
+}
+
+.btn-delete,
+.btn-reject {
+  background-color: $bg-card;
+  color: $udenar-rojo;
+  border-color: $udenar-rojo-border;
+
+  &:hover:not(:disabled) {
+    background-color: $udenar-rojo-soft;
+    color: $udenar-rojo-hover;
+  }
+}
+
+// ==========================================================
+//  10. ESTADO VACÍO
+// ==========================================================
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  animation: fadeIn 0.35s ease both;
+
+  .empty-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background-color: $udenar-verde-soft;
+    color: $udenar-verde;
+  }
+
+  .empty-title {
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: $text-main;
+  }
+
+  .empty-text {
+    margin: 0;
+    font-size: 0.85rem;
+    color: $text-muted;
+    max-width: 340px;
+  }
+}
+
+// ==========================================================
+//  11. MODALES
+// ==========================================================
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(4px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background-color: rgba($text-main, 0.5);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease both;
 }
 
 .modal {
-  background: #ffffff;
-  border-radius: $radius;
-  padding: 28px;
+  width: 100%;
   max-width: 650px;
-  width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 1.75rem;
+  background-color: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-pop;
+  position: relative;
+  animation: popIn 0.22s ease both;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 90px;
+    height: 3px;
+    border-top-left-radius: $radius-lg;
+    background-color: $udenar-dorado;
+  }
+
+  &.modal-md { max-width: 550px; }
+  &.modal-sm { max-width: 480px; }
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.25rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $text-main;
+
+  .icon { color: $udenar-verde; }
+
+  &.title-danger .icon { color: $udenar-rojo; }
+}
+
+.modal-lead {
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: $text-muted;
+
+  strong { color: $text-main; font-weight: 700; }
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $text-faint;
+}
+
+.field-value {
+  font-size: 0.92rem;
+  color: $text-main;
+}
+
+.reason-box {
+  padding: 0.85rem 1rem;
+  background-color: $bg-soft;
+  border: 1px solid $border-color;
+  border-left: 3px solid $udenar-dorado;
+  border-radius: 0 $radius-sm $radius-sm 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: $text-main;
+  white-space: pre-wrap;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid $border-strong;
+  border-radius: $radius-sm;
+  font-family: inherit;
+  font-size: 0.88rem;
+  color: $text-main;
+  background-color: $bg-card;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+
+  &:focus {
+    border-color: $udenar-verde;
+    box-shadow: 0 0 0 3px rgba($udenar-verde, 0.12);
+  }
+}
+
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.btn-ghost {
+  padding: 0.6rem 1.1rem;
+  border: 1px solid $border-strong;
+  border-radius: $radius-sm;
+  background-color: $bg-card;
+  color: $text-muted;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+
+  &:hover {
+    background-color: $bg-subtle;
+    color: $text-main;
+    border-color: $text-faint;
+  }
+}
+
+.btn-confirm { padding: 0.6rem 1.25rem; }
+
+// ==========================================================
+//  12. RESPONSIVE
+// ==========================================================
+@media (max-width: 768px) {
+  .section-header { flex-direction: column; align-items: stretch; }
+
+  .toolbar { width: 100%; }
+  .search-box { flex: 1; input { width: 100%; } }
+
+  .action-buttons { justify-content: flex-start; }
+
+  .hero-main { align-items: flex-start; }
+  .hero-actions { width: 100%; justify-content: space-between; }
 }

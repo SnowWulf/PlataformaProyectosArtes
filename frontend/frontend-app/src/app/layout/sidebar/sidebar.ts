@@ -14,9 +14,7 @@ import { Auth } from '../../services/auth';
   standalone: true,
   imports: [
     CommonModule,
-
     RouterLink,
-
     RouterLinkActive
   ],
   templateUrl: './sidebar.html',
@@ -29,81 +27,55 @@ export class Sidebar implements OnInit {
   usuarioActual: any = null;
 
   constructor(
+    public auth: Auth,
+    private router: Router
+  ) {}
 
-  public auth: Auth,
+  ngOnInit(): void {
+    this.usuarioActual = this.auth.obtenerUsuario();
+  }
 
-  private router: Router
-
-) {}
-ngOnInit(): void {
-
-  this.usuarioActual =
-    this.auth.obtenerUsuario();
-
-}
-
-logout(): void {
-
-  this.auth.logout();
-
-  this.router.navigate(
-    ['/login']
-  );
-
-}
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 
   obtenerRutaDashboard(): string {
-
-    if (
-      this.auth.esEstudiante()
-    ) {
-
+    if (this.auth.esEstudiante()) {
       return '/dashboard/student-home';
-
     }
 
-    if (
-      this.auth.esTutor()
-    ) {
-
+    if (this.auth.esTutor()) {
       return '/dashboard/tutor-home';
-
     }
 
-    if (
-      this.auth.esCoordinador()
-    ) {
-
+    if (this.auth.esCoordinador()) {
       return '/dashboard/coordinator-home';
-
     }
 
     return '/dashboard';
+  }
 
+  // <--- Método auxiliar para verificar si es coordinador directamente desde el template HTML
+  esCoordinador(): boolean {
+    return this.auth.esCoordinador();
   }
 
   obtenerUsuario() {
-
     return this.auth.obtenerUsuario();
-
-  }
-irAMiPerfil(): void {
-
-  const usuario =
-    this.auth.obtenerUsuario();
-
-  if (!usuario) {
-
-    return;
-
   }
 
-  this.router.navigate([
-    '/dashboard/community/profile',
-    usuario.id
-  ]);
+  irAMiPerfil(): void {
+    const usuario = this.auth.obtenerUsuario();
 
-}
+    if (!usuario) {
+      return;
+    }
 
+    this.router.navigate([
+      '/dashboard/community/profile',
+      usuario.id
+    ]);
+  }
 
 }
