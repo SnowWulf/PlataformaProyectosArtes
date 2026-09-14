@@ -22,50 +22,59 @@ class ProjectController extends Controller
         'Suspendido'
     ];
 
+    
+
     public function index(Request $request)
-    {
-        $user = $request->user();
+{
+    $user = $request->user();
 
-        // Consulta base cargando relaciones
-        $query = Project::with(['owner', 'tutor', 'collaborators', 'tutorRequests']);
+    // Consulta base cargando relaciones
+    $query = Project::with(['owner', 'tutor', 'collaborators', 'tutorRequests']);
 
-        // Coordinador: Ve todo excepto borradores sin solicitudes
-        if ($user->role->nombre === 'Coordinador') {
-            return $query->where(function ($q) {
-                $q->where('estado', '!=', 'Borrador')
-                  ->orWhere(function ($subQ) {
-                      $subQ->where('estado', 'Borrador')
-                           ->whereHas('tutorRequests');
-                  });
-            })->get();
-        }
-
-        // Tutor: Ve proyectos donde es asignado o creador
-        if ($user->role->nombre === 'Tutor') {
-            return $query->where('estado', '!=', 'Borrador')
-                ->where(function ($q) use ($user) {
-                    $q->where('owner_id', $user->id)
-                      ->orWhere('tutor_id', $user->id);
-                })->get();
-        }
-
-        // Estudiante / Consulta General:
-        // Muestra proyectos propios (aunque no sean visibles) O proyectos públicos de otros usuarios
-        return $query->where(function ($q) use ($user) {
-            // Mis proyectos o donde colaboro
-            $q->where('owner_id', $user->id)
-              ->orWhereHas('collaborators', function ($subQ) use ($user) {
-                  $subQ->where('users.id', $user->id);
-              })
-              // O proyectos públicos de terceros (visibilidad individual + global activa)
-              ->orWhere(function ($publicQ) {
-                  $publicQ->where('es_visible', true)
-                          ->whereHas('owner', function ($ownerQ) {
-                              $ownerQ->where('mostrar_proyectos', true);
-                          });
+    // 1. Coordinador: Ve todo excepto borradores sin solicitudes
+    if ($user->role->nombre === 'Coordinador') {
+        return $query->where(function ($q) {
+            $q->where('estado', '!=', 'Borrador')
+              ->orWhere(function ($subQ) {
+                  $subQ->where('estado', 'Borrador')
+                       ->whereHas('tutorRequests');
               });
         })->get();
     }
+
+    // 2. Tutor: Ve proyectos donde es asignado o creador
+    if ($user->role->nombre === 'Tutor') {
+        return $query->where('estado', '!=', 'Borrador')
+            ->where(function ($q) use ($user) {
+                $q->where('owner_id', $user->id)
+                  ->orWhere('tutor_id', $user->id);
+            })->get();
+    }
+
+    // 3. Estudiante: ÚNICAMENTE sus proyectos propios o donde es colaborador
+    if ($user->role->nombre === 'Estudiante') {
+        return $query->where(function ($q) use ($user) {
+            $q->where('owner_id', $user->id)
+              ->orWhereHas('collaborators', function ($subQ) use ($user) {
+                  $subQ->where('users.id', $user->id);
+              });
+        })->get();
+    }
+
+    // 4. Consulta pública / Galería general (si aplica para otros roles o usuarios no autenticados)
+    return $query->where(function ($q) use ($user) {
+        $q->where('owner_id', $user->id)
+          ->orWhereHas('collaborators', function ($subQ) use ($user) {
+              $subQ->where('users.id', $user->id);
+          })
+          ->orWhere(function ($publicQ) {
+              $publicQ->where('es_visible', true)
+                      ->whereHas('owner', function ($ownerQ) {
+                          $ownerQ->where('mostrar_proyectos', true);
+                      });
+          });
+    })->get();
+}
 
     public function show(Request $request, $id)
     {

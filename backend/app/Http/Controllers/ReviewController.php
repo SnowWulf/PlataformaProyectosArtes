@@ -66,6 +66,9 @@ class ReviewController extends Controller
     /**
      * Guardar una nueva reseña (Estudiantes y Tutores) moderada con IA.
      */
+    /**
+     * Guardar una nueva reseña (Estudiantes y Tutores) moderada con IA.
+     */
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -75,7 +78,8 @@ class ReviewController extends Controller
             'proyecto_contexto' => 'nullable|string|max:255',
         ]);
 
-        $moderation = $this->moderationService->moderarResena(
+        // CORREGIDO: $moderacion (con c)
+        $moderacion = $this->moderationService->moderarResena(
             $validated['asunto'],
             $validated['observaciones']
         );

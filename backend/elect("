@@ -1,0 +1,83 @@
+[90m= [39m[
+    {#8210
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mactivity_logs[39m[32m"[39m,
+    },
+    {#8212
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mcache[39m[32m"[39m,
+    },
+    {#8213
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mcache_locks[39m[32m"[39m,
+    },
+    {#8208
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mcalendar_events[39m[32m"[39m,
+    },
+    {#8178
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mcollaboration_requests[39m[32m"[39m,
+    },
+    {#8207
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mdelivery_submissions[39m[32m"[39m,
+    },
+    {#8206
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mdocument_reviews[39m[32m"[39m,
+    },
+    {#8205
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mdocuments[39m[32m"[39m,
+    },
+    {#8204
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mfailed_jobs[39m[32m"[39m,
+    },
+    {#8203
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mjob_batches[39m[32m"[39m,
+    },
+    {#8202
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mjobs[39m[32m"[39m,
+    },
+    {#8201
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mmigrations[39m[32m"[39m,
+    },
+    {#8228
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mnotifications[39m[32m"[39m,
+    },
+    {#8229
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mpassword_reset_tokens[39m[32m"[39m,
+    },
+    {#8230
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mpersonal_access_tokens[39m[32m"[39m,
+    },
+    {#8231
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mproject_chat_messages[39m[32m"[39m,
+    },
+    {#8232
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mproject_collaborators[39m[32m"[39m,
+    },
+    {#8233
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mproject_deliveries[39m[32m"[39m,
+    },
+    {#8234
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mproject_messages[39m[32m"[39m,
+    },
+    {#8235
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mprojects[39m[32m"[39m,
+    },
+    {#8236
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mregistration_requests[39m[32m"[39m,
+    },
+    {#8237
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mreviews[39m[32m"[39m,
+    },
+    {#8238
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mroles[39m[32m"[39m,
+    },
+    {#8239
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32msessions[39m[32m"[39m,
+    },
+    {#8240
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32mtutor_requests[39m[32m"[39m,
+    },
+    {#8241
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32muser_alert_preferences[39m[32m"[39m,
+    },
+    {#8242
+      +"[1mTables_in_plataforma_artes[22m": [32m"[39m[32musers[39m[32m"[39m,
+    },
+  ]
